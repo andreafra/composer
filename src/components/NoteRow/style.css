@@ -1,0 +1,29 @@
+.noteRow {
+  list-style: none;
+  border-bottom: 1px solid brown;
+}
+
+.noteRow-key {
+  display: inline-block;
+  color: brown;
+  width: 2.5em;
+  background-color: rgba(165, 42, 42, 0.2);
+  vertical-align: top;
+}
+
+.noteRow-frames {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+}
+
+.noteRow-frame {
+  display: inline-block;
+  height: 1em;
+  width: 10px;
+  border-right: 1px solid brown;
+}
+
+.noteRow-frame:hover {
+  background: brown;
+}
