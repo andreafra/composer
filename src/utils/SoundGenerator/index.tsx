@@ -4,26 +4,20 @@ interface Dictionary<T> {
   [key: string]: T
 }
 
-let audioContext: AudioContext = new window.AudioContext()
-let oscList: OscillatorNode[] = []
-let masterGainNode: GainNode = audioContext.createGain()
-let noteFreq: Array<Dictionary<number>>
-let customWaveform: PeriodicWave
-let sineTerms: Float32Array
-let cosineTerms: Float32Array
-
-sineTerms = new Float32Array([0, 0, 1, 0, 1]);
-cosineTerms = new Float32Array(sineTerms.length);
-customWaveform = audioContext.createPeriodicWave(cosineTerms, sineTerms);
-
-masterGainNode.connect(audioContext.destination);
-masterGainNode.gain.value = 1;
+interface Note {
+  name: string
+  freq: number
+  octave: number
+}
 
 /**
- * 
+ * Plays a sound with the matching parameters
  * @param freq Frequency (Pitch) of the note
  * @param type The shape of the waveform. Use "custom" to use the 
  * @param volume 
+ * @param duration Duration in milliseconds.
+ * @param customWaveform Optional, pass to generate a sound from
+ * a custom waveform
  */
 function playTone(
   freq: number,
@@ -32,6 +26,40 @@ function playTone(
   duration: number = 1,
   customWaveform?: PeriodicWave
 ) {
+  let osc = getSoundGenerator(freq, volume, type, customWaveform)
+  osc.start()
+
+  setInterval(() => {
+    osc.stop()
+  }, duration)
+}
+
+/**
+ * Returns a generator of sounds (oscillator) that you can start
+ * with `.start()` and stop with `.stop()`
+ * @param freq Frequency (Pitch) of the note
+ * @param type The shape of the waveform. Use "custom" to use the
+ * @param volume Gain level
+ * @param customWaveform Optional, pass to generate a sound from
+ * a custom waveform
+ */
+function getSoundGenerator(freq: number,
+  volume: number,
+  type: OscillatorType,
+  customWaveform?: PeriodicWave
+) {
+  let audioContext: AudioContext = new window.AudioContext()
+  let oscList: OscillatorNode[] = []
+  let masterGainNode: GainNode = audioContext.createGain()
+  let noteFreq: Array<Dictionary<number>>
+  let sineTerms: Float32Array = new Float32Array([0, 0, 1, 0, 1])
+  let cosineTerms: Float32Array = new Float32Array(sineTerms.length)
+
+  customWaveform = audioContext.createPeriodicWave(cosineTerms, sineTerms)
+
+  masterGainNode.connect(audioContext.destination)
+  masterGainNode.gain.value = 1
+
   let osc = audioContext.createOscillator()
   osc.connect(masterGainNode)
   if (type === "custom" && customWaveform !== undefined) {
@@ -41,11 +69,8 @@ function playTone(
   }
 
   osc.frequency.value = freq
-  osc.start()
 
-  setInterval(() => {
-    osc.stop()
-  }, duration)
+  return osc
 }
 
 /**
@@ -59,7 +84,7 @@ function playTone(
 function createNoteTable(
   startOctave: number,
   endOctave: number
-): Array<Dictionary<number>> {
+): Note[] {
   let baseOctave: Dictionary<number> = {}
   baseOctave["C"] = 32.703195662574829
   baseOctave["C#"] = 34.647828872109012
@@ -74,20 +99,23 @@ function createNoteTable(
   baseOctave["A#"] = 58.270470189761239
   baseOctave["B"] = 61.735412657015513
 
-  let newNotes: Array<Dictionary<number>> = []
-  // for each octave, generate the appropriate frequency for each note
+  let newNotes: Note[] = []
+
   for (let i = 0; i <= endOctave - startOctave; i++) {
-    let newOctave: Dictionary<number> = {}
     for (let key in baseOctave) {
-      let note = baseOctave[key]
-      newOctave[key] = note * Math.pow(2, startOctave + i)
+      newNotes.push({
+        name: key,
+        freq: baseOctave[key] * Math.pow(2, startOctave + i),
+        octave: startOctave + i
+      })
     }
-    newNotes[i] = newOctave
   }
+
   return newNotes
 }
 
 export { 
   createNoteTable,
+  getSoundGenerator,
   playTone
 }
