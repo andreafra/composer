@@ -1,17 +1,14 @@
 import React from 'react'
 import './style.css'
-import Button from 'components/Button'
+import Light from 'components/Lights'
 
 
 function App() {
 
-  const printCiao = () => {
-    console.log("Ciao")
-  }
-
   return (
     <div className="App">
-      <Button name="Ciao" action={() => printCiao()}/>
+     
+      <Light/>
     </div>
   )
 }
