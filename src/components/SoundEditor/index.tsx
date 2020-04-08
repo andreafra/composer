@@ -2,7 +2,9 @@ import React, { useState, useMemo } from 'react'
 import './style.css'
 
 import { createNoteTable } from 'utils/SoundGenerator'
-import SoundCanvas from 'components/SoundCanvas'
+import SoundCanvas from 'components/SoundTimeline'
+import VolumeTimeline from 'components/VolumeTimeline'
+import SoundTimeline from 'components/SoundTimeline'
 
 interface Frame {
   note: Note,
@@ -25,6 +27,11 @@ interface NoteUpdateCallbackData {
   pitch: number
 }
 
+interface VolumeFrameCallbackData {
+  volume: number,
+  time: number
+}
+
 function SoundEditor() {
 
   const [resolution, setResolution]: [number, any] = useState(100) // in ms
@@ -32,14 +39,13 @@ function SoundEditor() {
 
   // Init notes frequencies
   // TODO: replace 3, 5 with actual parameters
-  const notes = useMemo(() => createNoteTable(3, 5), [3, 5])
+  const notes = useMemo(() => createNoteTable(3, 5).reverse(), [3, 5])
 
   /**
-   * Call this method when you want to update the 
-   * @param note The new note you want to write in the x,y position of the melody
+   * Call this method when you want to update the notes (pitch) of the melody
+   * @param note The new note you want to write in the x position of the melody
    */
   const updateNote = (data: NoteUpdateCallbackData) => {
-    console.log(data)
     let newMelody = melody.slice(0)
 
     // create/update a Frame
@@ -52,13 +58,35 @@ function SoundEditor() {
     setMelody(newMelody)
   }
 
+  /**
+   * Call this method when you want to update the volume of melody
+   * @param frame The new volume you want to write in the x position of the melody.
+   */
+  const updateVolume = (frame: VolumeFrameCallbackData) => {
+    let newMelody = melody.slice(0)
+
+    // create/update a Frame
+    newMelody[frame.time] = {
+      ...newMelody[frame.time],
+      volume: frame.volume
+    }
+    setMelody(newMelody)
+  }
+
   return (
     <div className="soundEditor">
       <h2>Sounds</h2>
-      <SoundCanvas
+      <h3>Pitch</h3>
+      <SoundTimeline
         notes={notes}
         melody={melody}
         update={(note: NoteUpdateCallbackData) => updateNote(note)}
+      />
+      <h3>Volume</h3>
+      <p>Hold Shift to lock the volume</p>
+      <VolumeTimeline
+        melody={melody}
+        update={(frame: VolumeFrameCallbackData) => updateVolume(frame)}
       />
     </div>
   )

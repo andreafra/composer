@@ -1,10 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react'
 import './style.css'
 
-import { getSoundGenerator } from 'utils/SoundGenerator'
-import { lstat } from 'fs'
-import { createContext } from 'vm'
-
 const canvasW = window.innerWidth
 let canvasH = 0 // in px
 
@@ -42,7 +38,7 @@ interface Point {
  * @param props notes, melody, update (callback)
  * @return JSX Canvas element
  */
-function SoundCanvas(props: any) {
+function SoundTimeline(props: any) {
 
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
@@ -247,4 +243,4 @@ function SoundCanvas(props: any) {
   )
 }
 
-export default SoundCanvas
+export default SoundTimeline
