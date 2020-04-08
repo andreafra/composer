@@ -86,10 +86,22 @@ function SoundTimeline(props: any) {
   }
 
   /**
+   * Delete note by sending its position up to parent component
+   * @param time The x position of the note
+   */
+  const deleteNote = (time: number) => {
+    // update parent component
+    props.delete({
+      time: time,
+    })
+  }
+
+  /**
    * Actions to do when you start holding down mouseclick on the canvas.
    */
-  const onInputStart = () => {
+  const onInputStart = (e: any) => {
     setIsDrawing(true)
+    doInputAction(e)
   }
 
   /**
@@ -97,6 +109,8 @@ function SoundTimeline(props: any) {
    */
   const onInputStop = () => {
     setIsDrawing(false)
+    // Pass an "invalid" cell to never trigger the check
+    setLastCell({x: -1, y: -1})
   }
 
   /**
@@ -105,14 +119,20 @@ function SoundTimeline(props: any) {
    * @param e Event
    */
   const onInputMove = (e: any) => {
-    if (isDrawing) {
-      let pos = getInputPos(e)
-      if (pos.x > cellSafeZoneX) {
-        let cell = getCell(pos)
-        // when I change cell...
-        // optimized: only when cell changes
-        if (lastCell.x !== cell.x || lastCell.y !== cell.y) {
-          setLastCell(cell)
+    if (isDrawing) doInputAction(e)
+  }
+
+  const doInputAction = (e: any) => {
+    let pos = getInputPos(e)
+    if (pos.x > cellSafeZoneX) {
+      let cell = getCell(pos)
+      // when I change cell...
+      // optimized: only when cell changes
+      if (lastCell.x !== cell.x || lastCell.y !== cell.y) {
+        setLastCell(cell)
+        if (e.ctrlKey) {
+          deleteNote(cell.x - 1)
+        } else {
           // Pass note to data structure
           addNote(cell.x - 1, cell.y, "sine")
         }
@@ -236,7 +256,7 @@ function SoundTimeline(props: any) {
       width={canvasW}
       height={canvasH}
       onMouseMove={(e) => onInputMove(e)}
-      onMouseDown={onInputStart}
+      onMouseDown={(e) => onInputStart(e)}
       onMouseUp={onInputStop}
       onMouseLeave={onInputStop}
     ></canvas>

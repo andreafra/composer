@@ -56,6 +56,20 @@ function SoundEditor() {
       pitch: data.pitch
     }
     setMelody(newMelody)
+    console.log(newMelody)
+  }
+
+  /**
+   * Call this method when you want to update the volume of melody
+   * @param frame The new volume you want to write in the x position of the melody.
+   */
+  const deleteNote = (data: NoteUpdateCallbackData) => {
+    let newMelody = melody.slice(0)
+
+    // create/update a Frame
+    delete newMelody[data.time]
+    setMelody(newMelody)
+    console.log(newMelody)
   }
 
   /**
@@ -81,6 +95,8 @@ function SoundEditor() {
         notes={notes}
         melody={melody}
         update={(note: NoteUpdateCallbackData) => updateNote(note)}
+        delete={(note: NoteUpdateCallbackData) => deleteNote(note)}
+
       />
       <h3>Volume</h3>
       <p>Hold Shift to lock the volume</p>
