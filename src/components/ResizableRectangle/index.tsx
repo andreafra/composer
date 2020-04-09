@@ -1,26 +1,28 @@
 import React, {useState} from 'react'
 import './style.css'
 
-interface RectangleStyle {
+interface RectStyle {
   backgroundColor: string
   width: string
   height: string
+  marginLeft: string
 }
 
 function ResizableRectangle(props: any){
 
-  const [rectStyle, setRectStyle]: [RectangleStyle, any] = useState({
+  const [rectStyle, setRectStyle]: [RectStyle, any] = useState({
     backgroundColor: props.style.backgroundColor,
     width: props.style.width + "px",
-    height: props.style.height + "px"
+    height: props.style.height + "px",
+    marginLeft: (props.frameStart * props.style.width) + "px"
   })  
-  const [isRectSelected, setIsRectSelected] = useState(false)
-  const [isRectModified, setIsRectModified] = useState(false)
+
+  /**
+   * true = rect is being resized
+   */
+  const [isActive, setIsActive] = useState(false)
   
   let frameSize: number = props.editorFrameSize
-  /**
-   * The x position when you hold down mouse for the first time.
-   */
   let downX: number
   let movingX: number
   let upX: number
@@ -28,7 +30,14 @@ function ResizableRectangle(props: any){
   //this is the actual space til the end of the rectangle
   let endingX: number = props.editorLeftPadding + props.frameEnd*frameSize
 
+
+
+
+
+
+
   const onMouseDown = (e: any) => {
+    console.log("rect down")
     downX = e.clientX
     setIsRectSelected(true)
   }
@@ -36,8 +45,6 @@ function ResizableRectangle(props: any){
   const onMouseMove = (e: any) => {
     // movingX = e.clientX; 
     // movingX = props.getPosX()
-
-
 
     if(isRectSelected){
       // Calc the new width of the rectangle after moving the mouse
@@ -81,8 +88,6 @@ function ResizableRectangle(props: any){
       ></div>
       <div 
         onMouseDown={(e: any) => onMouseDown(e)}
-        onMouseUp={(e:any) => onMouseUp(e)}
-        onMouseLeave={(e: any) => onMouseMove(e)}
         className="ResizableRettangle-right"
       ></div>
     </div>

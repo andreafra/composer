@@ -48,6 +48,7 @@ function LightTimeline (props: any) {
   const addElementToLightArray = (element: LightData) => {
     let _ = lightArray.slice(0)
     _.push(element)
+    // Add the new light block after the last light block ends
     setCurrentFrame(currentFrame + 1)
 
     setLightArray(_)
@@ -97,7 +98,12 @@ function LightTimeline (props: any) {
         >Choose a light color
         </label>
       </div>
-      {getLights()}
+      <div className="LightTimeline-lights"
+        onMouseDown={() => console.log("timeline down")}
+        onMouseUp={() => console.log("timeline up")}
+      >
+        {getLights()}
+      </div>
     </div>
   )
 }

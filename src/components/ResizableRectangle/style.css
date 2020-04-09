@@ -1,5 +1,6 @@
 .ResizableRettangle {
   display: inline-block;
+  position: absolute;
 }
 
 .ResizableRettangle-left {

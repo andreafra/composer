@@ -6,6 +6,11 @@
   display: block;
 }
 
+.LightTimeline-lights {
+  display: block;
+  height: 100px; /* HARDCODED, match height in Rectangle*/
+  background-color: aquamarine;
+}
 
 .colorPicker {
   display: none;
