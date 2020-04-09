@@ -1,6 +1,10 @@
 import React, { useState } from 'react'
 import './style.css'
 
+/**
+ * A component that accepts a prop called `name`
+ * and a callback prop called `action`.
+ */
 function Button(props: any) {
 
   function handleClick() {

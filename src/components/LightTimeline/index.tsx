@@ -1,26 +1,42 @@
 import React, { useState } from 'react'
 import './style.css'
 
-import Light from "components/Light"
+import Rect from "components/ResizableRectangle"
+import Button from "components/Button"
 import { prototype } from 'events'
 
 interface LightData {
   color: string,
-  timeStart: number,
-  timeEnd: number, 
+  frameStart: number,
+  frameEnd: number, 
+}
+
+interface LightRectStyle {
+  backgroundColor: string
+  width: number
+  height: number
 }
 
 function LightTimeline (props: any) {
 
   const [color, setColor] = useState("#FF0000")
   const [lightArray, setLightArray]: [LightData[], any] = useState([])
+  const [currentFrame, setCurrentFrame]: [number, any] = useState(0)
 
-  const [currentTime, setCurrentTime]: [number, any] = useState(0)
+  /**
+   * Size of a single "frame"
+   */
+  const res = props.editorResolution
 
   const chooseColor = (e: any) => {
     setColor(e.target.value)
-    addElementToLightArray({
+  }
 
+  const addLight = () => {
+    addElementToLightArray({
+      color: color,
+      frameStart: currentFrame,
+      frameEnd: currentFrame + props.editorFrameSize
     })
   }
   
@@ -32,65 +48,58 @@ function LightTimeline (props: any) {
   const addElementToLightArray = (element: LightData) => {
     let _ = lightArray.slice(0)
     _.push(element)
-    
+    setCurrentFrame(currentFrame + 1)
+
     setLightArray(_)
   }
 
   const getLights = () => {
     return lightArray.map((light, index) => {
-      <Light
+      
+      const lightStyle: LightRectStyle = {
+        backgroundColor: light.color,
+        width: props.editorFrameSize,
+        height: 100
+      }
+      
+      return (
+      <Rect
         key={index}
-        color={light.color}
-        timeStart={light.timeStart}
-        timeEnd={light.timeEnd}
+        style={lightStyle}
+        frameStart={light.frameStart}
+        frameEnd={light.frameEnd}
+        editorLeftPadding={props.editorLeftPadding}
       />
-    })
+    )})
   }
 
-  /**
-   * 
-   * LightEditor (aggiungi una nuova LUCE)
-   *  LightTimeline (per il singolo PIN, asse y)
-   *     Button
-   *     Light (nel tempo, asse x) <-
-   *     Light (nel tempo, asse x) <-
-   *     Light (nel tempo, asse x) <-
-   *       Rectangle
-   *  LightTimeline (per il singolo PIN, asse y)
-   *     Light (nel tempo, asse x) <-
-   *       Rectangle
-   * 
-   */
-
-
-   /**
-    * 1. Gestire quando premi il bottone e aggiungi un rettangolo
-    * 2. Renderizzare la struttura dati
-    * 3. Modificare la struttura dati
-    */
   return (
-    <div>
-      <input
-        type="color"
-        value={color}
-        id="colorPicker"
-        className="colorPicker"
-        onChange={(e: any) => chooseColor(e)}
-      />
-      <label
-        htmlFor="colorPicker"
-        className="colorPicker_label"
-      >Choose a light color
-      </label>
+    <div className="LightTimeline"
+      onMouseMove={(e: any) => {
+
+      }}
+    >
+      <div className="LightTimeline-tools">
+        <Button 
+          name="Add a Light"
+          action={addLight}
+        />
+        <input
+          type="color"
+          value={color}
+          id="colorPicker"
+          className="colorPicker"
+          onChange={(e: any) => chooseColor(e)}
+        />
+        <label
+          htmlFor="colorPicker"
+          className="colorPicker_label"
+        >Choose a light color
+        </label>
+      </div>
       {getLights()}
     </div>
   )
-
-  /*
-      <Light
-        color={color}
-      />
-   */
 }
 
 export default LightTimeline
