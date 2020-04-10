@@ -1,6 +1,8 @@
 import React, { useRef, useEffect, useState } from 'react'
 import './style.css'
 
+
+// TODO: Costants to fix and move inside the function component
 const canvasW = window.innerWidth
 let canvasH = 0 // in px
 
@@ -11,8 +13,37 @@ let cellSafeZoneX = 30
 let cellW = 30
 let cellH = 15
 
+/*
+ * Funny story time: stuff you declare outside a function component 
+ * doesn't get resetted when React decides on its own to refresh that
+ * component, so stuff that has to be instantiated only once, such as
+ * a canvas ref, or a AudioContext/Oscillator it's in the global scope
+ * of the file.
+ */
+
+// ===== Canvas ref =====
 let ctx: CanvasRenderingContext2D | null
 let rect: DOMRect | null
+
+// ===== Sound Generator =====
+let AudioContext = window.AudioContext
+let audioCtx = new AudioContext();
+
+// create Oscillator and gain node
+let oscillator = audioCtx.createOscillator()
+let gainNode = audioCtx.createGain()
+
+// connect oscillator to gain node to speakers
+oscillator.connect(gainNode)
+gainNode.connect(audioCtx.destination)
+
+// set default options
+oscillator.detune.value = 100 // value in cents, IDK what this does :)
+oscillator.frequency.value = 0 // pitch
+gainNode.gain.value = 0 // volume
+oscillator.start(0) // start now
+
+// ===== INTERFACES ======
 
 interface Frame {
   note: Note,
@@ -44,6 +75,8 @@ function SoundTimeline(props: any) {
 
   const [lastCell, setLastCell]: [Point, any] = useState({ x: 0, y: 0 })
   const [isDrawing, setIsDrawing]: [boolean, any] = useState(false)
+
+  const MAX_VOLUME = props.maxVolume || 0.2
 
   /**
    * This part renders the canvas after initialising it.
@@ -78,7 +111,7 @@ function SoundTimeline(props: any) {
   const addNote = (time: number, row: number, type: OscillatorType) => {
     // update parent component
     props.update({
-      data: props.notes[row],
+      note: props.notes[row],
       time: time,
       type: type,
       pitch: row
@@ -111,6 +144,10 @@ function SoundTimeline(props: any) {
     setIsDrawing(false)
     // Pass an "invalid" cell to never trigger the check
     setLastCell({x: -1, y: -1})
+    
+    // Stop playing sound
+    oscillator.frequency.value = 0 // pitch
+    gainNode.gain.value = 0 // volume
   }
 
   /**
@@ -126,6 +163,14 @@ function SoundTimeline(props: any) {
     let pos = getInputPos(e)
     if (pos.x > cellSafeZoneX) {
       let cell = getCell(pos)
+
+      // always: play sound preview
+      oscillator.frequency.value = props.notes[cell.y].freq // pitch
+      let frame = props.melody[cell.x - 1]
+      let volume = 0.5 * MAX_VOLUME;
+      if (frame && frame.volume) volume = frame.volume * MAX_VOLUME
+      gainNode.gain.value = volume // volume
+
       // when I change cell...
       // optimized: only when cell changes
       if (lastCell.x !== cell.x || lastCell.y !== cell.y) {
@@ -147,8 +192,8 @@ function SoundTimeline(props: any) {
    */
   const getInputPos = (e: any): Point => {
     if (rect) return {
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top
+      x: e.pageX - rect.left,
+      y: e.pageY - rect.top
     }
     return { x: -1, y: -1 }
   }
@@ -204,7 +249,6 @@ function SoundTimeline(props: any) {
       ctx.stroke()
     }
   }
-
 
   /**
    * Draws note name labels (A, A#, ...)

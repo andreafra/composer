@@ -1,10 +1,10 @@
 import React, { useState, useMemo } from 'react'
 import './style.css'
 
-import { createNoteTable } from 'utils/SoundGenerator'
-import SoundCanvas from 'components/SoundTimeline'
+import { createNoteTable, getSoundGenerator } from 'utils/SoundGenerator'
 import VolumeTimeline from 'components/VolumeTimeline'
 import SoundTimeline from 'components/SoundTimeline'
+
 
 interface Frame {
   note: Note,
@@ -34,7 +34,6 @@ interface VolumeFrameCallbackData {
 
 function SoundEditor() {
 
-  const [resolution, setResolution]: [number, any] = useState(100) // in ms
   const [melody, setMelody]: [Frame[], any] = useState([])
 
   // Init notes frequencies
@@ -56,7 +55,6 @@ function SoundEditor() {
       pitch: data.pitch
     }
     setMelody(newMelody)
-    console.log(newMelody)
   }
 
   /**
@@ -69,7 +67,6 @@ function SoundEditor() {
     // create/update a Frame
     delete newMelody[data.time]
     setMelody(newMelody)
-    console.log(newMelody)
   }
 
   /**
@@ -96,7 +93,6 @@ function SoundEditor() {
         melody={melody}
         update={(note: NoteUpdateCallbackData) => updateNote(note)}
         delete={(note: NoteUpdateCallbackData) => deleteNote(note)}
-
       />
       <h3>Volume</h3>
       <p>Hold Shift to lock the volume</p>

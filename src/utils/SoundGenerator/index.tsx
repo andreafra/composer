@@ -58,7 +58,7 @@ function getSoundGenerator(freq: number,
   customWaveform = audioContext.createPeriodicWave(cosineTerms, sineTerms)
 
   masterGainNode.connect(audioContext.destination)
-  masterGainNode.gain.value = 1
+  masterGainNode.gain.value = volume
 
   let osc = audioContext.createOscillator()
   osc.connect(masterGainNode)

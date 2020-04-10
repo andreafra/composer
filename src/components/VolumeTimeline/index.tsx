@@ -65,9 +65,12 @@ function VolumeTimeline(props: any) {
    * @param volume 
    */
   const addFrame = (time: number, volume: number) => {
+    let percentVolume = volume / canvasH // from px value to 0-1 value
     // update parent component
+    console.log(volume + " >>> " + percentVolume)
+
     props.update({
-      volume: volume,
+      volume: percentVolume,
       time: time
     })
   }
@@ -123,8 +126,8 @@ function VolumeTimeline(props: any) {
    */
   const getInputPos = (e: any): Point => {
     if (rect) return {
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top
+      x: e.pageX - rect.left,
+      y: e.pageY - rect.top
     }
     return { x: -1, y: -1 }
   }
@@ -188,9 +191,11 @@ function VolumeTimeline(props: any) {
   const drawVolumeFrames = (melody: Frame[]) => {
     for (let index = 0; index < melody.length; index++) {
       const frame = melody[index]
-
-      if (frame)
-        drawRectangle(index + 1, frame.volume)
+      
+      if (frame) {
+        const volume = frame.volume * canvasH // from 0-1 value to px value
+        drawRectangle(index + 1, volume)
+      }
     }
   }
 
