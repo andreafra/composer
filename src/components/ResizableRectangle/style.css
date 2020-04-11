@@ -1,0 +1,18 @@
+.ResizableRettangle {
+  display: inline-block;
+  position: absolute;
+}
+
+.ResizableRettangle-left {
+  height: 100%;
+  width: 6px;
+  cursor: col-resize;
+  float: left;
+}
+
+.ResizableRettangle-right {
+  height: 100%;
+  width: 6px;
+  cursor: col-resize;
+  float: right;
+}
