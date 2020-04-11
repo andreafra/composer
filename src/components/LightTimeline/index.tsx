@@ -22,10 +22,8 @@ function LightTimeline (props: any) {
   const [color, setColor] = useState("#FF0000")
   const [lightArray, setLightArray]: [LightData[], any] = useState([])
   const [currentFrame, setCurrentFrame]: [number, any] = useState(0)
-
-  /**
-   * Size of a single "frame"
-   */
+  
+  //Size of a single "frame"
   const res = props.editorResolution
 
   const chooseColor = (e: any) => {
@@ -55,31 +53,22 @@ function LightTimeline (props: any) {
   }
 
   const getLights = () => {
-    return lightArray.map((light, index) => {
-      
-      const lightStyle: LightRectStyle = {
-        backgroundColor: light.color,
-        width: props.editorFrameSize,
-        height: 100
-      }
-      
-      return (
+    return lightArray.map((light, index) =>
       <Rect
         key={index}
-        style={lightStyle}
+        style={{
+          backgroundColor: light.color,
+          width: props.editorFrameSize,
+          height: 100
+        }}
         frameStart={light.frameStart}
         frameEnd={light.frameEnd}
         editorLeftPadding={props.editorLeftPadding}
       />
-    )})
-  }
+  )}
 
   return (
-    <div className="LightTimeline"
-      onMouseMove={(e: any) => {
-
-      }}
-    >
+    <div className="LightTimeline">
       <div className="LightTimeline-tools">
         <Button 
           name="Add a Light"
@@ -98,11 +87,8 @@ function LightTimeline (props: any) {
         >Choose a light color
         </label>
       </div>
-      <div className="LightTimeline-lights"
-        onMouseDown={() => console.log("timeline down")}
-        onMouseUp={() => console.log("timeline up")}
-      >
-        {getLights()}
+      <div className="LightTimeline-lights">
+      {/* GET LIGHTS */}
       </div>
     </div>
   )

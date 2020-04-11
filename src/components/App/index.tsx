@@ -23,7 +23,6 @@ function App() {
 
   return (
     <div className="App">
-      <SoundEditor />
       <LightEditor
         editorLeftPadding={editorLeftPadding}
         editorResolution={editorResolution}
