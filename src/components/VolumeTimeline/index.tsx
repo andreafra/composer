@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, createContext, SyntheticEvent } from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 import './style.css'
 
 const canvasW = window.innerWidth

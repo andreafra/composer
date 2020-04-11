@@ -1,10 +1,9 @@
 import React, { useState, useMemo } from 'react'
 import './style.css'
 
-import { createNoteTable, getSoundGenerator } from 'utils/SoundGenerator'
+import { createNoteTable } from 'utils/SoundGenerator'
 import VolumeTimeline from 'components/VolumeTimeline'
 import SoundTimeline from 'components/SoundTimeline'
-
 
 interface Frame {
   note: Note,
@@ -38,7 +37,7 @@ function SoundEditor() {
 
   // Init notes frequencies
   // TODO: replace 3, 5 with actual parameters
-  const notes = useMemo(() => createNoteTable(3, 5).reverse(), [3, 5])
+  const notes = useMemo(() => createNoteTable(3, 5).reverse(), [])
 
   /**
    * Call this method when you want to update the notes (pitch) of the melody
@@ -86,7 +85,7 @@ function SoundEditor() {
 
   return (
     <div className="soundEditor">
-      <h2>Sounds</h2>
+      <h2>Sounds</h2>      
       <h3>Pitch</h3>
       <SoundTimeline
         notes={notes}
