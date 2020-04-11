@@ -1,5 +1,3 @@
-import { setInterval } from 'timers'
-
 interface Dictionary<T> {
   [key: string]: T
 }
@@ -8,69 +6,6 @@ interface Note {
   name: string
   freq: number
   octave: number
-}
-
-/**
- * Plays a sound with the matching parameters
- * @param freq Frequency (Pitch) of the note
- * @param type The shape of the waveform. Use "custom" to use the 
- * @param volume 
- * @param duration Duration in milliseconds.
- * @param customWaveform Optional, pass to generate a sound from
- * a custom waveform
- */
-function playTone(
-  freq: number,
-  volume: number, 
-  type: OscillatorType,
-  duration: number = 1,
-  customWaveform?: PeriodicWave
-) {
-  let osc = getSoundGenerator(freq, volume, type, customWaveform)
-  osc.start()
-
-  setInterval(() => {
-    osc.stop()
-  }, duration)
-}
-
-/**
- * Returns a generator of sounds (oscillator) that you can start
- * with `.start()` and stop with `.stop()`
- * @param freq Frequency (Pitch) of the note
- * @param type The shape of the waveform. Use "custom" to use the
- * @param volume Gain level
- * @param customWaveform Optional, pass to generate a sound from
- * a custom waveform
- */
-function getSoundGenerator(freq: number,
-  volume: number,
-  type: OscillatorType,
-  customWaveform?: PeriodicWave
-) {
-  let audioContext: AudioContext = new window.AudioContext()
-  let oscList: OscillatorNode[] = []
-  let masterGainNode: GainNode = audioContext.createGain()
-  let noteFreq: Array<Dictionary<number>>
-  let sineTerms: Float32Array = new Float32Array([0, 0, 1, 0, 1])
-  let cosineTerms: Float32Array = new Float32Array(sineTerms.length)
-
-  customWaveform = audioContext.createPeriodicWave(cosineTerms, sineTerms)
-
-  masterGainNode.connect(audioContext.destination)
-  masterGainNode.gain.value = volume
-
-  let osc = audioContext.createOscillator()
-  osc.connect(masterGainNode)
-  if (type === "custom" && customWaveform !== undefined) {
-    osc.setPeriodicWave(customWaveform)
-  } else {
-    osc.type = type
-  }
-
-  osc.frequency.value = freq
-
-  return osc
 }
 
 /**
@@ -115,7 +50,5 @@ function createNoteTable(
 }
 
 export { 
-  createNoteTable,
-  getSoundGenerator,
-  playTone
+  createNoteTable
 }

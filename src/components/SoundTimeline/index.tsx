@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react'
 import './style.css'
 
+import InstrumentPicker from 'components/InstrumentPicker'
 
 // TODO: Costants to fix and move inside the function component
 const canvasW = window.innerWidth
@@ -40,6 +41,7 @@ gainNode.connect(audioCtx.destination)
 // set default options
 oscillator.detune.value = 100 // value in cents, IDK what this does :)
 oscillator.frequency.value = 0 // pitch
+oscillator.type = "sine" // instrument
 gainNode.gain.value = 0 // volume
 oscillator.start(0) // start now
 
@@ -75,6 +77,7 @@ function SoundTimeline(props: any) {
 
   const [lastCell, setLastCell]: [Point, any] = useState({ x: 0, y: 0 })
   const [isDrawing, setIsDrawing]: [boolean, any] = useState(false)
+  const [type, setType]: [OscillatorType, any] = useState("sine")
 
   const MAX_VOLUME = props.maxVolume || 0.2
 
@@ -164,8 +167,17 @@ function SoundTimeline(props: any) {
     if (pos.x > cellSafeZoneX) {
       let cell = getCell(pos)
 
-      // always: play sound preview
+      // ALWAYS: play sound preview
+      // Update the frequency
       oscillator.frequency.value = props.notes[cell.y].freq // pitch
+
+      // Update the instrument
+      // Prevents the sine function from being "resetted/recentered",
+      // which produces an annoying buzz, basically it's not "smooth"
+      if (type !== "sine")
+        oscillator.type = type
+      
+      // Update the volume
       let frame = props.melody[cell.x - 1]
       let volume = 0.5 * MAX_VOLUME;
       if (frame && frame.volume) volume = frame.volume * MAX_VOLUME
@@ -179,7 +191,7 @@ function SoundTimeline(props: any) {
           deleteNote(cell.x - 1)
         } else {
           // Pass note to data structure
-          addNote(cell.x - 1, cell.y, "sine")
+          addNote(cell.x - 1, cell.y, type)
         }
       }
     }
@@ -294,16 +306,22 @@ function SoundTimeline(props: any) {
   }
 
   return (
-    <canvas
-      className="soundCanvas"
-      ref={canvasRef}
-      width={canvasW}
-      height={canvasH}
-      onMouseMove={(e) => onInputMove(e)}
-      onMouseDown={(e) => onInputStart(e)}
-      onMouseUp={onInputStop}
-      onMouseLeave={onInputStop}
-    ></canvas>
+    <div className="SoundTimeline">
+      <InstrumentPicker
+        currentType={type}
+        update={(t: OscillatorType) => setType(t)}
+      />
+      <canvas
+        className="soundCanvas"
+        ref={canvasRef}
+        width={canvasW}
+        height={canvasH}
+        onMouseMove={(e) => onInputMove(e)}
+        onMouseDown={(e) => onInputStart(e)}
+        onMouseUp={onInputStop}
+        onMouseLeave={onInputStop}
+      ></canvas>
+    </div>
   )
 }
 

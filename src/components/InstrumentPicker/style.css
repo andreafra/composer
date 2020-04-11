@@ -1,0 +1,7 @@
+.InstrumentButton {
+  font-weight: normal;
+}
+
+.InstrumentButton-selected {
+  font-weight: bold;
+}
