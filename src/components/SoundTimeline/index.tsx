@@ -3,17 +3,6 @@ import './style.css'
 
 import InstrumentPicker from 'components/InstrumentPicker'
 
-// TODO: Costants to fix and move inside the function component
-const canvasW = window.innerWidth
-let canvasH = 0 // in px
-
-let numberOfRows = 0
-
-let cellSafeZoneX = 30
-
-let cellW = 30
-let cellH = 15
-
 /*
  * Funny story time: stuff you declare outside a function component 
  * doesn't get resetted when React decides on its own to refresh that
@@ -25,6 +14,8 @@ let cellH = 15
 // ===== Canvas ref =====
 let ctx: CanvasRenderingContext2D | null
 let rect: DOMRect | null
+let CANVAS_H = 0 // in px
+let numberOfRows = 0
 
 // ===== Sound Generator =====
 let AudioContext = window.AudioContext
@@ -72,6 +63,12 @@ interface Point {
  * @return JSX Canvas element
  */
 function SoundTimeline(props: any) {
+  const CANVAS_W = props.options.width + props.options.leftPadding
+
+  const LEFT_PADDING = props.options.leftPadding
+  
+  const CELL_W = props.options.frameSize
+  const CELL_H = 15
 
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
@@ -94,8 +91,8 @@ function SoundTimeline(props: any) {
       numberOfRows = props.notes.length
 
       // Make canvas height match number of rows
-      canvasH = numberOfRows * cellH
-      canvas.height = canvasH
+      CANVAS_H = numberOfRows * CELL_H
+      canvas.height = CANVAS_H
 
       // Render "loop"
       drawBackground()
@@ -164,7 +161,7 @@ function SoundTimeline(props: any) {
 
   const doInputAction = (e: any) => {
     let pos = getInputPos(e)
-    if (pos.x > cellSafeZoneX) {
+    if (pos.x > LEFT_PADDING) {
       let cell = getCell(pos)
 
       // ALWAYS: play sound preview
@@ -204,7 +201,7 @@ function SoundTimeline(props: any) {
    */
   const getInputPos = (e: any): Point => {
     if (rect) return {
-      x: e.pageX - rect.left,
+      x: e.pageX, // - rect.left,
       y: e.pageY - rect.top
     }
     return { x: -1, y: -1 }
@@ -218,8 +215,8 @@ function SoundTimeline(props: any) {
    */
   const getCell = (position: Point): Point => {
     return {
-      x: Math.floor(position.x / cellW),
-      y: Math.floor(position.y / cellH)
+      x: Math.floor(position.x / CELL_W),
+      y: Math.floor(position.y / CELL_H)
     }
   }
 
@@ -229,7 +226,7 @@ function SoundTimeline(props: any) {
   const drawBackground = () => {
     if (ctx) {
       ctx.fillStyle = "white"
-      ctx.fillRect(0, 0, canvasW, canvasH)
+      ctx.fillRect(0, 0, CANVAS_W, CANVAS_H)
     }
   }
 
@@ -241,13 +238,13 @@ function SoundTimeline(props: any) {
     if (ctx) {
       for (let i = 0; i <= n; i++) {
         // Get height of a row
-        let marginTop = cellH * i
+        let marginTop = CELL_H * i
 
         ctx.strokeStyle = "red"
         ctx.lineWidth = 0.3
         ctx.beginPath()
         ctx.moveTo(0, marginTop)
-        ctx.lineTo(canvasW, marginTop)
+        ctx.lineTo(CANVAS_W, marginTop)
         ctx.closePath()
         ctx.stroke()
 
@@ -255,8 +252,8 @@ function SoundTimeline(props: any) {
 
       ctx.strokeStyle = "blue"
       ctx.beginPath()
-      ctx.moveTo(cellW, 0)
-      ctx.lineTo(cellW, canvasH)
+      ctx.moveTo(CELL_W, 0)
+      ctx.lineTo(CELL_W, CANVAS_H)
       ctx.closePath()
       ctx.stroke()
     }
@@ -268,12 +265,12 @@ function SoundTimeline(props: any) {
    */
   const drawLabels = (notes: Note[]) => {
     if (ctx) {
-      let marginTop = cellH
-      ctx.font = `${cellH - 3}px sans-serif`
+      let marginTop = CELL_H
+      ctx.font = `${CELL_H - 3}px sans-serif`
       ctx.fillStyle = "red"
       for (const note of notes) {
         ctx.fillText(note.name, 5, marginTop - 2)
-        marginTop += cellH
+        marginTop += CELL_H
       }
     }
   }
@@ -287,7 +284,7 @@ function SoundTimeline(props: any) {
   const drawRectangle = (x: number, y: number, color: string) => {
     if (ctx) {
       ctx.fillStyle = color
-      ctx.fillRect(x * cellW, y * cellH, cellW, cellH)
+      ctx.fillRect(x * CELL_W, y * CELL_H, CELL_W, CELL_H)
     }
   }
 
@@ -314,8 +311,8 @@ function SoundTimeline(props: any) {
       <canvas
         className="soundCanvas"
         ref={canvasRef}
-        width={canvasW}
-        height={canvasH}
+        width={CANVAS_W}
+        height={CANVAS_H}
         onMouseMove={(e) => onInputMove(e)}
         onMouseDown={(e) => onInputStart(e)}
         onMouseUp={onInputStop}

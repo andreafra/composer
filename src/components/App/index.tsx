@@ -15,19 +15,26 @@ function App() {
 
   /**
    * Length in pixels of a generic editor.
-   * (CHECK: Might not update correctly?)
    */
   const editorWidth = editorLength * 1000 / editorResolution * editorFrameSize
 
-  const editorLeftPadding = 30
+  const EDITOR_LEFT_PADDING = 30 // in px
+
+  const editorOptions = {
+    leftPadding: EDITOR_LEFT_PADDING,
+    resolution: editorResolution,
+    width: editorWidth,
+    frameSize: editorFrameSize
+  }
+
 
   return (
     <div className="App">
+      <SoundEditor
+        options={editorOptions}
+      />
       <LightEditor
-        editorLeftPadding={editorLeftPadding}
-        editorResolution={editorResolution}
-        editorWidth={editorWidth}
-        editorFrameSize={editorFrameSize}
+        options={editorOptions}
       />
     </div>
   )

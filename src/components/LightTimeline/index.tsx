@@ -24,7 +24,7 @@ function LightTimeline (props: any) {
   const [currentFrame, setCurrentFrame]: [number, any] = useState(0)
   
   //Size of a single "frame"
-  const res = props.editorResolution
+  const res = props.options.resolution
 
   const chooseColor = (e: any) => {
     setColor(e.target.value)
@@ -34,7 +34,7 @@ function LightTimeline (props: any) {
     addElementToLightArray({
       color: color,
       frameStart: currentFrame,
-      frameEnd: currentFrame + props.editorFrameSize
+      frameEnd: currentFrame + props.options.frameSize
     })
   }
   
@@ -58,12 +58,11 @@ function LightTimeline (props: any) {
         key={index}
         style={{
           backgroundColor: light.color,
-          width: props.editorFrameSize,
+          width: props.options.frameSize,
           height: 100
         }}
         frameStart={light.frameStart}
         frameEnd={light.frameEnd}
-        editorLeftPadding={props.editorLeftPadding}
       />
   )}
 

@@ -4,13 +4,9 @@ import './style.css'
 import LightTimeline from 'components/LightTimeline'
 
 function LightEditor(props: any){
-
-  
-
-  let editorStyle = {
-    width: props.editorWidth + "px",
-    marginLeft: props.editorLeftPadding + "px",
-    backgroundColor: "pink"
+  const editorStyle = {
+    width: props.options.width + "px",
+    marginLeft: props.options.leftPadding + "px",
   }
 
   return (
@@ -19,9 +15,7 @@ function LightEditor(props: any){
       style={editorStyle}
     >
       <LightTimeline
-        resolution={props.editorResolution}
-        editorLeftPadding={props.editorLeftPadding}
-        editorFrameSize={props.editorFrameSize}
+        options={props.options}
       />
     </div>
   )

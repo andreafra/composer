@@ -31,7 +31,7 @@ interface VolumeFrameCallbackData {
   time: number
 }
 
-function SoundEditor() {
+function SoundEditor(props: any) {
 
   const [melody, setMelody]: [Frame[], any] = useState([])
 
@@ -88,6 +88,7 @@ function SoundEditor() {
       <h2>Sounds</h2>      
       <h3>Pitch</h3>
       <SoundTimeline
+        options={props.options}
         notes={notes}
         melody={melody}
         update={(note: NoteUpdateCallbackData) => updateNote(note)}
@@ -96,6 +97,7 @@ function SoundEditor() {
       <h3>Volume</h3>
       <p>Hold Shift to lock the volume</p>
       <VolumeTimeline
+        options={props.options}
         melody={melody}
         update={(frame: VolumeFrameCallbackData) => updateVolume(frame)}
       />

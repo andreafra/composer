@@ -1,12 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react'
 import './style.css'
 
-const canvasW = window.innerWidth
-const canvasH =  70 // in px
-const frameSafeZoneX = 30 // in px
-
-let frameW = 30
-
 let ctx: CanvasRenderingContext2D | null
 let rect: DOMRect | null
 
@@ -35,6 +29,13 @@ interface Point {
  * @return JSX Canvas element
  */
 function VolumeTimeline(props: any) {
+
+  const CANVAS_W = props.options.width
+  const CANVAS_H = 70 // in px
+
+  const LEFT_PADDING = props.options.leftPadding
+  
+  const FRAME_W = props.options.frameSize
 
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
@@ -65,7 +66,7 @@ function VolumeTimeline(props: any) {
    * @param volume 
    */
   const addFrame = (time: number, volume: number) => {
-    let percentVolume = volume / canvasH // from px value to 0-1 value
+    let percentVolume = volume / CANVAS_H // from px value to 0-1 value
     // update parent component
     console.log(volume + " >>> " + percentVolume)
 
@@ -104,7 +105,7 @@ function VolumeTimeline(props: any) {
   const onInputMove = (e: any) => {
     if (isDrawing) {
       let pos = getInputPos(e)
-      if (pos.x > frameSafeZoneX) {
+      if (pos.x > LEFT_PADDING) {
         let frame = getFrame(pos)
         // when I change cell...
         // optimized: only when cell changes
@@ -140,8 +141,8 @@ function VolumeTimeline(props: any) {
    */
   const getFrame = (position: Point): Point => {
     return {
-      x: Math.floor(position.x / frameW),
-      y: canvasH - position.y
+      x: Math.floor(position.x / FRAME_W),
+      y: CANVAS_H - position.y
     }
   }
 
@@ -151,7 +152,7 @@ function VolumeTimeline(props: any) {
   const drawBackground = () => {
     if (ctx) {
       ctx.fillStyle = "white"
-      ctx.fillRect(0, 0, canvasW, canvasH)
+      ctx.fillRect(0, 0, CANVAS_W, CANVAS_H)
     }
   }
 
@@ -163,9 +164,9 @@ function VolumeTimeline(props: any) {
       ctx.font = "12px sans-serif"
       ctx.fillStyle = "red"
       ctx.fillText("100", 2, 14)
-      ctx.fillText("0", 2, canvasH - 2)
-      ctx.moveTo(frameW, 0)
-      ctx.lineTo(frameW, canvasH)
+      ctx.fillText("0", 2, CANVAS_H - 2)
+      ctx.moveTo(FRAME_W, 0)
+      ctx.lineTo(FRAME_W, CANVAS_H)
       ctx.stroke()
     }
   }
@@ -179,7 +180,7 @@ function VolumeTimeline(props: any) {
   const drawRectangle = (x: number, y: number) => {
     if (ctx) {
       ctx.fillStyle = "green"
-      ctx.fillRect(x * frameW, canvasH - y, frameW, canvasH)
+      ctx.fillRect(x * FRAME_W, CANVAS_H - y, FRAME_W, CANVAS_H)
     }
   }
 
@@ -193,7 +194,7 @@ function VolumeTimeline(props: any) {
       const frame = melody[index]
       
       if (frame) {
-        const volume = frame.volume * canvasH // from 0-1 value to px value
+        const volume = frame.volume * CANVAS_H // from 0-1 value to px value
         drawRectangle(index + 1, volume)
       }
     }
@@ -203,8 +204,8 @@ function VolumeTimeline(props: any) {
     <canvas
       className="volumeCanvas"
       ref={canvasRef}
-      width={canvasW}
-      height={canvasH}
+      width={CANVAS_W}
+      height={CANVAS_H}
       onMouseMove={(e) => onInputMove(e)}
       onMouseDown={(e) =>onInputStart(e)}
       onMouseUp={(e) => onInputStop(e)}
