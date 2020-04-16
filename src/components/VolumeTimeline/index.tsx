@@ -128,7 +128,7 @@ function VolumeTimeline(props: any) {
   const getInputPos = (e: any): Point => {
     if (rect) return {
       x: e.pageX - rect.left,
-      y: e.pageY - rect.top
+      y: e.clientY - rect.top
     }
     return { x: -1, y: -1 }
   }
