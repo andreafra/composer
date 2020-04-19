@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import './style.css'
 
-import Rect from "components/ResizableRectangle"
+import Rect from "components/Rect"
 import Button from "components/Button"
 import { prototype } from 'events'
 
@@ -87,7 +87,7 @@ function LightTimeline (props: any) {
         </label>
       </div>
       <div className="LightTimeline-lights">
-      {/* GET LIGHTS */}
+      
       </div>
     </div>
   )
