@@ -4,6 +4,7 @@ import './style.css'
 interface RectStyle {
   backgroundColor: string
   width: string
+  marginLeft: string
 }
 
 function Rect(props: any){
@@ -12,6 +13,7 @@ function Rect(props: any){
   const [style, setStyle]: [RectStyle, any] = useState({
     backgroundColor: props.color,
     width: (props.frameEnd - props.frameStart + 1) * props.frameSize + "px",
+    marginLeft: (props.frameStart - 1) + props.frameSize + "px",
   })  
 
   // True if I'm editing this rectangle
@@ -19,20 +21,24 @@ function Rect(props: any){
   
   // If I'm dragging the left handle (else it's the right one)
   const [isLeftHandleActive, setIsLeftHandleActive] = useState(false)
+  //last used pixel
+  let endingX: number = (props.frameEnd*props.frameSize)+ props.leftPadding
 
   useEffect(() => {
     if(props.shouldEdit && isActive) {
       // If I'm editing the rectangle
       let newWidth: number = 0
+      let newMargin: number = (props.frameStart - 1) + props.frameSize
       if(isLeftHandleActive) {
-        // TODO: Handle left handle
+        newWidth = (endingX - props.x)
+        newMargin = (props.frameStart - 1) + props.frameSize - ((props.frameStart * props.frameSize) - props.x)
       } else {
-        // TODO: Handle right handle
-        //newWidth = Math.abs(props.x - (props.frameSize * props.frameStart))
+        newWidth = props.x - (props.frameSize * props.frameStart)
       }
       setStyle({
         ...style,
-        width: newWidth
+        width: newWidth,
+        marginLeft: newMargin
       })
     }
   }, [props.x])
@@ -40,9 +46,39 @@ function Rect(props: any){
   useEffect(() => {
     if(props.shouldEdit === false) {
       if(isActive) {
+        //the delta of space where the rect has been moved
+        let  temp: number  = props.x - endingX 
+        //the width of the rect
+        let actualWidth : number = (props.frameEnd - props.frameStart + 1) * props.frameSize
+        //the number of frames that has to be summed
+        let numberOfFrames: number = (temp/props.frameSize) 
+        //if we want to only add a frame, number of frames will be < 1. We need to separate
+        //number of frames >1 or <1
+        if (numberOfFrames > 1){
+          actualWidth = actualWidth*numberOfFrames
+          if (temp % props.frameSize > props.frameSize * 0.33){
+            // I'm in the next frame
+            actualWidth += (numberOfFrames*props.frameSize)
+          }
+        }
+        else {
+          console.log(temp)
+          if (temp % props.frameSize > props.frameSize * 0.33){
+            console.log(temp%props.frameSize)
+            // I'm in the next frame
+            actualWidth += props.frameSize
+            console.log(actualWidth)
+          }
+        }
+        
+        console.log(numberOfFrames)
+        
         // Handle mouse up
-
         // push the data up to the parent
+        setStyle({
+          ...style,
+          width: actualWidth
+        })
         props.update({
           //...
         })
