@@ -4,6 +4,9 @@ import './style.css'
 import SoundEditor from 'components/SoundEditor'
 import LightEditor from 'components/LightEditor'
 
+// temp
+import Timeline from 'components/Timeline'
+
 function App() {
 
   // The total length of the track/song/whatever
@@ -30,10 +33,7 @@ function App() {
 
   return (
     <div className="App">
-      <SoundEditor
-        options={editorOptions}
-      />
-      <LightEditor
+      <Timeline
         options={editorOptions}
       />
     </div>
