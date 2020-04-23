@@ -9,142 +9,109 @@ interface RectStyle {
 
 function Rect(props: any){
 
-  // Check if future if there are any performance issues?
-  const [style, setStyle]: [RectStyle, any] = useState({
+  const [lastFrameStartX, setLastFrameStartX]: [number, any] = useState(props.frameStart * props.frameSize)
+  const [lastFrameWidth, setLastFrameWidth]: [number, any] = useState((props.frameEnd - props.frameStart + 1) * props.frameSize)
+  
+  const lastFrameEndX: number = lastFrameStartX + lastFrameWidth
+
+  // TODO: Check in future for any performance issues?
+  const style: RectStyle = {
     backgroundColor: props.color,
-    width: (props.frameEnd - props.frameStart + 1) * props.frameSize + "px",
-    marginLeft: (props.frameStart - 1) + props.frameSize + "px",
-  })  
+    width: lastFrameWidth + "px",
+    marginLeft: lastFrameStartX + "px",
+  }
 
   // True if I'm editing this rectangle
   const [isActive, setIsActive] = useState(false)
   
-  // If I'm dragging the left handle (else it's the right one)
+  // Am I dragging the left or right handle?
   const [isLeftHandleActive, setIsLeftHandleActive] = useState(false)
-  //last used pixel
-  let endingX: number = (props.frameEnd*props.frameSize)+ props.leftPadding
+  const [isRightHandleActive, setIsRightHandleActive] = useState(false)
 
-  useEffect(() => {
+
+  const handleResize = () => {
     if(props.shouldEdit && isActive) {
       // If I'm editing the rectangle
-      let newWidth: number = 0
-      let newMargin: number = (props.frameStart - 1) + props.frameSize
-      if(isLeftHandleActive) {
-        newWidth = (endingX - props.x)
-        newMargin = (props.frameStart - 1) + props.frameSize - ((props.frameStart * props.frameSize) - props.x)
-      } else {
-        newWidth = props.x - (props.frameSize * props.frameStart)
-      }
-      setStyle({
-        ...style,
-        width: newWidth,
-        marginLeft: newMargin
-      })
-    }
-  }, [props.x])
+      let newWidth: number = lastFrameWidth
+      let newMargin: number = lastFrameStartX
 
-  useEffect(() => {
+      if(isLeftHandleActive) {
+        newMargin = props.x - props.frameSize
+        newWidth = lastFrameEndX - newMargin
+      } else if(isRightHandleActive) {
+        newWidth = props.x - lastFrameStartX - props.frameSize
+        newMargin = lastFrameStartX
+      } else {
+        // drag the Rect around (it just works)
+        newMargin = props.x - dragOffset - props.frameSize
+      }
+
+      setLastFrameWidth(newWidth >= props.frameSize ? newWidth : props.frameSize)
+      setLastFrameStartX(newMargin)
+    }
+  }
+
+  useEffect(() => handleResize(), [props.x])
+
+  const fitToTimeline = () => {
     if(props.shouldEdit === false) {
+      // If we were editing stuff, we want to finalize the changes and round the
+      // rectangles to the correct position.
       if(isActive) {
-        //the delta of space where the rect has been moved
-        let  temp: number  = props.x - endingX 
-        //the width of the rect
-        let actualWidth : number = (props.frameEnd - props.frameStart + 1) * props.frameSize
-        //the number of frames that has to be summed
-        let numberOfFrames: number = (temp/props.frameSize) 
-        //if we want to only add a frame, number of frames will be < 1. We need to separate
-        //number of frames >1 or <1
-        if (numberOfFrames > 1){
-          actualWidth = actualWidth*numberOfFrames
-          if (temp % props.frameSize > props.frameSize * 0.33){
-            // I'm in the next frame
-            actualWidth += (numberOfFrames*props.frameSize)
-          }
+        // how many frames the rect spans through.
+        // Example: this Rect is long 3 frames.
+        const sizeInFrames: number = Math.floor(lastFrameWidth / props.frameSize)
+        let newWidth = props.frameSize * sizeInFrames
+        if (lastFrameWidth % props.frameSize > props.frameSize * 0.5) {
+          // Then I'm in the next frame (I add a frame)
+          newWidth += props.frameSize
         }
-        else {
-          console.log(temp)
-          if (temp % props.frameSize > props.frameSize * 0.33){
-            console.log(temp%props.frameSize)
-            // I'm in the next frame
-            actualWidth += props.frameSize
-            console.log(actualWidth)
-          }
+
+        const marginInFrames: number = Math.floor(lastFrameStartX / props.frameSize)
+        let newMargin = props.frameSize * marginInFrames
+        if (lastFrameStartX % props.frameSize > props.frameSize * 0.5) {
+          // Then I'm in the next frame (I add a frame)
+          newMargin += props.frameSize
         }
-        
-        console.log(numberOfFrames)
-        
         // Handle mouse up
-        // push the data up to the parent
-        setStyle({
-          ...style,
-          width: actualWidth
-        })
+        setLastFrameStartX(newMargin)
+        setLastFrameWidth(newWidth)
+        
+        // TODO: push the data up to the parent
         props.update({
           //...
         })
-        // finally
-        setIsActive(false)
       }
+      setIsActive(false)
+      setIsLeftHandleActive(false)
+      setIsRightHandleActive(false)
     }
-  }, [props.shouldEdit])
+  }
 
-  // let frameSize: number = props.editorFrameSize
-  // let downX: number
-  // let movingX: number
-  // let upX: number
-  // let tempWidth: number
-  // //this is the actual space til the end of the rectangle
-  // let endingX: number = props.editorLeftPadding + props.frameEnd*frameSize
+  useEffect(() => fitToTimeline(), [props.shouldEdit])
 
-  // const onMouseMove = (e: any) => {
-  //   movingX = e.clientX; 
-  //   movingX = props.getPosX()
-
-  //   if(isRectSelected){
-  //     // Calc the new width of the rectangle after moving the mouse
-  //     tempWidth = Math.abs(movingX - (frameSize * props.frameStart + props.editorLeftPadding))
-  //     setStyle({
-  //       ...style,
-  //       width: tempWidth + "px"
-  //     })
-  //     if(movingX != endingX) setIsRectModified(true);
-  //   }
-  // }
-
-  // const onMouseUp = (e: any) => {
-  //   if(isRectSelected && isRectModified){
-  //     upX = e.clientX
-
-  //     const temp = Math.abs(upX-endingX)
-
-  //     let actualWidth: number = temp/frameSize
-  //     // If the new width is filling at least 1/3 of the next frame,
-  //     // set the endingX to that frame
-  //     if (temp % frameSize > frameSize * 0.33){
-  //       // I'm in the next frame
-  //       actualWidth += 1
-  //     }
-  //     setStyle({
-  //       ...style,
-  //       width: actualWidth + "px"
-  //     })
-  //   }
-  // }
+  const [dragOffset, setDragOffset] = useState(0)
 
   return (
     <div
       className="Rect"
+      draggable={false}
       style={style}
 
-      onMouseDown={() => setIsActive(true)}
+      onMouseDown={(e) => {
+          setIsActive(true)
+          setDragOffset(e.pageX - (lastFrameStartX + props.leftPadding))
+        }}
     >
       <div 
         className="Rect-left"
+        draggable={false}
         onMouseDown={() => setIsLeftHandleActive(true)}
       ></div>
       <div 
         className="Rect-right"
-        onMouseDown={() => setIsLeftHandleActive(false)}
+        draggable={false}
+        onMouseDown={() => setIsRightHandleActive(true)}
       ></div>
     </div>
   )

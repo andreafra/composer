@@ -31,8 +31,8 @@ function Timeline(props: any) {
         x={mouseX}
         shouldEdit={isMouseDown}
         frameSize={props.options.frameSize}
-        frameStart={2}
-        frameEnd={2}
+        frameStart={1}
+        frameEnd={1}
         leftPadding={props.options.leftPadding}
         color={"red"}
         update={(data: any) => { /* callback */}}

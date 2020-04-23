@@ -6,14 +6,18 @@
 
 .Rect-left {
   height: 100%;
-  width: 6px;
+  width: 10px;
   cursor: col-resize;
   float: left;
+  transform: translate(-50%);
+  /* background-color: rgba(128, 0, 128, 0.253) */
 }
 
 .Rect-right {
   height: 100%;
-  width: 6px;
+  width: 10px;
   cursor: col-resize;
   float: right;
+  transform: translate(+50%);
+  /* background-color: rgba(128, 0, 128, 0.253) */
 }
