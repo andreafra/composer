@@ -1,11 +1,7 @@
 import React, { useState } from 'react'
 import './style.css'
 
-import SoundEditor from 'components/SoundEditor'
-import LightEditor from 'components/LightEditor'
-
-// temp
-import Timeline from 'components/Timeline'
+import Editor from 'components/Editor'
 
 function App() {
 
@@ -33,7 +29,7 @@ function App() {
 
   return (
     <div className="App">
-      <Timeline
+      <Editor
         options={editorOptions}
       />
     </div>

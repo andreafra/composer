@@ -7,6 +7,11 @@ interface RectStyle {
   marginLeft: string
 }
 
+export interface RectCallbackData {
+  start: number
+  end: number
+}
+
 function Rect(props: any){
 
   const [lastFrameStartX, setLastFrameStartX]: [number, any] = useState(props.frameStart * props.frameSize)
@@ -60,27 +65,31 @@ function Rect(props: any){
       if(isActive) {
         // how many frames the rect spans through.
         // Example: this Rect is long 3 frames.
-        const sizeInFrames: number = Math.floor(lastFrameWidth / props.frameSize)
+        let sizeInFrames: number = Math.floor(lastFrameWidth / props.frameSize)
         let newWidth = props.frameSize * sizeInFrames
         if (lastFrameWidth % props.frameSize > props.frameSize * 0.5) {
           // Then I'm in the next frame (I add a frame)
           newWidth += props.frameSize
+          sizeInFrames += 1
         }
 
-        const marginInFrames: number = Math.floor(lastFrameStartX / props.frameSize)
+        let marginInFrames: number = Math.floor(lastFrameStartX / props.frameSize)
         let newMargin = props.frameSize * marginInFrames
         if (lastFrameStartX % props.frameSize > props.frameSize * 0.5) {
           // Then I'm in the next frame (I add a frame)
           newMargin += props.frameSize
+          marginInFrames += 1
         }
         // Handle mouse up
         setLastFrameStartX(newMargin)
         setLastFrameWidth(newWidth)
         
         // TODO: push the data up to the parent
-        props.update({
-          //...
-        })
+        const callbackData: RectCallbackData = {
+          start: marginInFrames,
+          end: marginInFrames + sizeInFrames - 1
+        }
+        props.update(callbackData)
       }
       setIsActive(false)
       setIsLeftHandleActive(false)

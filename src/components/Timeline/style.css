@@ -1,7 +1,14 @@
 .Timeline {
-  background: pink;
-  display: inline-block;
-  /* temp */
+  display: block;
+}
+
+.Timeline-title {
+  display: block;
+  font-weight: bold;
+}
+
+.Timeline-frames {
+  display: block;
   height: 100px;
-  width: 800px;
+  background-color: pink;
 }
