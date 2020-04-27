@@ -26,16 +26,20 @@ function Timeline(props: any) {
   }
   
   const handleRectUpdate = (data: RectCallbackData) => {
+    // Should the Rect have a UID
+
+    // HANDLE THE OVERLAPPING RECTS
+    // props.frames[data.id] is the Rect that has been edited
     // TODO: when a rect is done resizing, do the following steps:
-    // 1. Update the timeline data structure2
-    // 2. Gracefully handle overlapping Rects
-    // 3. Sort the timeline data structure
-    // 4. Push the timeline data to the Editor
+    // 1. Gracefully handle overlapping Rects
+    // 2. Sort the timeline data structure
+    // 3. Push the timeline data to the Editor
   }
 
   const rects = props.frames.map((frame: Frame, index: number) => (
     <Rect
       key={index}
+      id={index}
       x={mouseX}
       shouldEdit={isMouseDown}
       frameSize={props.options.frameSize}

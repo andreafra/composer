@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import './style.css'
 
 import Timeline, {Frame, TimelineCallbackData}  from 'components/Timeline'
-import { type } from 'os'
 
 export interface Channel {
   name: string
@@ -11,10 +10,7 @@ export interface Channel {
 }
 
 function Editor(props: any){
-
-  // TODO: Add multiple light channels
-
-  // Temporary data structure: list of 
+  // Temporary data structure: it will have to be passed upwards
   const [data, setData]: [Channel[], any] = useState([
     /* Mock for testing - TODO: REMOVE */
     {name:"Test: 1 Rect", pins: [1], frames: [{color: "red", start: 1, end: 2}]},
@@ -29,9 +25,9 @@ function Editor(props: any){
     <Timeline
       key={channel.name + index}
       options={props.options}
-      name={data[index].name}
-      pins={data[index].pins}
-      frames={data[index].frames}
+      name={channel.name}
+      pins={channel.pins}
+      frames={channel.frames}
       update={(data: TimelineCallbackData) => handleTimelineUpdate(data)}
     />
   )

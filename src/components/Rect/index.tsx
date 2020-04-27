@@ -8,6 +8,7 @@ interface RectStyle {
 }
 
 export interface RectCallbackData {
+  id: number
   start: number
   end: number
 }
@@ -19,7 +20,6 @@ function Rect(props: any){
   
   const lastFrameEndX: number = lastFrameStartX + lastFrameWidth
 
-  // TODO: Check in future for any performance issues?
   const style: RectStyle = {
     backgroundColor: props.color,
     width: lastFrameWidth + "px",
@@ -84,8 +84,9 @@ function Rect(props: any){
         setLastFrameStartX(newMargin)
         setLastFrameWidth(newWidth)
         
-        // TODO: push the data up to the parent
+        // push the data up to the parent
         const callbackData: RectCallbackData = {
+          id: props.id,
           start: marginInFrames,
           end: marginInFrames + sizeInFrames - 1
         }
