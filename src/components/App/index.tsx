@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import './style.css'
 
-import Editor from 'components/Editor'
+import Editor from 'components/actuators/Editor'
 
 function App() {
 

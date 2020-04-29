@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react'
 import './style.css'
 
-import InstrumentPicker from 'components/InstrumentPicker'
+import InstrumentPicker from 'components/sound/InstrumentPicker'
 
 /*
  * Funny story time: stuff you declare outside a function component 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import './style.css'
 
-import Timeline, {Frame, TimelineCallbackData}  from 'components/Timeline'
+import Timeline, {Frame, TimelineCallbackData}  from 'components/actuators/Timeline'
 
 export interface Channel {
   name: string

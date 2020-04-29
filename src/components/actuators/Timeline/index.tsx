@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import './style.css'
 
-import Rect, { RectCallbackData } from 'components/Rect'
+import Rect, { RectCallbackData } from 'components/actuators/Rect'
 
 export interface Frame {
   color: string

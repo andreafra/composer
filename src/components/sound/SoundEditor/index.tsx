@@ -2,8 +2,8 @@ import React, { useState, useMemo } from 'react'
 import './style.css'
 
 import { createNoteTable } from 'utils/SoundGenerator'
-import VolumeTimeline from 'components/VolumeTimeline'
-import SoundTimeline from 'components/SoundTimeline'
+import VolumeTimeline from 'components/sound/VolumeTimeline'
+import SoundTimeline from 'components/sound/SoundTimeline'
 
 interface Frame {
   note: Note,
