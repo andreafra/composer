@@ -1,3 +1,15 @@
 .Editor {
   display: block;
 }
+
+.Editor-toolbar {
+  display: block;
+}
+
+.Editor-btn {
+  margin: 0.5em;
+}
+
+.Editor-timelines {
+  display: block;
+}

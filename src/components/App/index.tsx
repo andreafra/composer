@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
 import './style.css'
 
-import Editor from 'components/actuators/Editor'
+import LightEditor from 'components/actuators/Editor/LightEditor'
+import SoundEditor from 'components/sound/SoundEditor'
+import { EditorOptions } from './editorOptions'
 
 function App() {
 
@@ -19,17 +21,19 @@ function App() {
 
   const EDITOR_LEFT_PADDING = 30 // in px
 
-  const editorOptions = {
+  const editorOptions: EditorOptions = {
     leftPadding: EDITOR_LEFT_PADDING,
     resolution: editorResolution,
     width: editorWidth,
     frameSize: editorFrameSize
   }
 
-
   return (
     <div className="App">
-      <Editor
+      <SoundEditor
+        options={editorOptions}
+      />
+      <LightEditor
         options={editorOptions}
       />
     </div>

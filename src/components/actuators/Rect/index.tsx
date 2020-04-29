@@ -1,38 +1,49 @@
 import React, {useState, useEffect} from 'react'
 import './style.css'
+import Frame from '../Editor/frame'
 
 interface RectStyle {
   backgroundColor: string
   width: string
   marginLeft: string
+  zIndex: number
 }
 
 export interface RectCallbackData {
-  id: number
-  start: number
-  end: number
+  index: number
+  frame: Frame
 }
 
-function Rect(props: any){
+type RectProps = {
+  x: number
+  index: number
+  frame: Frame
+  frameSize: number
+  leftPadding: number
+  shouldEdit: boolean
+  update: Function
+  editFrameCallback: Function
+}
 
-  const [lastFrameStartX, setLastFrameStartX]: [number, any] = useState(props.frameStart * props.frameSize)
-  const [lastFrameWidth, setLastFrameWidth]: [number, any] = useState((props.frameEnd - props.frameStart + 1) * props.frameSize)
-  
-  const lastFrameEndX: number = lastFrameStartX + lastFrameWidth
+function Rect(props: RectProps){
 
-  const style: RectStyle = {
-    backgroundColor: props.color,
-    width: lastFrameWidth + "px",
-    marginLeft: lastFrameStartX + "px",
-  }
-
+  const [lastFrameStartX, setLastFrameStartX]: [number, any] = useState(props.frame.start * props.frameSize)
+  const [lastFrameWidth, setLastFrameWidth]: [number, any] = useState((props.frame.end - props.frame.start + 1) * props.frameSize)
   // True if I'm editing this rectangle
   const [isActive, setIsActive] = useState(false)
-  
   // Am I dragging the left or right handle?
   const [isLeftHandleActive, setIsLeftHandleActive] = useState(false)
   const [isRightHandleActive, setIsRightHandleActive] = useState(false)
+  const [dragOffset, setDragOffset] = useState(0)
 
+  const lastFrameEndX: number = lastFrameStartX + lastFrameWidth
+
+  const style: RectStyle = {
+    backgroundColor: props.frame.color,
+    width: lastFrameWidth + "px",
+    marginLeft: lastFrameStartX + "px",
+    zIndex: isActive ? 10000 : 0
+  }
 
   const handleResize = () => {
     if(props.shouldEdit && isActive) {
@@ -55,8 +66,6 @@ function Rect(props: any){
       setLastFrameStartX(newMargin)
     }
   }
-
-  useEffect(() => handleResize(), [props.x])
 
   const fitToTimeline = () => {
     if(props.shouldEdit === false) {
@@ -84,11 +93,14 @@ function Rect(props: any){
         setLastFrameStartX(newMargin)
         setLastFrameWidth(newWidth)
         
+        // deep clone
+        const frameCopy: Frame = JSON.parse(JSON.stringify(props.frame))
+        frameCopy.start = marginInFrames
+        frameCopy.end = marginInFrames + sizeInFrames - 1
         // push the data up to the parent
         const callbackData: RectCallbackData = {
-          id: props.id,
-          start: marginInFrames,
-          end: marginInFrames + sizeInFrames - 1
+          index: props.index,
+          frame: frameCopy
         }
         props.update(callbackData)
       }
@@ -98,20 +110,30 @@ function Rect(props: any){
     }
   }
 
+  useEffect(() => handleResize(), [props.x])
   useEffect(() => fitToTimeline(), [props.shouldEdit])
 
-  const [dragOffset, setDragOffset] = useState(0)
+  const handleEditFrame = () => {
+    // deep clone
+    const frameCopy: Frame = JSON.parse(JSON.stringify(props.frame))
+    // push the data up to the parent
+    const callbackData: RectCallbackData = {
+      index: props.index,
+      frame: props.editFrameCallback(frameCopy)
+    }
+    props.update(callbackData)
+  }
 
   return (
     <div
       className="Rect"
       draggable={false}
       style={style}
-
+      onDoubleClick={handleEditFrame}
       onMouseDown={(e) => {
-          setIsActive(true)
-          setDragOffset(e.pageX - (lastFrameStartX + props.leftPadding))
-        }}
+        setIsActive(true)
+        setDragOffset(e.pageX - (lastFrameStartX + props.leftPadding))
+      }}
     >
       <div 
         className="Rect-left"

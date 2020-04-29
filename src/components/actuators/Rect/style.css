@@ -2,6 +2,7 @@
   display: inline-block;
   position: absolute;
   height: 100px;
+  z-index: 0;
 }
 
 .Rect-left {

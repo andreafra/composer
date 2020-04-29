@@ -5,10 +5,22 @@
 .Timeline-title {
   display: block;
   font-weight: bold;
+  margin: 0;
+  padding: 0.5em 0;
 }
 
 .Timeline-frames {
   display: block;
   height: 100px;
   background-color: pink;
+}
+
+.Timeline-btn {
+  padding: 0.5em;
+  border: none;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  background-color: rgb(255, 133, 154);
 }

@@ -4,6 +4,7 @@ import './style.css'
 import { createNoteTable } from 'utils/SoundGenerator'
 import VolumeTimeline from 'components/sound/VolumeTimeline'
 import SoundTimeline from 'components/sound/SoundTimeline'
+import { EditorOptions } from 'components/App/editorOptions'
 
 interface Frame {
   note: Note,
@@ -29,6 +30,10 @@ interface NoteUpdateCallbackData {
 interface VolumeFrameCallbackData {
   volume: number,
   time: number
+}
+
+type SoundEditorProps = {
+  options: EditorOptions
 }
 
 function SoundEditor(props: any) {
