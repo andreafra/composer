@@ -36,27 +36,6 @@ oscillator.type = "sine" // instrument
 gainNode.gain.value = 0 // volume
 oscillator.start(0) // start now
 
-// ===== INTERFACES ======
-
-interface Frame {
-  note: Note,
-  pitch: number,
-  volume: number,
-  time: number,
-  type: OscillatorType
-}
-
-interface Note {
-  name: string
-  freq: number
-  octave: number
-}
-
-interface Point {
-  x: number,
-  y: number
-}
-
 /**
  * This component builds a canvas with the lines for actual melody composition.
  * @param props notes, melody, update (callback)
@@ -293,7 +272,7 @@ function SoundTimeline(props: any) {
    * pitch(y axis), time(x axis) and waveform(color)
    * @param melody Array of frames to render
    */
-  const drawNotes = (melody: Frame[]) => {
+  const drawNotes = (melody: SoundFrame[]) => {
     for (let index = 0; index < melody.length; index++) {
       const frame = melody[index]
 

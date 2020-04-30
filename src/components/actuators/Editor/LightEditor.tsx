@@ -3,10 +3,6 @@ import './style.css'
 import Editor, { Channel } from '../Editor/index'
 import Frame from './frame'
 
-interface LightFrame extends Frame {
-  lightColor: string
-}
-
 function LightEditor(props: any) {
 
 

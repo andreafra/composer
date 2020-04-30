@@ -5,12 +5,6 @@ import Timeline, {TimelineCallbackData}  from 'components/actuators/Timeline'
 import Frame from 'components/actuators/Editor/frame'
 import { EditorOptions } from 'components/App/editorOptions'
 
-export interface Channel {
-  name: string
-  pins: number[]
-  frames: Frame[]
-}
-
 type EditorProps = {
   options: EditorOptions
   newTimelineCallback: Function

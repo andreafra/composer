@@ -6,39 +6,13 @@ import VolumeTimeline from 'components/sound/VolumeTimeline'
 import SoundTimeline from 'components/sound/SoundTimeline'
 import { EditorOptions } from 'components/App/editorOptions'
 
-interface Frame {
-  note: Note,
-  pitch: number,
-  volume: number,
-  time: number,
-  type: OscillatorType
-}
-
-interface Note {
-  name: string
-  freq: number
-  octave: number
-}
-
-interface NoteUpdateCallbackData {
-  note: Note,
-  time: number,
-  type: OscillatorType,
-  pitch: number
-}
-
-interface VolumeFrameCallbackData {
-  volume: number,
-  time: number
-}
-
 type SoundEditorProps = {
   options: EditorOptions
 }
 
 function SoundEditor(props: any) {
 
-  const [melody, setMelody]: [Frame[], any] = useState([])
+  const [melody, setMelody]: [SoundFrame[], any] = useState([])
 
   // Init notes frequencies
   // TODO: replace 3, 5 with actual parameters

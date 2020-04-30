@@ -4,25 +4,6 @@ import './style.css'
 let ctx: CanvasRenderingContext2D | null
 let rect: DOMRect | null
 
-interface Frame {
-  note: Note,
-  pitch: number,
-  volume: number,
-  time: number,
-  type: OscillatorType
-}
-
-interface Note {
-  name: string
-  freq: number
-  octave: number
-}
-
-interface Point {
-  x: number,
-  y: number
-}
-
 /**
  * This component builds a canvas with the lines for actual melody composition.
  * @param props notes, melody, update (callback)

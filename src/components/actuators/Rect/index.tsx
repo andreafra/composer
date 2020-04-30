@@ -9,11 +9,6 @@ interface RectStyle {
   zIndex: number
 }
 
-export interface RectCallbackData {
-  index: number
-  frame: Frame
-}
-
 type RectProps = {
   x: number
   index: number

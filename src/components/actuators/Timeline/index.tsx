@@ -5,11 +5,6 @@ import Rect, { RectCallbackData } from 'components/actuators/Rect'
 import Frame from 'components/actuators/Editor/frame'
 import { EditorOptions } from 'components/App/editorOptions'
 
-export interface TimelineCallbackData {
-  index: number
-  frames: Frame[]
-}
-
 type TimelineProps = {
   index: number
   options: EditorOptions
