@@ -1,8 +1,8 @@
 import {
-  ADD_TIMELINE,
-  REMOVE_TIMELINE,
-  UPDATE_TIMELINE,
-  TimelineAction,
+  ADD_CHANNEL,
+  REMOVE_CHANNEL,
+  UPDATE_CHANNEL,
+  ChannelAction,
   Channel
 } from 'types'
 
@@ -10,23 +10,23 @@ const initialState: Array<Channel> = []
 
 export default (
   state = initialState,
-  action: TimelineAction
+  action: ChannelAction
 ) => {
   switch (action.type) {
 
-  case ADD_TIMELINE:
+  case ADD_CHANNEL:
     return [...state, action.payload]
 
-  case REMOVE_TIMELINE:
+  case REMOVE_CHANNEL:
     return state.reduce<Channel[]>((res, elem) => {
-      if(elem.name !== action.meta.name)
+      if(elem.id !== action.meta.id)
         res.push(elem)
       return res
     }, [])
   
-  case UPDATE_TIMELINE:
+  case UPDATE_CHANNEL:
     return state.reduce<Channel[]>((res, elem) => {
-      if(elem.name === action.meta.name)
+      if(elem.id === action.meta.id)
         res.push(action.payload)
       return res
     }, [])

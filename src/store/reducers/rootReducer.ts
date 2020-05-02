@@ -1,20 +1,13 @@
 import { ComposerState } from "types"
 import soundReducer from "./soundReducer"
-import actuatorReducer from "./actuatorReducer"
+import channelReducer from "./channelReducer"
+import { combineReducers } from "redux"
+import systemReducer from "./systemReducer"
 
-const initialState: ComposerState = {
-  fileName: "Unnamed",
-  sound: [],
-  actuators: []
-}
+const rootReducer = combineReducers({
+  system: systemReducer,
+  sound: soundReducer,
+  actuators: channelReducer
+})
 
-export default (
-  state = initialState,
-  action: any
-) => {
-  return  {
-    fileName: "Unnamed",
-    sound: soundReducer(state.sound, action),
-    actuators: actuatorReducer(state.actuators, action)
-  }
-}
+export default rootReducer

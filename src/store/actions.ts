@@ -28,43 +28,23 @@ export const setVolume = (payload: type.SoundFrame, index: number): type.VolumeA
   }
 })
 
-export const addActuator = (payload: type.Actuator): type.ActuatorAction => ({
-  type: type.ADD_ACTUATOR,
+export const addChannel = (payload: type.Channel): type.ChannelAction => ({
+  type: type.ADD_CHANNEL,
   payload
 })
 
-export const removeActuator = (name: string): type.ActuatorAction => ({
-  type: type.REMOVE_ACTUATOR,
+export const removeChannel = (id: string): type.ChannelAction => ({
+  type: type.REMOVE_CHANNEL,
   meta: {
-    name
+    id: id
   }
 })
 
-export const updateActuator = (payload: type.Actuator, name: string): type.ActuatorAction => ({
-  type: type.UPDATE_ACTUATOR,
+export const updateChannel = (payload: type.Channel, id: string): type.ChannelAction => ({
+  type: type.UPDATE_CHANNEL,
   payload,
   meta: {
-    name
-  }
-})
-
-export const addTimeline = (payload: type.Channel): type.TimelineAction => ({
-  type: type.ADD_TIMELINE,
-  payload
-})
-
-export const removeTimeline = (name: string): type.TimelineAction => ({
-  type: type.REMOVE_TIMELINE,
-  meta: {
-    name
-  }
-})
-
-export const updateTimeline = (payload: type.Channel): type.TimelineAction => ({
-  type: type.UPDATE_TIMELINE,
-  payload,
-  meta: {
-    name
+    id: id
   }
 })
 
@@ -73,17 +53,46 @@ export const addFrame = (payload: type.Frame): type.FrameAction => ({
   payload
 })
 
-export const removeFrame = (index: number): type.FrameAction => ({
+export const removeFrame = (id: string): type.FrameAction => ({
   type: type.REMOVE_FRAME,
   meta: {
-    index
+    id: id
   }
 })
 
-export const updateFrame = (payload: type.Frame, index: number): type.FrameAction => ({
+export const updateFrame = (payload: type.Frame, id: string): type.FrameAction => ({
   type: type.UPDATE_FRAME,
   payload,
   meta: {
-    index
+    id: id
   }
+})
+
+export const setEditPanelVisibility = (visibile: boolean): type.SystemAction => ({
+  type: type.SET_EDIT_PANEL_VISIBILITY,
+  visibile
+})
+
+export const setEditPanelScope = (scope: string, channelId: string, frameId?: string): type.SystemAction => ({
+  type: type.SET_EDIT_PANEL_SCOPE,
+  scope: scope,
+  meta: {
+    channelId: channelId,
+    frameId: frameId
+  }
+})
+
+export const setUsername = (username: string): type.SystemAction => ({
+  type: type.SET_USERNAME,
+  username: username
+})
+
+export const setFilename = (filename: string): type.SystemAction => ({
+  type: type.SET_FILENAME,
+  filename: filename
+})
+
+export const setEditorOptions = (payload: type.EditorOptions): type.SystemAction => ({
+  type: type.SET_EDITOR_OPTIONS,
+  payload: payload
 })

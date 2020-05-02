@@ -1,5 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react'
 import './style.css'
+import { Point, SoundFrame, EditorOptions, ComposerState } from 'types'
+import { useSelector } from 'react-redux'
 
 let ctx: CanvasRenderingContext2D | null
 let rect: DOMRect | null
@@ -11,12 +13,14 @@ let rect: DOMRect | null
  */
 function VolumeTimeline(props: any) {
 
-  const CANVAS_W = props.options.width
+  const options: EditorOptions = useSelector((state: ComposerState) => state.system.editorOptions)
+
+  const CANVAS_W = options.width
   const CANVAS_H = 70 // in px
 
-  const LEFT_PADDING = props.options.leftPadding
+  const LEFT_PADDING = options.leftPadding
   
-  const FRAME_W = props.options.frameSize
+  const FRAME_W = options.frameSize
 
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
@@ -170,7 +174,7 @@ function VolumeTimeline(props: any) {
    * pitch(y axis), time(x axis) and waveform(color)
    * @param melody Array of frames to render
    */
-  const drawVolumeFrames = (melody: Frame[]) => {
+  const drawVolumeFrames = (melody: SoundFrame[]) => {
     for (let index = 0; index < melody.length; index++) {
       const frame = melody[index]
       

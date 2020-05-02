@@ -18,15 +18,15 @@ export default (
     return [...state, action.payload]
 
   case REMOVE_FRAME:
-    return state.reduce<Frame[]>((res, elem, index) => {
-      if(index !== action.meta.index)
+    return state.reduce<Frame[]>((res, elem) => {
+      if(elem.id !== action.meta.id)
         res.push(elem)
       return res
     }, [])
   
   case UPDATE_FRAME:
-    return state.reduce<Frame[]>((res, elem, index) => {
-      if(index === action.meta.index)
+    return state.reduce<Frame[]>((res, elem) => {
+      if(elem.id === action.meta.id)
         res.push(action.payload)
       return res
     }, [])

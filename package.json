@@ -17,6 +17,7 @@
     "react-redux": "^7.2.0",
     "react-scripts": "3.4.0",
     "redux": "^4.0.5",
+    "shortid": "^2.2.15",
     "typescript": "~3.7.2"
   },
   "scripts": {
@@ -41,6 +42,8 @@
     ]
   },
   "devDependencies": {
+    "@types/react-redux": "^7.1.7",
+    "@types/shortid": "0.0.29",
     "redux-devtools": "^3.5.0"
   }
 }

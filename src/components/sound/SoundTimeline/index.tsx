@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from 'react'
 import './style.css'
 
 import InstrumentPicker from 'components/sound/InstrumentPicker'
+import { Point, Note, SoundFrame } from 'types'
 
 /*
  * Funny story time: stuff you declare outside a function component 
