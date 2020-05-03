@@ -1,10 +1,5 @@
 import * as type from 'types'
 
-export const addNote = (payload: type.SoundFrame): type.NoteAction => ({
-  type: type.ADD_NOTE,
-  payload
-})
-
 export const removeNote = (index: number): type.NoteAction => ({
   type: type.REMOVE_NOTE,
   meta: {
@@ -13,7 +8,7 @@ export const removeNote = (index: number): type.NoteAction => ({
 })
 
 export const updateNote = (payload: type.SoundFrame, index: number): type.NoteAction => ({
-  type: type.UPDATE_NOTE,
+  type: type.SET_NOTE,
   payload,
   meta: {
     index
@@ -48,23 +43,20 @@ export const updateChannel = (payload: type.Channel, id: string): type.ChannelAc
   }
 })
 
-export const addFrame = (payload: type.Frame): type.FrameAction => ({
-  type: type.ADD_FRAME,
-  payload
-})
-
-export const removeFrame = (id: string): type.FrameAction => ({
+export const removeFrame = (id: string, channelId: string): type.FrameAction => ({
   type: type.REMOVE_FRAME,
   meta: {
-    id: id
+    id: id,
+    channelId: channelId
   }
 })
 
-export const updateFrame = (payload: type.Frame, id: string): type.FrameAction => ({
-  type: type.UPDATE_FRAME,
+export const setFrame = (payload: type.Frame, id: string, channelId: string): type.FrameAction => ({
+  type: type.SET_FRAME,
   payload,
   meta: {
-    id: id
+    id: id,
+    channelId: channelId
   }
 })
 
@@ -73,7 +65,7 @@ export const setEditPanelVisibility = (visibile: boolean): type.SystemAction => 
   visibile
 })
 
-export const setEditPanelScope = (scope: string, channelId: string, frameId?: string): type.SystemAction => ({
+export const setEditPanelScope = (scope: type.PanelScope, channelId: string, frameId?: string): type.SystemAction => ({
   type: type.SET_EDIT_PANEL_SCOPE,
   scope: scope,
   meta: {

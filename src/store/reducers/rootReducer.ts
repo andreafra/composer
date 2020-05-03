@@ -1,7 +1,6 @@
-import { ComposerState } from "types"
-import soundReducer from "./soundReducer"
-import channelReducer from "./channelReducer"
 import { combineReducers } from "redux"
+import channelReducer from "./channelReducer"
+import soundReducer from "./soundReducer"
 import systemReducer from "./systemReducer"
 
 const rootReducer = combineReducers({

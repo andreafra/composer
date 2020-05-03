@@ -1,8 +1,8 @@
 import { createStore } from 'redux'
+import { Channel, Frame } from 'types'
+import { addChannel, setFrame } from './actions'
 import root from './reducers/rootReducer'
-import { addChannel } from './actions'
 
-import { Channel } from 'types'
 
 export const store = createStore(root)
 
@@ -18,11 +18,18 @@ const unsubscribe = store.subscribe(() => console.log(store.getState()))
 // EXAMPLE
 const sampleChannel: Channel = {
   name:"Test: 1 Rect",
-  id: "test-1-rect",
-  type: "LIGHT",
-  pins: [1], frames: {
-      "aaa": {id: "Xfw53Sx", color: "red", start: 1, end: 2}
-  }
+  id: "xxxyyyzz",
+  type: "LIGHT_RGB",
+  pins: [1,2,3], 
+  frames: new Map<string, Frame>()
 }
 
 store.dispatch(addChannel(sampleChannel))
+store.dispatch(setFrame({
+  id: "aaaaaaaa",
+  channelId: "xxxyyyzz",
+  color: "#ff0000",
+  start: 1,
+  end: 2,
+  fields: ["#ff0000"]
+}, "aaaaaaaa", "xxxyyyzz"))

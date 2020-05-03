@@ -1,9 +1,7 @@
-import React from 'react'
-import './style.css'
-
-import { EditorOptions } from 'types'
 import ActuatorList from 'components/actuators/ActuatorList'
 import EditPanel from 'components/actuators/EditPanel'
+import React from 'react'
+import './style.css'
 
 function App() {
 

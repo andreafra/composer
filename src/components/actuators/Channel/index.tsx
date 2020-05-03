@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
-import './style.css'
-
-import { CommandBar, ICommandBarItemProps} from '@fluentui/react/lib/CommandBar'
+import { CommandBar, ICommandBarItemProps } from '@fluentui/react/lib/CommandBar'
 import Rect from 'components/actuators/Rect'
-
-import { ComposerState, Channel as ChannelType, Frame } from 'types'
+import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import shortid from 'shortid'
+import { setEditPanelScope, setEditPanelVisibility } from 'store/actions'
+import { Channel as ChannelType, ComposerState } from 'types'
+import './style.css'
 
 type ChannelProps = {
   id: string
@@ -14,11 +14,10 @@ type ChannelProps = {
 function Channel(props: ChannelProps) {
 
   const channels = useSelector((state: ComposerState) => state.actuators.filter(c => c.id === props.id))
+  const dispatch = useDispatch()
 
-  let thisChannel: ChannelType
-  if (channels) {
-    thisChannel = channels[0]
-  } else {
+  let thisChannel: ChannelType = channels[0]
+  if (!thisChannel) {
     throw new Error(`No channel with id: ${props.id}`)
   }
   const options = useSelector((state: ComposerState) => state.system.editorOptions)
@@ -46,13 +45,23 @@ function Channel(props: ChannelProps) {
     // 3. Push the timeline data to the Editor
   }
 
+  /**
+   * On click, this function will open a panel where
+   * the user can customize 
+   */
+  const handleNewFrameBtn = () => {
+    dispatch(setEditPanelVisibility(true))
+    dispatch(setEditPanelScope("FRAME", props.id, shortid.generate()))
+  }
 
-    // <Rect
-    //   key={index}
-    //   index={index}
-    //   x={mouseX}
-    //   shouldEdit={isMouseDown}
-    // />
+  const _items: ICommandBarItemProps[] = [
+    {
+      key: "newFrame",
+      text: "New Frame",
+      iconProps: {iconName: "Add"},
+      onClick: () => handleNewFrameBtn()
+    }
+  ]
 
   return (
     <div
@@ -76,29 +85,17 @@ function Channel(props: ChannelProps) {
           width: options.width
         }}
       >
-        {Object.keys(thisChannel.frames).map((value) => {
-          const frame: Frame = thisChannel.frames[value]
-          return (
-            <Rect
-              key={frame.id}
-              frame={frame}
-              x={mouseX}
-              shouldEdit={isMouseDown}
-            />
-          )
-        })}
+        {Array.from(thisChannel.frames).map(([value, frame]) => (
+          <Rect
+            key={value}
+            frame={frame}
+            x={mouseX}
+            shouldEdit={isMouseDown}
+          />)
+        )}
       </div>
     </div>
   )
 }
-
-const _items: ICommandBarItemProps[] = [
-  {
-    key: "newFrame",
-    text: "New Frame",
-    iconProps: {iconName: "Add"},
-    onClick: () => console.log("Add new Frame...")
-  }
-]
 
 export default Channel

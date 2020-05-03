@@ -9,7 +9,7 @@ import { initializeIcons } from '@fluentui/react/lib/Icons';
 import {loadTheme} from '@fluentui/react'
 
 import {store} from 'store'
-import { initDefaultActuators } from 'types/defaultActuators'
+import { initDefaultActuators } from 'utils/defaultActuators'
 
 initializeIcons()
 

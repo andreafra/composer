@@ -1,7 +1,6 @@
 /* Redux Action Type */
-export const ADD_NOTE = 'ADD_NOTE'
+export const SET_NOTE = 'EDIT_NOTE'
 export const REMOVE_NOTE = 'REMOVE_NOTE'
-export const UPDATE_NOTE = 'EDIT_NOTE'
 
 export const SET_VOLUME = 'SET_VOLUME'
 
@@ -9,9 +8,8 @@ export const ADD_CHANNEL = 'ADD_CHANNEL'
 export const REMOVE_CHANNEL = 'REMOVE_CHANNEL'
 export const UPDATE_CHANNEL = 'UPDATE_CHANNEL'
 
-export const ADD_FRAME = 'ADD_FRAME'
+export const SET_FRAME = 'SET_FRAME'
 export const REMOVE_FRAME = 'REMOVE_FRAME'
-export const UPDATE_FRAME = 'UPDATE_FRAME'
 
 /* System */
 export const SET_EDIT_PANEL_VISIBILITY = 'SET_EDIT_PANEL_VISIBILITY'
@@ -26,10 +24,6 @@ export interface IDictionary<V> {
 }
 
 /* Actions */
-interface AddNoteAction {
-  type: typeof ADD_NOTE
-  payload: SoundFrame
-}
 
 interface RemoveNoteAction {
   type: typeof REMOVE_NOTE
@@ -38,15 +32,15 @@ interface RemoveNoteAction {
   }
 }
 
-interface UpdateNoteAction {
-  type: typeof UPDATE_NOTE
+interface SetNoteAction {
+  type: typeof SET_NOTE
   payload: SoundFrame
   meta: {
     index: number
   }
 }
 
-export type NoteAction = AddNoteAction | RemoveNoteAction | UpdateNoteAction
+export type NoteAction = RemoveNoteAction | SetNoteAction
 
 interface SetVolumeAction {
   type: typeof SET_VOLUME
@@ -80,29 +74,25 @@ interface UpdateChannelAction {
   }
 }
 
-export type ChannelAction = AddChannelAction | RemoveChannelAction | UpdateChannelAction
-
-interface AddFrameAction {
-  type: typeof ADD_FRAME
-  payload: Frame
-}
-
 interface RemoveFrameAction {
   type: typeof REMOVE_FRAME
   meta: {
     id: string
+    channelId: string
   }
 }
 
-interface UpdateFrameAction {
-  type: typeof UPDATE_FRAME
+interface SetFrameAction {
+  type: typeof SET_FRAME
   payload: Frame
   meta: {
     id: string
+    channelId: string
   }
 }
 
-export type FrameAction = AddFrameAction | RemoveFrameAction | UpdateFrameAction
+export type FrameAction = SetFrameAction | RemoveFrameAction
+export type ChannelAction = AddChannelAction | RemoveChannelAction | UpdateChannelAction | FrameAction
 
 interface SetEditPanelVisibilityAction {
   type: typeof SET_EDIT_PANEL_VISIBILITY
@@ -141,8 +131,15 @@ export type SystemAction = SetEditPanelAction | SetUsernameAction | SetFilenameA
 export interface SystemState {
   username: string
   filename: string
-  editPanelVisibility: boolean
+  editPanel: EditPanelState
   editorOptions: EditorOptions
+}
+
+export interface EditPanelState {
+  scope: PanelScope
+  visibility: boolean
+  channelId?: string
+  frameId?: string
 }
 
 export interface EditorOptions {
@@ -185,26 +182,25 @@ export interface Channel {
   id: string
   type: string
   pins: number[]
-  frames: IDictionary<Frame>
+  frames: Map<string, Frame>
 }
 
 export interface Frame {
   id: string
+  channelId: string
   color: string
   start: number
   end: number
+  fields: Array<string>
 }
 
 /* Panel Types */
-export enum PanelTypes {
-  System="PANEL_SYSTEM",
-  Actuator="PANEL_ACTUATOR",
-  Frame="PANEL_FRAME"
-}
+
+export type PanelScope = "SYSTEM" | "ACTUATOR" | "FRAME"
 
 /* Custom Actuators */
 export interface Field {
-  type: string
+  type: "COLOR" | "NUMBER" | "BOOL"
   name: string
   minValue?: number
   maxValue?: number
@@ -213,6 +209,6 @@ export interface Field {
 export interface Actuator {
   type: string
   name: string
-  pins: number
+  pins: string[]
   fields: Field[]
 }

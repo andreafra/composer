@@ -1,12 +1,4 @@
-import {
-  SET_EDIT_PANEL_SCOPE,
-  SET_EDIT_PANEL_VISIBILITY,
-  SET_USERNAME,
-  SET_FILENAME,
-  SET_EDITOR_OPTIONS,
-  SystemState,
-  SystemAction
-} from 'types'
+import { SET_EDITOR_OPTIONS, SET_EDIT_PANEL_SCOPE, SET_EDIT_PANEL_VISIBILITY, SET_FILENAME, SET_USERNAME, SystemAction, SystemState } from 'types'
 
 // The margin from the left side of the screen
 const LEFT_PADDING = 30 // in px
@@ -19,7 +11,10 @@ const FRAME_SIZE = 30 // in px
 const initialState: SystemState = {
   username: "Unknown",
   filename: "Unnamed File",
-  editPanelVisibility: false,
+  editPanel: {
+    visibility: false,
+    scope: "SYSTEM"
+  },
   editorOptions: {
     leftPadding: LEFT_PADDING,
     resolution: FRAME_RESOLUTION,
@@ -37,13 +32,20 @@ export default (
   case SET_EDIT_PANEL_VISIBILITY:
     return {
       ...state,
-      editPanelVisibility: action.visibile
+      editPanel: {
+        ...state.editPanel,
+        visibility: action.visibile
+      }
     }
   case SET_EDIT_PANEL_SCOPE:
-    console.log("TODO: SET_EDIT_PANEL_OPTIONS")
     return {
       ...state,
-      // TODO:
+      editPanel: {
+        ...state.editPanel,
+        scope: action.scope,
+        channelId: action.meta.channelId,
+        frameId: action.meta.frameId
+      }
     }
   case SET_USERNAME:
     return {

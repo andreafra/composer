@@ -1,7 +1,8 @@
-import React, {useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { setEditPanelScope, setEditPanelVisibility, setFrame } from 'store/actions'
+import { ComposerState, Frame } from 'types'
 import './style.css'
-import { Frame, ComposerState } from 'types'
-import { useSelector } from 'react-redux'
 
 interface RectStyle {
   backgroundColor: string
@@ -18,6 +19,7 @@ type RectProps = {
 
 function Rect(props: RectProps){
 
+  const dispatch = useDispatch()
   const options = useSelector((state: ComposerState) => state.system.editorOptions)
 
   const [lastFrameStartX, setLastFrameStartX]: [number, any] = useState(props.frame.start * options.frameSize)
@@ -90,12 +92,7 @@ function Rect(props: RectProps){
         const frameCopy: Frame = JSON.parse(JSON.stringify(props.frame))
         frameCopy.start = marginInFrames
         frameCopy.end = marginInFrames + sizeInFrames - 1
-        // TODO: push the data up to the parent
-        // const callbackData: RectCallbackData = {
-        //   index: props.index,
-        //   frame: frameCopy
-        // }
-        // props.update(callbackData)
+        dispatch(setFrame(frameCopy, frameCopy.id, frameCopy.channelId))
       }
       setIsActive(false)
       setIsLeftHandleActive(false)
@@ -105,16 +102,14 @@ function Rect(props: RectProps){
 
   useEffect(() => handleResize(), [props.x])
   useEffect(() => fitToTimeline(), [props.shouldEdit])
-
+  // Update from outside
+  useEffect(() => {
+    setLastFrameStartX(props.frame.start * options.frameSize)
+    setLastFrameWidth((props.frame.end - props.frame.start + 1) * options.frameSize)
+  }, [props.frame.start, props.frame.end, options.frameSize])
   const handleEditFrame = () => {
-    // deep clone
-    const frameCopy: Frame = JSON.parse(JSON.stringify(props.frame))
-    // TODO: push the data up to the parent
-    // const callbackData: RectCallbackData = {
-    //   index: props.index,
-    //   frame: props.editFrameCallback(frameCopy)
-    // }
-    // props.update(callbackData)
+    dispatch(setEditPanelScope("FRAME", props.frame.channelId, props.frame.id))
+    dispatch(setEditPanelVisibility(true))
   }
 
   return (

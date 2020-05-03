@@ -1,31 +1,16 @@
-import React from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import './style.css'
-
-import { CommandBar, ICommandBarItemProps} from '@fluentui/react/lib/CommandBar'
-
-
+import { CommandBar, ICommandBarItemProps } from '@fluentui/react/lib/CommandBar'
 import Channel from 'components/actuators/Channel'
-import { Channel as ChannelType, ComposerState, PanelTypes } from 'types'
-import { setEditPanelVisibility, setEditPanelScope } from 'store/actions'
-
+import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import shortid from 'shortid'
+import { setEditPanelScope, setEditPanelVisibility } from 'store/actions'
+import { Channel as ChannelType, ComposerState } from 'types'
+import './style.css'
 
 function ActuatorList(){
 
   const dispatch = useDispatch()
   const channels = useSelector((state: ComposerState) => state.actuators)
-
-  // /**
-  //  * Receive new data from timeline and updates the data structure in editor.
-  //  * Called when props.update(...) is called in a child component.
-  //  * @param _data the callback data
-  //  */
-  // const handleTimelineUpdate = (_data: TimelineCallbackData) => {
-  //   // Create a new copy to edit (data is read-only)
-  //   let newData = data.slice(0)
-  //   // TODO: Update the editor
-  // }
 
   /**
    * On click, this function will open a panel where
@@ -33,7 +18,7 @@ function ActuatorList(){
    */
   const handleNewActuatorBtn = () => {
     dispatch(setEditPanelVisibility(true))
-    dispatch(setEditPanelScope(PanelTypes.Actuator, shortid.generate()))
+    dispatch(setEditPanelScope("ACTUATOR", shortid.generate()))
   }
 
   // CammandBar items
