@@ -4,20 +4,14 @@ import './style.css'
 import { createNoteTable } from 'utils/SoundGenerator'
 import VolumeTimeline from 'components/sound/VolumeTimeline'
 import SoundTimeline from 'components/sound/SoundTimeline'
-import { SoundFrame } from 'types'
+import { SoundFrame, ComposerState } from 'types'
+import { useSelector } from 'react-redux'
 
 function SoundEditor() {
-
-  // const [melody, setMelody]: [SoundFrame[], any] = useState([])
-
-  // // Init notes frequencies
-  // // TODO: replace 3, 5 with actual parameters
-  // const notes = useMemo(() => createNoteTable(3, 5).reverse(), [])
-
-  // /**
-  //  * Call this method when you want to update the notes (pitch) of the melody
-  //  * @param note The new note you want to write in the x position of the melody
-  //  */
+  /**
+   * Call this method when you want to update the notes (pitch) of the melody
+   * @param note The new note you want to write in the x position of the melody
+   */
   // const updateNote = (data: NoteUpdateCallbackData) => {
   //   let newMelody = melody.slice(0)
 
@@ -31,10 +25,10 @@ function SoundEditor() {
   //   setMelody(newMelody)
   // }
 
-  // /**
-  //  * Call this method when you want to update the volume of melody
-  //  * @param frame The new volume you want to write in the x position of the melody.
-  //  */
+  /**
+   * Call this method when you want to update the volume of melody
+   * @param frame The new volume you want to write in the x position of the melody.
+   */
   // const deleteNote = (data: NoteUpdateCallbackData) => {
   //   let newMelody = melody.slice(0)
 
@@ -43,10 +37,10 @@ function SoundEditor() {
   //   setMelody(newMelody)
   // }
 
-  // /**
-  //  * Call this method when you want to update the volume of melody
-  //  * @param frame The new volume you want to write in the x position of the melody.
-  //  */
+  /**
+   * Call this method when you want to update the volume of melody
+   * @param frame The new volume you want to write in the x position of the melody.
+   */
   // const updateVolume = (frame: VolumeFrameCallbackData) => {
   //   let newMelody = melody.slice(0)
 
@@ -58,27 +52,16 @@ function SoundEditor() {
   //   setMelody(newMelody)
   // }
 
-  // return (
-  //   <div className="soundEditor">
-  //     <h2>Sounds</h2>      
-  //     <h3>Pitch</h3>
-  //     <SoundTimeline
-  //       options={props.options}
-  //       notes={notes}
-  //       melody={melody}
-  //       update={(note: NoteUpdateCallbackData) => updateNote(note)}
-  //       delete={(note: NoteUpdateCallbackData) => deleteNote(note)}
-  //     />
-  //     <h3>Volume</h3>
-  //     <p>Hold Shift to lock the volume</p>
-  //     <VolumeTimeline
-  //       options={props.options}
-  //       melody={melody}
-  //       update={(frame: VolumeFrameCallbackData) => updateVolume(frame)}
-  //     />
-  //   </div>
-  // )
-  return
+  return (
+    <div className="soundEditor">
+      <h2>Sounds</h2>      
+      <h3>Pitch</h3>
+      <SoundTimeline />
+      <h3>Volume</h3>
+      <p>Hold Shift to lock the volume</p>
+      <VolumeTimeline />
+    </div>
+  )
 }
 
 export default SoundEditor

@@ -7,7 +7,7 @@ export const removeNote = (index: number): type.NoteAction => ({
   }
 })
 
-export const updateNote = (payload: type.SoundFrame, index: number): type.NoteAction => ({
+export const setNote = (payload: type.SoundFrame, index: number): type.NoteAction => ({
   type: type.SET_NOTE,
   payload,
   meta: {

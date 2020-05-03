@@ -1,7 +1,8 @@
 import React, { useRef, useEffect, useState } from 'react'
 import './style.css'
 import { Point, SoundFrame, EditorOptions, ComposerState } from 'types'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { setVolume } from 'store/actions'
 
 let ctx: CanvasRenderingContext2D | null
 let rect: DOMRect | null
@@ -13,7 +14,9 @@ let rect: DOMRect | null
  */
 function VolumeTimeline(props: any) {
 
-  const options: EditorOptions = useSelector((state: ComposerState) => state.system.editorOptions)
+  const dispatch = useDispatch()
+  const options = useSelector((state: ComposerState) => state.system.editorOptions)
+  const melody = useSelector((state: ComposerState) => state.sound)
 
   const CANVAS_W = options.width
   const CANVAS_H = 70 // in px
@@ -41,7 +44,7 @@ function VolumeTimeline(props: any) {
       // Render "loop"
       drawBackground()
       drawLabels()
-      drawVolumeFrames(props.melody)
+      drawVolumeFrames(melody)
     }
   })
 
@@ -53,12 +56,17 @@ function VolumeTimeline(props: any) {
   const addFrame = (time: number, volume: number) => {
     let percentVolume = volume / CANVAS_H // from px value to 0-1 value
     // update parent component
-    console.log(volume + " >>> " + percentVolume)
-
-    props.update({
-      volume: percentVolume,
-      time: time
-    })
+    const _oldFrame: SoundFrame = melody[time] || {
+      note: {name: "", freq: 0, octave: 0},
+      pitch: 0,
+      volume: 0,
+      type: "sine"
+    }
+    const _newFrame: SoundFrame = {
+      ..._oldFrame,
+      volume: percentVolume
+    }
+    dispatch(setVolume(_newFrame, time))
   }
 
   /**
@@ -174,7 +182,7 @@ function VolumeTimeline(props: any) {
    * pitch(y axis), time(x axis) and waveform(color)
    * @param melody Array of frames to render
    */
-  const drawVolumeFrames = (melody: SoundFrame[]) => {
+  const drawVolumeFrames = (melody: Array<SoundFrame|null>) => {
     for (let index = 0; index < melody.length; index++) {
       const frame = melody[index]
       

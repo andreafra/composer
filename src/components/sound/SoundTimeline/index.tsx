@@ -1,8 +1,11 @@
-import React, { useRef, useEffect, useState } from 'react'
+import React, { useRef, useEffect, useState, useMemo } from 'react'
 import './style.css'
 
 import InstrumentPicker from 'components/sound/InstrumentPicker'
-import { Point, Note, SoundFrame } from 'types'
+import { Point, Note, SoundFrame, ComposerState } from 'types'
+import { useSelector, useDispatch } from 'react-redux'
+import { createNoteTable } from 'utils/SoundGenerator'
+import { setNote, removeNote } from 'store/actions'
 
 /*
  * Funny story time: stuff you declare outside a function component 
@@ -43,11 +46,18 @@ oscillator.start(0) // start now
  * @return JSX Canvas element
  */
 function SoundTimeline(props: any) {
-  const CANVAS_W = props.options.width + props.options.leftPadding
+  const dispatch = useDispatch()
+  const options = useSelector((state: ComposerState) => state.system.editorOptions)
+  const melody = useSelector((state: ComposerState) => state.sound)
 
-  const LEFT_PADDING = props.options.leftPadding
-  
-  const CELL_W = props.options.frameSize
+  // Init notes frequencies
+  // TODO: replace 3, 5 with actual parameters
+  const notes = useMemo(() => createNoteTable(3, 5).reverse(), [])
+
+
+  const CANVAS_W = options.width + options.leftPadding
+  const LEFT_PADDING = options.leftPadding
+  const CELL_W = options.frameSize
   const CELL_H = 15
 
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -68,7 +78,7 @@ function SoundTimeline(props: any) {
       ctx = canvas.getContext('2d')
       rect = canvas.getBoundingClientRect()
       // Calculate number of rows
-      numberOfRows = props.notes.length
+      numberOfRows = notes.length
 
       // Make canvas height match number of rows
       CANVAS_H = numberOfRows * CELL_H
@@ -77,8 +87,8 @@ function SoundTimeline(props: any) {
       // Render "loop"
       drawBackground()
       drawLines(numberOfRows)
-      drawLabels(props.notes)
-      drawNotes(props.melody)
+      drawLabels(notes)
+      drawNotes(melody)
     }
   })
 
@@ -90,12 +100,14 @@ function SoundTimeline(props: any) {
    */
   const addNote = (time: number, row: number, type: OscillatorType) => {
     // update parent component
-    props.update({
-      note: props.notes[row],
-      time: time,
+    const _oldNote = melody[time]
+    const _newNote: SoundFrame = {
+      note: notes[row],
       type: type,
-      pitch: row
-    })
+      pitch: row,
+      volume: _oldNote?.volume || 0.5
+    }
+    dispatch(setNote(_newNote, time))
   }
 
   /**
@@ -104,9 +116,7 @@ function SoundTimeline(props: any) {
    */
   const deleteNote = (time: number) => {
     // update parent component
-    props.delete({
-      time: time,
-    })
+    dispatch(removeNote(time))
   }
 
   /**
@@ -146,7 +156,7 @@ function SoundTimeline(props: any) {
 
       // ALWAYS: play sound preview
       // Update the frequency
-      oscillator.frequency.value = props.notes[cell.y].freq // pitch
+      oscillator.frequency.value = notes[cell.y] ? notes[cell.y].freq : 0// pitch
 
       // Update the instrument
       // Prevents the sine function from being "resetted/recentered",
@@ -155,7 +165,7 @@ function SoundTimeline(props: any) {
         oscillator.type = type
       
       // Update the volume
-      let frame = props.melody[cell.x - 1]
+      let frame = melody[cell.x - 1]
       let volume = 0.5 * MAX_VOLUME;
       if (frame && frame.volume) volume = frame.volume * MAX_VOLUME
       gainNode.gain.value = volume // volume
@@ -241,14 +251,14 @@ function SoundTimeline(props: any) {
 
   /**
    * Draws note name labels (A, A#, ...)
-   * @param notes Pass the array of notes
+   * @param _notes Pass the array of notes
    */
-  const drawLabels = (notes: Note[]) => {
+  const drawLabels = (_notes: Note[]) => {
     if (ctx) {
       let marginTop = CELL_H
       ctx.font = `${CELL_H - 3}px sans-serif`
       ctx.fillStyle = "red"
-      for (const note of notes) {
+      for (const note of _notes) {
         ctx.fillText(note.name, 5, marginTop - 2)
         marginTop += CELL_H
       }
@@ -273,11 +283,11 @@ function SoundTimeline(props: any) {
    * pitch(y axis), time(x axis) and waveform(color)
    * @param melody Array of frames to render
    */
-  const drawNotes = (melody: SoundFrame[]) => {
+  const drawNotes = (melody: Array<SoundFrame|null>) => {
     for (let index = 0; index < melody.length; index++) {
       const frame = melody[index]
 
-      if (frame)
+      if (frame !== null)
         drawRectangle(index + 1, frame.pitch, "red")
     }
   }
