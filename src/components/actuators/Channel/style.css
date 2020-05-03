@@ -1,0 +1,20 @@
+.Timeline {
+  display: block;
+}
+
+.Timeline-title {
+  display: block;
+  font-weight: bold;
+  margin: 0;
+  padding: 0.5em 0;
+}
+
+.Timeline-toolbox h3 {
+  padding-left: 2em;
+}
+
+.Timeline-frames {
+  display: block;
+  height: 100px;
+  background-color: pink;
+}
