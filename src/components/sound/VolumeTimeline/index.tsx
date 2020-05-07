@@ -18,7 +18,7 @@ function VolumeTimeline(props: any) {
   const options = useSelector((state: ComposerState) => state.system.editorOptions)
   const melody = useSelector((state: ComposerState) => state.sound)
 
-  const CANVAS_W = options.width
+  const CANVAS_W = options.width + options.leftPadding
   const CANVAS_H = 70 // in px
 
   const LEFT_PADDING = options.leftPadding
