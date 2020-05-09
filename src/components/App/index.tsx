@@ -8,8 +8,10 @@ function App() {
 
   return (
     <div className="App">
-      <SoundEditor />
-      <ActuatorList />
+      <div>
+        <SoundEditor />
+        <ActuatorList />
+      </div>
       <EditPanel />
     </div>
   )

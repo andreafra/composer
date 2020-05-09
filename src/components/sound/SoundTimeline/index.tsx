@@ -1,11 +1,10 @@
-import React, { useRef, useEffect, useState, useMemo } from 'react'
-import './style.css'
-
 import InstrumentPicker from 'components/sound/InstrumentPicker'
-import { Point, Note, SoundFrame, ComposerState } from 'types'
-import { useSelector, useDispatch } from 'react-redux'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { removeNote, setNote } from 'store/actions'
+import { ComposerState, Note, Point, SoundFrame } from 'types'
 import { createNoteTable } from 'utils/SoundGenerator'
-import { setNote, removeNote } from 'store/actions'
+import './style.css'
 
 /*
  * Funny story time: stuff you declare outside a function component 
@@ -293,11 +292,14 @@ function SoundTimeline(props: any) {
   }
 
   return (
-    <div className="SoundTimeline">
-      <InstrumentPicker
+    <>
+    <InstrumentPicker
         currentType={type}
         update={(t: OscillatorType) => setType(t)}
       />
+    <div
+      className="SoundTimeline"  
+    >
       <canvas
         className="soundCanvas"
         ref={canvasRef}
@@ -309,6 +311,7 @@ function SoundTimeline(props: any) {
         onMouseLeave={onInputStop}
       ></canvas>
     </div>
+    </>
   )
 }
 

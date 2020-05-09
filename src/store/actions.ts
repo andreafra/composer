@@ -88,3 +88,8 @@ export const setEditorOptions = (payload: type.EditorOptions): type.SystemAction
   type: type.SET_EDITOR_OPTIONS,
   payload: payload
 })
+
+export const setScroll = (scroll: number): type.SystemAction => ({
+  type: type.SET_LEFT_SCROLL,
+  scroll: scroll
+})

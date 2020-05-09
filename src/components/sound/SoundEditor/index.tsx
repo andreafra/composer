@@ -1,60 +1,47 @@
-import React, { useState, useMemo } from 'react'
-import './style.css'
-
-import { createNoteTable } from 'utils/SoundGenerator'
-import VolumeTimeline from 'components/sound/VolumeTimeline'
 import SoundTimeline from 'components/sound/SoundTimeline'
-import { SoundFrame, ComposerState } from 'types'
+import VolumeTimeline from 'components/sound/VolumeTimeline'
+import React, { useState } from 'react'
+import './style.css'
+import { CommandBar, ICommandBarItemProps } from '@fluentui/react'
 import { useSelector } from 'react-redux'
+import { ComposerState, SoundFrame } from 'types'
+
 
 function SoundEditor() {
-  /**
-   * Call this method when you want to update the notes (pitch) of the melody
-   * @param note The new note you want to write in the x position of the melody
-   */
-  // const updateNote = (data: NoteUpdateCallbackData) => {
-  //   let newMelody = melody.slice(0)
 
-  //   // create/update a Frame
-  //   newMelody[data.time] = {
-  //     ...newMelody[data.time],
-  //     note: data.note,
-  //     type: data.type,
-  //     pitch: data.pitch
-  //   }
-  //   setMelody(newMelody)
-  // }
 
-  /**
-   * Call this method when you want to update the volume of melody
-   * @param frame The new volume you want to write in the x position of the melody.
-   */
-  // const deleteNote = (data: NoteUpdateCallbackData) => {
-  //   let newMelody = melody.slice(0)
+  const [play, setPlay] = useState(false);
 
-  //   // create/update a Frame
-  //   delete newMelody[data.time]
-  //   setMelody(newMelody)
-  // }
-
-  /**
-   * Call this method when you want to update the volume of melody
-   * @param frame The new volume you want to write in the x position of the melody.
-   */
-  // const updateVolume = (frame: VolumeFrameCallbackData) => {
-  //   let newMelody = melody.slice(0)
-
-  //   // create/update a Frame
-  //   newMelody[frame.time] = {
-  //     ...newMelody[frame.time],
-  //     volume: frame.volume
-  //   }
-  //   setMelody(newMelody)
-  // }
+  const _items: ICommandBarItemProps[] = [
+    {
+      key: 'play',
+      text: play ? 'Pause' : 'Play',
+      iconProps: { iconName: play ? 'Pause' : 'Play' },
+      onClick: () => {
+        setPlay(!play)
+      }
+    },
+    {
+      key: 'stop',
+      text: 'Stop',
+      iconProps: { iconName: 'Stop' },
+      onClick: () => setPlay(false),
+    },
+    {
+      key: 'download',
+      text: 'Download',
+      iconProps: { iconName: 'Download' },
+      onClick: () => console.log('Download'),
+    },
+  ];
 
   return (
     <div className="soundEditor">
-      <h2>Sounds</h2>      
+      <h2>Sounds</h2>
+      <CommandBar
+        items={_items}
+        ariaLabel="Use left and right arrow keys to navigate between commands"
+      />
       <h3>Pitch</h3>
       <SoundTimeline />
       <h3>Volume</h3>
@@ -65,3 +52,63 @@ function SoundEditor() {
 }
 
 export default SoundEditor
+
+
+// function Player(props: {
+//   play: boolean,
+//   updateFrame: (frame: number) => void
+// }) {
+//   const {oscillator, gainNode} = usePlayer()
+//   const options = useSelector((state: ComposerState) => state.system.editorOptions)
+//   const melody = useSelector((state: ComposerState) => state.sound)
+  
+
+//   let i = 0;
+
+//   let loop = setInterval(() => {
+//     // stop if not playing
+//     if (props.play === false || i >= melody.length) {
+//       clearInterval(loop)
+//       props.updateFrame(i)
+//       oscillator.stop()
+//     }
+
+//     const sf = melody[i]
+//     if (sf) {
+//       oscillator.frequency.value = sf.note.freq
+//       oscillator.type = sf.type
+//       gainNode.gain.value = sf.volume
+//     } else {
+//       oscillator.frequency.value = 0
+//       gainNode.gain.value = 0
+//     }
+//     // Go to next frame
+//     i += 1
+//   }, options.resolution)
+
+//   return null
+// }
+
+// TODO: MAKE PLAYER A SINGLETON (FUCK IT)
+// function usePlayer() {
+//   let AudioContext = window.AudioContext
+//   let audioCtx = new AudioContext();
+
+//   // create Oscillator and gain node
+//   let oscillator = audioCtx.createOscillator()
+//   let gainNode = audioCtx.createGain()
+
+//   // connect oscillator to gain node to speakers
+//   oscillator.connect(gainNode)
+//   gainNode.connect(audioCtx.destination)
+
+//   // set default options
+//   oscillator.detune.value = 100 // value in cents, IDK what this does :)
+//   oscillator.frequency.value = 0 // pitch
+//   oscillator.type = "sine" // instrument
+//   gainNode.gain.value = 0 // volume
+
+//   oscillator.start(0) // start now
+
+//   return {oscillator, gainNode}
+// }
