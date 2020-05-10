@@ -11,21 +11,37 @@ function SoundEditor() {
 
 
   const [play, setPlay] = useState(false);
+  const melody = useSelector((state: ComposerState) => state.sound)
+  const player = Player.instance
+
+
+  const handlePlay = () => {
+    if (play === false) {
+      setPlay(true)
+      player._melody = melody
+      Player.play(() => setPlay(false))
+    } else {
+      handleStop()
+    }
+  }
+
+  const handleStop = () => {
+    setPlay(false)
+    Player.stop()
+  }
 
   const _items: ICommandBarItemProps[] = [
     {
       key: 'play',
       text: play ? 'Pause' : 'Play',
       iconProps: { iconName: play ? 'Pause' : 'Play' },
-      onClick: () => {
-        setPlay(!play)
-      }
+      onClick: handlePlay
     },
     {
       key: 'stop',
       text: 'Stop',
       iconProps: { iconName: 'Stop' },
-      onClick: () => setPlay(false),
+      onClick: handleStop,
     },
     {
       key: 'download',
@@ -53,62 +69,107 @@ function SoundEditor() {
 
 export default SoundEditor
 
+/**
+ * Singleton for player
+ */
+class Player {
+  static _instance : Player | null = null;
 
-// function Player(props: {
-//   play: boolean,
-//   updateFrame: (frame: number) => void
-// }) {
-//   const {oscillator, gainNode} = usePlayer()
-//   const options = useSelector((state: ComposerState) => state.system.editorOptions)
-//   const melody = useSelector((state: ComposerState) => state.sound)
-  
+  _melody: Array<SoundFrame | null>
+  _oscillator: OscillatorNode
+  _gainNode: GainNode
+  _tempo: number
+  _loop: any
+  _position: number
+  _isPlaying: boolean
 
-//   let i = 0;
+  constructor() {
+    if(Player._instance) {
+        throw new Error("Error: Instantiation failed: Use SingletonClass.getInstance() instead of new.");
+    } else {
+      let AudioContext = window.AudioContext
+      let audioCtx = new AudioContext();
+    
+      // create Oscillator and gain node
+      let oscillator = audioCtx.createOscillator()
+      let gainNode = audioCtx.createGain()
+    
+      // connect oscillator to gain node to speakers
+      oscillator.connect(gainNode)
+      gainNode.connect(audioCtx.destination)
+    
+      // set default options
+      oscillator.detune.value = 100 // value in cents, IDK what this does :)
+      oscillator.frequency.value = 0 // pitch
+      oscillator.type = "sine" // instrument
+      gainNode.gain.value = 0 // volume
 
-//   let loop = setInterval(() => {
-//     // stop if not playing
-//     if (props.play === false || i >= melody.length) {
-//       clearInterval(loop)
-//       props.updateFrame(i)
-//       oscillator.stop()
-//     }
+      oscillator.start()
 
-//     const sf = melody[i]
-//     if (sf) {
-//       oscillator.frequency.value = sf.note.freq
-//       oscillator.type = sf.type
-//       gainNode.gain.value = sf.volume
-//     } else {
-//       oscillator.frequency.value = 0
-//       gainNode.gain.value = 0
-//     }
-//     // Go to next frame
-//     i += 1
-//   }, options.resolution)
+      // Initialize content
+      this._oscillator = oscillator
+      this._gainNode = gainNode
+      this._melody = []
+      this._tempo = 500 //ms
+      this._position = 0
+      this._isPlaying = false
+    }
+  }
 
-//   return null
-// }
+  static get instance() : Player {
+    if (Player._instance === null) {
+      Player._instance = new Player()
+    }
+    return this._instance!
+  }
 
-// TODO: MAKE PLAYER A SINGLETON (FUCK IT)
-// function usePlayer() {
-//   let AudioContext = window.AudioContext
-//   let audioCtx = new AudioContext();
+  static set melody(m: SoundFrame[]) {
+    Player._instance!._melody = m
+  }
 
-//   // create Oscillator and gain node
-//   let oscillator = audioCtx.createOscillator()
-//   let gainNode = audioCtx.createGain()
+  static play(callback: () => void) {
+    if (!Player.instance._isPlaying) {
+      Player.instance._isPlaying = true
 
-//   // connect oscillator to gain node to speakers
-//   oscillator.connect(gainNode)
-//   gainNode.connect(audioCtx.destination)
+      Player.instance!._loop = setInterval(() => {
+        // Stop if we're at the end
+        if (Player.instance._position >= Player.instance._melody.length) {
+          this.stop()
+          callback()
+          console.log(Player.instance._oscillator)
+          return
+        }
+        // current soundFrame
+        const sf = Player.instance!._melody[Player.instance._position]
+        // Play only if there's a note
+        if (sf) {
+          Player.instance!._oscillator.frequency.value = sf.note.freq
+          Player.instance!._oscillator.type = sf.type
+          Player.instance!._gainNode.gain.value = sf.volume
+        } else {
+          this.reset()
+        }
+        // Go to next frame
+        Player.instance._position += 1
+      }, Player.instance!._tempo)
+    }
+  }
 
-//   // set default options
-//   oscillator.detune.value = 100 // value in cents, IDK what this does :)
-//   oscillator.frequency.value = 0 // pitch
-//   oscillator.type = "sine" // instrument
-//   gainNode.gain.value = 0 // volume
+  static stop() {
+      clearInterval(Player.instance!._loop)
+      Player.instance._isPlaying = false
+      Player.instance._position = 0
+      this.reset()
+      // Stopping destroys the Oscillator and you can't restart it again.
+      // Player.instance!._oscillator.stop()
+  }
 
-//   oscillator.start(0) // start now
+  static set tempo(period: number) {
+    Player.instance!._tempo = period
+  }
 
-//   return {oscillator, gainNode}
-// }
+  static reset() {
+    Player.instance!._oscillator.frequency.value = 0
+    Player.instance!._gainNode.gain.value = 0
+  }
+}
