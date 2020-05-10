@@ -1,19 +1,19 @@
-.Timeline {
+.Channel {
   display: block;
 }
 
-.Timeline-title {
+.Channel-title {
   display: block;
   font-weight: bold;
   margin: 0;
   padding: 0.5em 0;
 }
 
-.Timeline-toolbox h3 {
-  padding-left: 2em;
+.Channel-toolbox h3 {
+  padding-left: 2rem;
 }
 
-.Timeline-frames {
+.Channel-frames {
   display: block;
   height: 100px;
   background-color: pink;

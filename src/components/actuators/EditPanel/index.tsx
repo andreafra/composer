@@ -19,7 +19,7 @@ function EditPanel() {
         onDismiss={() => dispatch(setEditPanelVisibility(false))}
         type={PanelType.customNear}
         closeButtonAriaLabel="Close"
-        headerText={"Edit" }
+        headerText={"Inspector" }
         customWidth={"400px"}
       >
         <ContentSwitcher />

@@ -6,6 +6,7 @@ import shortid from 'shortid'
 import { setEditPanelScope, setEditPanelVisibility } from 'store/actions'
 import { Channel as ChannelType, ComposerState } from 'types'
 import './style.css'
+import FoldableDiv from 'components/utilities/FoldableDiv'
 
 function ActuatorList(){
 
@@ -35,20 +36,24 @@ function ActuatorList(){
     <div
       className="Editor"
     >
-      <CommandBar
-        items={_items}
-        ariaLabel="Use left and right arrow keys to navigate between commands"
-      />
-      <div className="Editor-channels">
-        {
-          channels.map((channel: ChannelType) => 
-            <Channel
-              key={channel.id}
-              id={channel.id}
-            />
-          )
-        }
-      </div>
+      <FoldableDiv title="Actuators">
+        <>
+          <CommandBar
+            items={_items}
+            ariaLabel="Use left and right arrow keys to navigate between commands"
+          />
+          <div className="Editor-channels">
+            {
+              channels.map((channel: ChannelType) => 
+                <Channel
+                  key={channel.id}
+                  id={channel.id}
+                />
+              )
+            }
+          </div>
+        </>
+      </FoldableDiv>
     </div>
   )
 }

@@ -153,7 +153,9 @@ export interface EditorOptions {
   leftPadding: number,
   resolution: number,
   width: number,
-  frameSize: number
+  frameSize: number,
+  accentColor: string
+  altAccentColor: string
 }
 
 /* Composer */

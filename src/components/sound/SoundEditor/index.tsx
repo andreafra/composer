@@ -6,6 +6,7 @@ import { CommandBar, ICommandBarItemProps } from '@fluentui/react'
 import { useSelector } from 'react-redux'
 import { ComposerState, SoundFrame } from 'types'
 import DownloadJS from 'downloadjs'
+import FoldableDiv from 'components/utilities/FoldableDiv'
 
 function SoundEditor() {
 
@@ -62,17 +63,20 @@ function SoundEditor() {
   ];
 
   return (
-    <div className="soundEditor">
-      <h2>Sounds</h2>
-      <CommandBar
-        items={_items}
-        ariaLabel="Use left and right arrow keys to navigate between commands"
-      />
-      <h3>Pitch</h3>
-      <SoundTimeline />
-      <h3>Volume</h3>
-      <p>Hold Shift to lock the volume</p>
-      <VolumeTimeline />
+    <div className="SoundEditor">
+      <FoldableDiv title="Sound">
+        <>
+          <CommandBar
+            items={_items}
+            ariaLabel="Use left and right arrow keys to navigate between commands"
+          />
+          <h3 className="App-title SoundEditor-title">Pitch</h3>
+          <SoundTimeline />
+          <h3 className="App-title SoundEditor-title">Volume</h3>
+          <VolumeTimeline />
+        </>
+      </FoldableDiv>
+      
     </div>
   )
 }
