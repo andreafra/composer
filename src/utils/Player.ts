@@ -1,88 +1,17 @@
-import SoundTimeline from 'components/sound/SoundTimeline'
-import VolumeTimeline from 'components/sound/VolumeTimeline'
-import React, { useState } from 'react'
-import './style.css'
-import { CommandBar, ICommandBarItemProps } from '@fluentui/react'
-import { useSelector } from 'react-redux'
-import { ComposerState, SoundFrame } from 'types'
-import DownloadJS from 'downloadjs'
-
-function SoundEditor() {
-
-
-  const [play, setPlay] = useState(false);
-  const state = useSelector((state: ComposerState) => state)
-  const melody = useSelector((state: ComposerState) => state.sound)
-  const tempo = useSelector((state: ComposerState) => state.system.editorOptions.resolution)
-
-  const player = Player.instance
-
-  // Set speed
-  player._tempo = tempo
-
-  const handlePlay = () => {
-    if (play === false) {
-      setPlay(true)
-      player._melody = melody
-      Player.play(() => setPlay(false))
-    } else {
-      handleStop()
-    }
-  }
-
-  const handleStop = () => {
-    setPlay(false)
-    Player.stop()
-  }
-
-  const handleDownload = () => {
-    console.log(DownloadJS)
-    DownloadJS(JSON.stringify(state), state.system.filename + ".json", "application/json")
-  }
-
-  const _items: ICommandBarItemProps[] = [
-    {
-      key: 'play',
-      text: play ? 'Pause' : 'Play',
-      iconProps: { iconName: play ? 'Pause' : 'Play' },
-      onClick: handlePlay
-    },
-    {
-      key: 'stop',
-      text: 'Stop',
-      iconProps: { iconName: 'Stop' },
-      onClick: handleStop,
-    },
-    {
-      key: 'download',
-      text: 'Download',
-      iconProps: { iconName: 'Download' },
-      onClick: handleDownload
-    },
-  ];
-
-  return (
-    <div className="soundEditor">
-      <h2>Sounds</h2>
-      <CommandBar
-        items={_items}
-        ariaLabel="Use left and right arrow keys to navigate between commands"
-      />
-      <h3>Pitch</h3>
-      <SoundTimeline />
-      <h3>Volume</h3>
-      <p>Hold Shift to lock the volume</p>
-      <VolumeTimeline />
-    </div>
-  )
-}
-
-export default SoundEditor
+import { SoundFrame } from "types";
 
 /**
  * Singleton for player
+ * <br/>
+ * It still has some issues with popping:
+ * a possible solution could be generating an oscillator for each note,
+ * and switching between them, instead of updating the same oscillator.
+ * 
+ * It might be migrated to 
+ * https://tonejs.github.io/docs/ for better
+ * usability.
  */
-class Player {
+export default class Player {
   static _instance : Player | null = null;
 
   _melody: Array<SoundFrame | null>
@@ -103,11 +32,20 @@ class Player {
       // create Oscillator and gain node
       let oscillator = audioCtx.createOscillator()
       let gainNode = audioCtx.createGain()
-    
+
+      // It should lower the highest notes
+      let compressor = audioCtx.createDynamicsCompressor();
+      compressor.threshold.setValueAtTime(-30, audioCtx.currentTime);
+      compressor.knee.setValueAtTime(40, audioCtx.currentTime);
+      compressor.ratio.setValueAtTime(12, audioCtx.currentTime);
+      compressor.attack.setValueAtTime(0, audioCtx.currentTime);
+      compressor.release.setValueAtTime(0.25, audioCtx.currentTime);
+
       // connect oscillator to gain node to speakers
       oscillator.connect(gainNode)
+      oscillator.connect(compressor)
       gainNode.connect(audioCtx.destination)
-    
+
       // set default options
       oscillator.detune.value = 100 // value in cents, IDK what this does :)
       oscillator.frequency.value = 0 // pitch
@@ -153,9 +91,10 @@ class Player {
         const sf = Player.instance!._melody[Player.instance._position]
         // Play only if there's a note
         if (sf) {
-          Player.instance!._oscillator.frequency.value = sf.note.freq
-          Player.instance!._oscillator.type = sf.type
-          Player.instance!._gainNode.gain.value = sf.volume
+          Player.instance._oscillator.frequency.value = sf.note.freq
+          Player.instance._oscillator.type = sf.type
+          // Player.instance._gainNode.gain.value = sf.volume
+          Player.instance._gainNode.gain.value = sf.volume
         } else {
           this.reset()
         }
