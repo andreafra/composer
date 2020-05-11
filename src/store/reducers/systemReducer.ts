@@ -1,4 +1,4 @@
-import { SET_EDITOR_OPTIONS, SET_EDIT_PANEL_SCOPE, SET_EDIT_PANEL_VISIBILITY, SET_FILENAME, SET_USERNAME, SystemAction, SystemState } from 'types'
+import { SET_EDITOR_OPTIONS, SET_EDIT_PANEL_SCOPE, SET_EDIT_PANEL_VISIBILITY, SET_FILENAME, SET_USERNAME, SET_LEFT_SCROLL, SystemAction, SystemState } from 'types'
 
 // The margin from the left side of the screen
 const LEFT_PADDING = 30 // in px
@@ -19,8 +19,11 @@ const initialState: SystemState = {
     leftPadding: LEFT_PADDING,
     resolution: FRAME_RESOLUTION,
     width: LENGTH * 1000 / FRAME_RESOLUTION * FRAME_SIZE,
-    frameSize: FRAME_SIZE
-  }
+    frameSize: FRAME_SIZE,
+    accentColor: "#666666",
+    altAccentColor: "#999999"
+  },
+  leftScroll: 0
 }
 
 export default (
@@ -61,6 +64,11 @@ export default (
     return {
       ...state,
       editorOptions: action.payload
+    }
+  case SET_LEFT_SCROLL:
+    return {
+      ...state,
+      leftScroll: action.scroll
     }
   default:
     return state

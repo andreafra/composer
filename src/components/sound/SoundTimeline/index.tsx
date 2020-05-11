@@ -1,11 +1,10 @@
-import React, { useRef, useEffect, useState, useMemo } from 'react'
-import './style.css'
-
 import InstrumentPicker from 'components/sound/InstrumentPicker'
-import { Point, Note, SoundFrame, ComposerState } from 'types'
-import { useSelector, useDispatch } from 'react-redux'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { removeNote, setNote } from 'store/actions'
+import { ComposerState, Note, Point, SoundFrame } from 'types'
 import { createNoteTable } from 'utils/SoundGenerator'
-import { setNote, removeNote } from 'store/actions'
+import './style.css'
 
 /*
  * Funny story time: stuff you declare outside a function component 
@@ -53,7 +52,6 @@ function SoundTimeline(props: any) {
   // Init notes frequencies
   // TODO: replace 3, 5 with actual parameters
   const notes = useMemo(() => createNoteTable(3, 5).reverse(), [])
-
 
   const CANVAS_W = options.width + options.leftPadding
   const LEFT_PADDING = options.leftPadding
@@ -230,7 +228,7 @@ function SoundTimeline(props: any) {
         // Get height of a row
         let marginTop = CELL_H * i
 
-        ctx.strokeStyle = "red"
+        ctx.strokeStyle = options.accentColor
         ctx.lineWidth = 0.3
         ctx.beginPath()
         ctx.moveTo(0, marginTop)
@@ -240,7 +238,7 @@ function SoundTimeline(props: any) {
 
       }
 
-      ctx.strokeStyle = "blue"
+      ctx.strokeStyle = options.altAccentColor
       ctx.beginPath()
       ctx.moveTo(CELL_W, 0)
       ctx.lineTo(CELL_W, CANVAS_H)
@@ -257,7 +255,7 @@ function SoundTimeline(props: any) {
     if (ctx) {
       let marginTop = CELL_H
       ctx.font = `${CELL_H - 3}px sans-serif`
-      ctx.fillStyle = "red"
+      ctx.fillStyle = options.accentColor
       for (const note of _notes) {
         ctx.fillText(note.name, 5, marginTop - 2)
         marginTop += CELL_H
@@ -288,16 +286,19 @@ function SoundTimeline(props: any) {
       const frame = melody[index]
 
       if (frame !== null)
-        drawRectangle(index + 1, frame.pitch, "red")
+        drawRectangle(index + 1, frame.pitch, getColorFromInstrument(frame.type))
     }
   }
 
   return (
-    <div className="SoundTimeline">
-      <InstrumentPicker
+    <>
+    <InstrumentPicker
         currentType={type}
         update={(t: OscillatorType) => setType(t)}
       />
+    <div
+      className="SoundTimeline"  
+    >
       <canvas
         className="soundCanvas"
         ref={canvasRef}
@@ -309,7 +310,23 @@ function SoundTimeline(props: any) {
         onMouseLeave={onInputStop}
       ></canvas>
     </div>
+    </>
   )
 }
 
 export default SoundTimeline
+
+const getColorFromInstrument = (instrument: OscillatorType) => {
+  switch (instrument) {
+    case "sine":
+      return "red"
+    case "triangle":
+      return "blue"
+    case "square":
+      return "green"
+    case "sawtooth":
+      return "orange"  
+    default:
+      return "purple";
+  }
+}

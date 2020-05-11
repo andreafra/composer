@@ -17,7 +17,7 @@ export const SET_EDIT_PANEL_SCOPE = 'SET_EDIT_PANEL_SCOPE'
 export const SET_USERNAME = 'SET_USERNAME'
 export const SET_FILENAME = 'SET_FILENAME'
 export const SET_EDITOR_OPTIONS = 'SET_EDITOR_OPTIONS'
-
+export const SET_LEFT_SCROLL = 'SET_LEFT_SCROLL'
 /* Dictionary */
 export interface IDictionary<V> {
   [index: string]: V
@@ -125,7 +125,13 @@ interface SetEditorOptionsAction {
   payload: EditorOptions
 }
 
-export type SystemAction = SetEditPanelAction | SetUsernameAction | SetFilenameAction | SetEditorOptionsAction
+interface SetLeftScroll {
+  type: typeof SET_LEFT_SCROLL
+  scroll: number
+}
+
+export type SystemAction = SetEditPanelAction | SetUsernameAction | SetFilenameAction | SetEditorOptionsAction | SetLeftScroll
+
 
 /* System */
 export interface SystemState {
@@ -133,6 +139,7 @@ export interface SystemState {
   filename: string
   editPanel: EditPanelState
   editorOptions: EditorOptions
+  leftScroll: number
 }
 
 export interface EditPanelState {
@@ -146,7 +153,9 @@ export interface EditorOptions {
   leftPadding: number,
   resolution: number,
   width: number,
-  frameSize: number
+  frameSize: number,
+  accentColor: string
+  altAccentColor: string
 }
 
 /* Composer */

@@ -1,8 +1,8 @@
-import React, { useRef, useEffect, useState } from 'react'
-import './style.css'
-import { Point, SoundFrame, EditorOptions, ComposerState } from 'types'
-import { useSelector, useDispatch } from 'react-redux'
+import React, { useEffect, useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { setVolume } from 'store/actions'
+import { ComposerState, Point, SoundFrame } from 'types'
+import './style.css'
 
 let ctx: CanvasRenderingContext2D | null
 let rect: DOMRect | null
@@ -18,7 +18,7 @@ function VolumeTimeline(props: any) {
   const options = useSelector((state: ComposerState) => state.system.editorOptions)
   const melody = useSelector((state: ComposerState) => state.sound)
 
-  const CANVAS_W = options.width
+  const CANVAS_W = options.width + options.leftPadding
   const CANVAS_H = 70 // in px
 
   const LEFT_PADDING = options.leftPadding
@@ -155,7 +155,8 @@ function VolumeTimeline(props: any) {
   const drawLabels = () => {
     if (ctx) {
       ctx.font = "12px sans-serif"
-      ctx.fillStyle = "red"
+      ctx.strokeStyle = options.altAccentColor
+      ctx.fillStyle = options.accentColor
       ctx.fillText("100", 2, 14)
       ctx.fillText("0", 2, CANVAS_H - 2)
       ctx.moveTo(FRAME_W, 0)
@@ -172,7 +173,7 @@ function VolumeTimeline(props: any) {
    */
   const drawRectangle = (x: number, y: number) => {
     if (ctx) {
-      ctx.fillStyle = "green"
+      ctx.fillStyle = options.accentColor
       ctx.fillRect(x * FRAME_W, CANVAS_H - y, FRAME_W, CANVAS_H)
     }
   }
@@ -192,18 +193,22 @@ function VolumeTimeline(props: any) {
       }
     }
   }
-
+ 
   return (
-    <canvas
-      className="volumeCanvas"
-      ref={canvasRef}
-      width={CANVAS_W}
-      height={CANVAS_H}
-      onMouseMove={(e) => onInputMove(e)}
-      onMouseDown={(e) =>onInputStart(e)}
-      onMouseUp={(e) => onInputStop(e)}
-      onMouseLeave={(e) => onInputStop(e)}
-    ></canvas>
+    <div 
+      className="VolumeTimeline"
+    >
+      <canvas
+        className="volumeCanvas"
+        ref={canvasRef}
+        width={CANVAS_W}
+        height={CANVAS_H}
+        onMouseMove={(e) => onInputMove(e)}
+        onMouseDown={(e) =>onInputStart(e)}
+        onMouseUp={(e) => onInputStop(e)}
+        onMouseLeave={(e) => onInputStop(e)}
+      ></canvas>
+    </div>
   )
 }
 

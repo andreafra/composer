@@ -35,10 +35,10 @@ function FieldList(props: {
     case "BOOL":
       return <Toggle
         label={spec.name}
-        defaultValue={parseInt(props.value) || 0}
+        checked={Boolean(parseInt(props.value))}
         onText="On"
         offText="Off"
-        onChange={(e, value) => props.update(value ? "1" : "0")} />
+        onChange={(e, checked) => props.update(checked ? "1" : "0")} />
     default:
       return null
   }

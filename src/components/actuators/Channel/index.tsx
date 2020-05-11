@@ -65,21 +65,21 @@ function Channel(props: ChannelProps) {
 
   return (
     <div
-      className="Timeline"
+      className="Channel"
       onMouseMove={e => onMouseMove(e)}
       onMouseDown={() => setIsMouseDown(true)}
       onMouseUp={() => setIsMouseDown(false)}
       onMouseLeave={() => setIsMouseDown(false)}
     >
-      <div className="Timeline-toolbox">
-        <h3 className="Timeline-title">{thisChannel.name}</h3>
+      <div className="Channel-toolbox">
+        <h3 className="Channel-title">{thisChannel.name}</h3>
         <CommandBar
           items={_items}
           ariaLabel="Use left and right arrow keys to navigate between commands"
         />
       </div>
       <div
-        className="Timeline-frames"
+        className="Channel-frames"
         style={{
           marginLeft: options.leftPadding,
           width: options.width

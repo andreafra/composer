@@ -33,3 +33,5 @@ store.dispatch(setFrame({
   end: 2,
   fields: ["#ff0000"]
 }, "aaaaaaaa", "xxxyyyzz"))
+
+unsubscribe()
