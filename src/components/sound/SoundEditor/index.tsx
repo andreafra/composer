@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux'
 import { ComposerState, SoundFrame } from 'types'
 import DownloadJS from 'downloadjs'
 import FoldableDiv from 'components/utilities/FoldableDiv'
+import { useJSONFilteredOutput } from 'utils/JSONFilteredOutput'
 
 function SoundEditor() {
 
@@ -15,6 +16,8 @@ function SoundEditor() {
   const state = useSelector((state: ComposerState) => state)
   const melody = useSelector((state: ComposerState) => state.sound)
   const tempo = useSelector((state: ComposerState) => state.system.editorOptions.resolution)
+
+  const parsedOutput = useJSONFilteredOutput()
 
   const player = Player.instance
 
@@ -38,7 +41,7 @@ function SoundEditor() {
 
   const handleDownload = () => {
     console.log(DownloadJS)
-    DownloadJS(JSON.stringify(state), state.system.filename + ".json", "application/json")
+    DownloadJS(parsedOutput(), state.system.filename + ".json", "application/json")
   }
 
   const _items: ICommandBarItemProps[] = [
