@@ -1,10 +1,14 @@
-import { createStore } from 'redux'
+import { createStore, applyMiddleware } from 'redux'
 import { Channel, Frame } from 'types'
 import { addChannel, setFrame } from './actions'
+import { composeWithDevTools, devToolsEnhancer } from 'redux-devtools-extension';
 import root from './reducers/rootReducer'
 
 
-export const store = createStore(root)
+export const store = createStore(
+  root,
+  devToolsEnhancer({})
+)
 
 // Log the initial state
 console.log(store.getState())
