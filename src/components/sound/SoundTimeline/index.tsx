@@ -97,6 +97,9 @@ function SoundTimeline(props: any) {
    * @param type The instrument used
    */
   const addNote = (time: number, row: number, type: OscillatorType) => {
+    for (let i = melody.length; i < time; i++) {
+      dispatch(removeNote(i))
+    }
     // update parent component
     const _oldNote = melody[time]
     const _newNote: SoundFrame = {

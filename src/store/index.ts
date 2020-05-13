@@ -1,8 +1,8 @@
-import { createStore, applyMiddleware } from 'redux'
-import { Channel, Frame } from 'types'
-import { addChannel, setFrame } from './actions'
-import { composeWithDevTools, devToolsEnhancer } from 'redux-devtools-extension';
-import root from './reducers/rootReducer'
+import { createStore } from 'redux';
+import { devToolsEnhancer } from 'redux-devtools-extension';
+import { Channel, Frame } from 'types';
+import { addChannel, setFrame } from './actions';
+import root from './reducers/rootReducer';
 
 
 export const store = createStore(

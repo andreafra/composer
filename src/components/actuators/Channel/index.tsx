@@ -30,20 +30,6 @@ function Channel(props: ChannelProps) {
       setMouseX(e.pageX)
     }
   }
-  
-  const handleRectUpdate = (id: string) => {
-    // Should the Rect have a UID
-
-    // HANDLE THE OVERLAPPING RECTS
-    // props.frames[data.id] is the Rect that has been edited
-    // data.frame is the new frame
-    // One possible implementation might be to delete the index-esim
-    // frame/rect, and replace it with the new one (data.frame)
-    // TODO: when a rect is done resizing, do the following steps:
-    // 1. Gracefully handle overlapping Rects
-    // 2. Sort the timeline data structure
-    // 3. Push the timeline data to the Editor
-  }
 
   /**
    * On click, this function will open a panel where
