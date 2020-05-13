@@ -1,10 +1,11 @@
 import InstrumentPicker from 'components/sound/InstrumentPicker'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState, useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { removeNote, setNote } from 'store/actions'
 import { ComposerState, Note, Point, SoundFrame } from 'types'
 import { createNoteTable } from 'utils/SoundGenerator'
 import './style.css'
+import { ScrollableDiv, ScrollContext } from 'components/utilities/ScrollableDiv'
 
 /*
  * Funny story time: stuff you declare outside a function component 
@@ -45,6 +46,9 @@ oscillator.start(0) // start now
  * @return JSX Canvas element
  */
 function SoundTimeline(props: any) {
+
+  const scrollCtx = useContext(ScrollContext)
+
   const dispatch = useDispatch()
   const options = useSelector((state: ComposerState) => state.system.editorOptions)
   const melody = useSelector((state: ComposerState) => state.sound)
@@ -192,7 +196,7 @@ function SoundTimeline(props: any) {
    */
   const getInputPos = (e: any): Point => {
     if (rect) return {
-      x: e.pageX, // - rect.left,
+      x: e.clientX + scrollCtx.scroll, // - rect.left,
       y: e.clientY - rect.top
     }
     return { x: -1, y: -1 }
@@ -299,19 +303,19 @@ function SoundTimeline(props: any) {
         currentType={type}
         update={(t: OscillatorType) => setType(t)}
       />
-    <div
-      className="SoundTimeline"  
-    >
-      <canvas
-        className="soundCanvas"
-        ref={canvasRef}
-        width={CANVAS_W}
-        height={CANVAS_H}
-        onMouseMove={(e) => onInputMove(e)}
-        onMouseDown={(e) => onInputStart(e)}
-        onMouseUp={onInputStop}
-        onMouseLeave={onInputStop}
-      ></canvas>
+    <div className="SoundTimeline">
+      <ScrollableDiv>
+        <canvas
+          className="soundCanvas"
+          ref={canvasRef}
+          width={CANVAS_W}
+          height={CANVAS_H}
+          onMouseMove={(e) => onInputMove(e)}
+          onMouseDown={(e) => onInputStart(e)}
+          onMouseUp={onInputStop}
+          onMouseLeave={onInputStop}
+        ></canvas>
+      </ScrollableDiv>
     </div>
     </>
   )

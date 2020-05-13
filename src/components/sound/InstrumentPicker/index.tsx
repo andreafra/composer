@@ -2,6 +2,8 @@ import React from 'react'
 import './style.css'
 import { IChoiceGroupOption, ChoiceGroup, values } from '@fluentui/react'
 
+import {SineWave, SawtoothWave1, SquareWave1, TriangleWave } from 'assets/images'
+
 function InstrumentPicker(props: any) {
 
   const instruments: OscillatorType[] = ["sine", "triangle", "square", "sawtooth" /*, "custom" */]
@@ -13,37 +15,39 @@ function InstrumentPicker(props: any) {
     props.update(value)
   }
 
+  const IMAGE_SIZE = 32
+  
   const options: IChoiceGroupOption[] = [
     {
       key: 'sine',
       imageAlt: 'Sine icon',
-      imageSrc: undefined,
-      selectedImageSrc: undefined,
-      imageSize: { width: 32, height: 32 },
+      imageSrc: SineWave,
+      selectedImageSrc: SineWave,
+      imageSize: { width: IMAGE_SIZE, height: IMAGE_SIZE },
       text: 'Sine Wave', // This text is long to show text wrapping.
     },
     {
       key: 'triangle',
       imageAlt: 'Triangle icon',
-      imageSrc: undefined,
-      selectedImageSrc: undefined,
-      imageSize: { width: 32, height: 32 },
+      imageSrc: TriangleWave,
+      selectedImageSrc: TriangleWave,
+      imageSize: { width: IMAGE_SIZE, height: IMAGE_SIZE },
       text: 'Triangle Wave',
     },
     {
       key: 'square',
       imageAlt: 'Square icon',
-      imageSrc: undefined,
-      selectedImageSrc: undefined,
-      imageSize: { width: 32, height: 32 },
+      imageSrc: SquareWave1,
+      selectedImageSrc: SquareWave1,
+      imageSize: { width: IMAGE_SIZE, height: IMAGE_SIZE },
       text: 'Square Wave',
     },
     {
       key: 'sawtooth',
       imageAlt: 'Sawtooth icon',
-      imageSrc: undefined,
-      selectedImageSrc: undefined,
-      imageSize: { width: 32, height: 32 },
+      imageSrc: SawtoothWave1,
+      selectedImageSrc: SawtoothWave1,
+      imageSize: { width: IMAGE_SIZE, height: IMAGE_SIZE },
       text: 'Sawtooth Wave',
     },
   ];

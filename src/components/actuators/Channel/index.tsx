@@ -6,6 +6,7 @@ import shortid from 'shortid'
 import { setEditPanelScope, setEditPanelVisibility } from 'store/actions'
 import { Channel as ChannelType, ComposerState } from 'types'
 import './style.css'
+import { ScrollableDiv } from 'components/utilities/ScrollableDiv'
 
 type ChannelProps = {
   id: string
@@ -64,21 +65,19 @@ function Channel(props: ChannelProps) {
           ariaLabel="Use left and right arrow keys to navigate between commands"
         />
       </div>
-      <div
-        className="Channel-frames"
-        style={{
-          marginLeft: options.leftPadding,
-          width: options.width
-        }}
-      >
-        {Array.from(thisChannel.frames).map(([value, frame]) => (
-          <Rect
-            key={value}
-            frame={frame}
-            x={mouseX}
-            shouldEdit={isMouseDown}
-          />)
-        )}
+      <div className="Channel-frames">
+        <ScrollableDiv>
+          <div className="Channel-scrollable" style={{width: options.width, marginLeft: options.leftPadding}}>
+            {Array.from(thisChannel.frames).map(([value, frame]) => (
+              <Rect
+                key={value}
+                frame={frame}
+                x={mouseX}
+                shouldEdit={isMouseDown}
+              />)
+            )}
+          </div>
+        </ScrollableDiv>
       </div>
     </div>
   )

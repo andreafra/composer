@@ -1,6 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { ScrollableDiv, ScrollContext } from 'components/utilities/ScrollableDiv'
+import React, { useEffect, useRef, useState, useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { setVolume } from 'store/actions'
+import { setVolume, removeNote } from 'store/actions'
 import { ComposerState, Point, SoundFrame } from 'types'
 import './style.css'
 
@@ -13,6 +14,8 @@ let rect: DOMRect | null
  * @return JSX Canvas element
  */
 function VolumeTimeline(props: any) {
+
+  const scrollCtx = useContext(ScrollContext)
 
   const dispatch = useDispatch()
   const options = useSelector((state: ComposerState) => state.system.editorOptions)
@@ -54,6 +57,10 @@ function VolumeTimeline(props: any) {
    * @param volume 
    */
   const addFrame = (time: number, volume: number) => {
+    for (let i = melody.length; i < time; i++) {
+      dispatch(removeNote(i))
+    }
+
     let percentVolume = volume / CANVAS_H // from px value to 0-1 value
     // update parent component
     const _oldFrame: SoundFrame = melody[time] || {
@@ -120,7 +127,7 @@ function VolumeTimeline(props: any) {
    */
   const getInputPos = (e: any): Point => {
     if (rect) return {
-      x: e.pageX,
+      x: e.clientX + scrollCtx.scroll,
       y: e.clientY - rect.top
     }
     return { x: -1, y: -1 }
@@ -195,19 +202,19 @@ function VolumeTimeline(props: any) {
   }
  
   return (
-    <div 
-      className="VolumeTimeline"
-    >
-      <canvas
-        className="volumeCanvas"
-        ref={canvasRef}
-        width={CANVAS_W}
-        height={CANVAS_H}
-        onMouseMove={(e) => onInputMove(e)}
-        onMouseDown={(e) =>onInputStart(e)}
-        onMouseUp={(e) => onInputStop(e)}
-        onMouseLeave={(e) => onInputStop(e)}
-      ></canvas>
+    <div className="VolumeTimeline">
+      <ScrollableDiv>
+        <canvas
+          className="volumeCanvas"
+          ref={canvasRef}
+          width={CANVAS_W}
+          height={CANVAS_H}
+          onMouseMove={(e) => onInputMove(e)}
+          onMouseDown={(e) =>onInputStart(e)}
+          onMouseUp={(e) => onInputStop(e)}
+          onMouseLeave={(e) => onInputStop(e)}
+        ></canvas>
+      </ScrollableDiv>
     </div>
   )
 }

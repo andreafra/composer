@@ -16,5 +16,11 @@
 .Channel-frames {
   display: block;
   height: 100px;
-  background-color: pink;
+}
+
+.Channel-scrollable {
+  position: relative;
+  box-shadow: -1px 0px 3px #999999;
+  background-color: #eeeeee;
+  height: 100%;
 }
