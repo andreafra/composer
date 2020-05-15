@@ -103,7 +103,7 @@ interface SetEditPanelScopeAction {
   type: typeof SET_EDIT_PANEL_SCOPE
   scope: string
   meta: {
-    channelId: string
+    channelId?: string
     frameId?: string
   }
 }
@@ -136,10 +136,10 @@ export type SystemAction = SetEditPanelAction | SetUsernameAction | SetFilenameA
 /* System */
 export interface SystemState {
   username: string
+  lastModified: Date
   filename: string
   editPanel: EditPanelState
   editorOptions: EditorOptions
-  leftScroll: number
 }
 
 export interface EditPanelState {

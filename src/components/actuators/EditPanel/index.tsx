@@ -5,21 +5,23 @@ import { setEditPanelVisibility } from 'store/actions'
 import { ComposerState } from 'types'
 import ActuatorConfig from './configs/actuator'
 import FrameConfig from './configs/frame'
+import { TextField, Label, SpinButton, DetailsList, IDetailsItemProps, DetailsListLayoutMode } from '@fluentui/react'
+import { useId } from '@uifabric/react-hooks'
 
 // The panel type and description are passed in by the PanelSizesExample component (later in this file)
 function EditPanel() {
-  const isOpen = useSelector((state: ComposerState) => state.system.editPanel.visibility)
+  const editPanel = useSelector((state: ComposerState) => state.system.editPanel)
   const dispatch = useDispatch()
 
   return (
     <div>
       <Panel
         isLightDismiss
-        isOpen={isOpen}
+        isOpen={editPanel.visibility}
         onDismiss={() => dispatch(setEditPanelVisibility(false))}
         type={PanelType.customNear}
         closeButtonAriaLabel="Close"
-        headerText={"Inspector" }
+        headerText={editPanel.scope.toLowerCase() + " options" }
         customWidth={"400px"}
       >
         <ContentSwitcher />
@@ -51,7 +53,36 @@ function ContentSwitcher() {
 
 function SystemConfig() {
   
+  const system = useSelector((state: ComposerState) => state.system)
+
   return <div>
-    <h2>System config</h2>
+    <TextField
+      label="File name"
+      defaultValue={system.filename}
+    />
+    <TextField
+      label="Author"
+      defaultValue={system.username}
+    />
+    <SpinButton
+      defaultValue={system.editorOptions.resolution.toString()}
+      label={'Tempo (ms)'}
+      min={0}
+      max={10000}
+      step={1}
+      iconProps={{ iconName: 'Timer' }}
+      incrementButtonAriaLabel={'Increase value by 1'}
+      decrementButtonAriaLabel={'Decrease value by 1'}
+    />
+    <SpinButton
+      defaultValue={(system.editorOptions.width/system.editorOptions.frameSize).toString()}
+      label={'Length (frames)'}
+      min={0}
+      max={10000}
+      step={1}
+      iconProps={{ iconName: 'FitWidth' }}
+      incrementButtonAriaLabel={'Increase value by 1'}
+      decrementButtonAriaLabel={'Decrease value by 1'}
+    />
   </div>
 }
