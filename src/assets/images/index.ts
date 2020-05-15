@@ -1,0 +1,6 @@
+export const SineWave = require("./SineWave.svg")
+export const SquareWave1 = require("./SquareWave1.svg")
+export const SquareWave2 = require("./SquareWave2.svg")
+export const SawtoothWave1 = require("./SawtoothWave1.svg")
+export const SawtoothWave2 = require("./SawtoothWave2.svg")
+export const TriangleWave = require("./TriangleWave.svg")

@@ -1,5 +1,21 @@
 .App {
   /* max-width: 920px; */
   margin: auto;
-  background-color: antiquewhite;
+  background-color: #eeeeee;
+}
+
+.App-title {
+  margin: 0;
+  padding: 0.5rem 2rem;
+}
+
+.App-desc {
+  margin: 0.5rem 0;
+  padding: 0 2rem;
+}
+
+.App-scrollable {
+  overflow-x: scroll;
+  overflow-y: hidden;
+  height: 100%;
 }

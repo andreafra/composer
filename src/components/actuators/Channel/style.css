@@ -1,0 +1,26 @@
+.Channel {
+  display: block;
+}
+
+.Channel-title {
+  display: block;
+  font-weight: bold;
+  margin: 0;
+  padding: 0.5em 0;
+}
+
+.Channel-toolbox h3 {
+  padding-left: 2rem;
+}
+
+.Channel-frames {
+  display: block;
+  height: 100px;
+}
+
+.Channel-scrollable {
+  position: relative;
+  box-shadow: -1px 0px 3px #999999;
+  background-color: #eeeeee;
+  height: 100%;
+}

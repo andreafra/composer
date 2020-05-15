@@ -1,0 +1,13 @@
+.SoundEditor {
+
+}
+
+.SoundEditor-title {
+  display: block;
+  font-weight: bold;
+}
+
+.SoundEditor-desc {
+  display: block;
+  font-weight: normal;
+}
