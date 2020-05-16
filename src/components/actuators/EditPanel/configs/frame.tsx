@@ -3,8 +3,8 @@ import { ComposerState, Field, Frame } from "types"
 import { useCustomActuators } from "utils/defaultActuators"
 import React, { useState } from "react"
 import shortid from "shortid"
-import { setEditPanelVisibility, setFrame } from "store/actions"
-import { Stack, SpinButton, PrimaryButton, IStackTokens } from "@fluentui/react"
+import { setEditPanelVisibility, setFrame, removeFrame } from "store/actions"
+import { Stack, SpinButton, PrimaryButton, DefaultButton, IStackTokens } from "@fluentui/react"
 import FieldElement from './field'
 
 const StackTokens: Partial<IStackTokens> = { childrenGap: 10 };
@@ -16,7 +16,7 @@ function FrameConfig() {
   const channels = useSelector((state: ComposerState) => state.actuators.filter(c => c.id === edit.channelId))
   const actuatorBlueprints = useCustomActuators()
 
-  const channel = channels[0]  
+  const channel = channels[0]
   const actuatorBlueprint = actuatorBlueprints.filter(a => a.type === channel.type)[0]
   const fields: Field[] = actuatorBlueprint.fields || []
 
@@ -68,6 +68,13 @@ function FrameConfig() {
     dispatch(setEditPanelVisibility(false))
   }
 
+  const _deleteRect = () => {
+    if (edit.frameId && edit.channelId) {
+      dispatch(removeFrame(newFrame.id,channel.id))
+      dispatch(setEditPanelVisibility(false))
+    }
+  }
+
   return <div>
     <Stack tokens={StackTokens}>
       <h3>Frame of {channel.name}</h3>
@@ -104,6 +111,16 @@ function FrameConfig() {
         />
       )}
       <PrimaryButton text="Set Frame" onClick={_setFrame} allowDisabledFocus disabled={false} />
+      {
+        edit.frameId && channel.frames.has(edit.frameId) ?
+        <DefaultButton
+          text="Delete Frame"
+          onClick={_deleteRect}
+          allowDisabledFocus
+          disabled={edit.frameId === undefined || edit.channelId === undefined}
+        /> : null
+      }
+      
     </Stack>
   </div>
 }
