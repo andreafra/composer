@@ -210,7 +210,7 @@ function SoundTimeline(props: any) {
    */
   const getCell = (position: Point): Point => {
     return {
-      x: Math.floor(position.x / CELL_W),
+      x: Math.floor((position.x - LEFT_PADDING) / CELL_W) + 1,
       y: Math.floor(position.y / CELL_H)
     }
   }
@@ -247,8 +247,8 @@ function SoundTimeline(props: any) {
 
       ctx.strokeStyle = options.altAccentColor
       ctx.beginPath()
-      ctx.moveTo(CELL_W, 0)
-      ctx.lineTo(CELL_W, CANVAS_H)
+      ctx.moveTo(LEFT_PADDING, 0)
+      ctx.lineTo(LEFT_PADDING, CANVAS_H)
       ctx.closePath()
       ctx.stroke()
     }
@@ -279,7 +279,7 @@ function SoundTimeline(props: any) {
   const drawRectangle = (x: number, y: number, color: string) => {
     if (ctx) {
       ctx.fillStyle = color
-      ctx.fillRect(x * CELL_W, y * CELL_H, CELL_W, CELL_H)
+      ctx.fillRect(LEFT_PADDING + x * CELL_W, y * CELL_H, CELL_W, CELL_H)
     }
   }
 
@@ -293,7 +293,7 @@ function SoundTimeline(props: any) {
       const frame = melody[index]
 
       if (frame !== null)
-        drawRectangle(index + 1, frame.pitch, getColorFromInstrument(frame.type))
+        drawRectangle(index, frame.pitch, getColorFromInstrument(frame.type))
     }
   }
 

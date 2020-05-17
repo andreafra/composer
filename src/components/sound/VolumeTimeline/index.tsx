@@ -141,7 +141,7 @@ function VolumeTimeline(props: any) {
    */
   const getFrame = (position: Point): Point => {
     return {
-      x: Math.floor(position.x / FRAME_W),
+      x: Math.floor((position.x - LEFT_PADDING) / FRAME_W) + 1,
       y: CANVAS_H - position.y
     }
   }
@@ -166,8 +166,8 @@ function VolumeTimeline(props: any) {
       ctx.fillStyle = options.accentColor
       ctx.fillText("100", 2, 14)
       ctx.fillText("0", 2, CANVAS_H - 2)
-      ctx.moveTo(FRAME_W, 0)
-      ctx.lineTo(FRAME_W, CANVAS_H)
+      ctx.moveTo(LEFT_PADDING, 0)
+      ctx.lineTo(LEFT_PADDING, CANVAS_H)
       ctx.stroke()
     }
   }
@@ -181,7 +181,7 @@ function VolumeTimeline(props: any) {
   const drawRectangle = (x: number, y: number) => {
     if (ctx) {
       ctx.fillStyle = options.accentColor
-      ctx.fillRect(x * FRAME_W, CANVAS_H - y, FRAME_W, CANVAS_H)
+      ctx.fillRect(LEFT_PADDING + x * FRAME_W, CANVAS_H - y, FRAME_W, CANVAS_H)
     }
   }
 
@@ -196,7 +196,7 @@ function VolumeTimeline(props: any) {
       
       if (frame) {
         const volume = frame.volume * CANVAS_H // from 0-1 value to px value
-        drawRectangle(index + 1, volume)
+        drawRectangle(index, volume)
       }
     }
   }
