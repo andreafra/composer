@@ -1,15 +1,15 @@
+import { CommandBar, ICommandBarItemProps, Layer } from '@fluentui/react'
 import SoundTimeline from 'components/sound/SoundTimeline'
 import VolumeTimeline from 'components/sound/VolumeTimeline'
-import React, { useState } from 'react'
-import './style.css'
-import { CommandBar, ICommandBarItemProps, Layer } from '@fluentui/react'
-import { useSelector, useDispatch } from 'react-redux'
-import { ComposerState, SoundFrame } from 'types'
-import DownloadJS from 'downloadjs'
 import FoldableDiv from 'components/utilities/FoldableDiv'
+import DownloadJS from 'downloadjs'
+import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { setEditPanelScope, setEditPanelVisibility } from 'store/actions'
+import { ComposerState } from 'types'
 import { useJSONFilteredOutput } from 'utils/JSONFilteredOutput'
 import Player from 'utils/Player'
-import { setEditPanelScope, setEditPanelVisibility } from 'store/actions'
+import './style.css'
 
 function SoundEditor() {
 

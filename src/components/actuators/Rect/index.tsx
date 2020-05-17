@@ -46,27 +46,28 @@ function Rect(props: RectProps){
       let newWidth: number = FrameWidth
       let newMargin: number = FrameStartX
 
-      if(isLeftHandleActive) {
-        newMargin = props.x - options.frameSize
+      if(isLeftHandleActive) { // Drag left handle
+        newMargin = props.x - options.leftPadding // - options.frameSize
         newWidth = FrameEndX - newMargin
         if (props.x <= options.leftPadding){
           newMargin = 0 
           newWidth = FrameWidth + FrameStartX
         }
-      } else if(isRightHandleActive) {
-        newWidth = props.x - FrameStartX - options.frameSize
+      } else if(isRightHandleActive) { // Drag right handle
+        newWidth = props.x - FrameStartX - options.leftPadding //- options.frameSize
         newMargin = FrameStartX
         if(props.x >= options.width){
           newWidth = (options.width - FrameStartX)
         }
-      } else {
-        // drag the Rect around (it just works)
-        if ((props.x - dragOffset)  <= options.leftPadding){
+      } else { // drag the Rect around (it just works)
+        newWidth = FrameWidth
+        if(props.x - dragOffset <= options.leftPadding) { // Stop at left margin
           newMargin = 0 
-          newWidth = FrameWidth + FrameStartX
+        } else if(props.x + (FrameWidth - dragOffset) >= options.width + options.leftPadding) { // Stop at right margin
+          newMargin = options.width - FrameWidth
+        } else {
+          newMargin = props.x - dragOffset - options.frameSize
         }
-        else if(props.x + dragOffset >= options.width) newWidth = options.width - FrameStartX 
-        else newMargin = props.x - dragOffset - options.frameSize
       }
      
       setFrameWidth(newWidth >= options.frameSize ? newWidth : options.frameSize)

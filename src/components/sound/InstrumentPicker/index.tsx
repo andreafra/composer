@@ -1,12 +1,11 @@
+import { ChoiceGroup, IChoiceGroupOption } from '@fluentui/react'
+import { SawtoothWave1, SineWave, SquareWave1, TriangleWave } from 'assets/images'
 import React from 'react'
 import './style.css'
-import { IChoiceGroupOption, ChoiceGroup, values } from '@fluentui/react'
 
-import {SineWave, SawtoothWave1, SquareWave1, TriangleWave } from 'assets/images'
 
 function InstrumentPicker(props: any) {
 
-  const instruments: OscillatorType[] = ["sine", "triangle", "square", "sawtooth" /*, "custom" */]
   // "custom" breaks the app, since it needs an appropriate initialization
   // See: https://developer.mozilla.org/en-US/docs/Web/API/PeriodicWave
   

@@ -1,6 +1,6 @@
-import { TextField, IconButton, ITextFieldStyles, IStyleFunction, IStyleFunctionOrObject, IStyleSet, IButtonStyles, IStyle, Label, ILabelStyles } from "@fluentui/react";
-import React, { useState, CSSProperties } from "react";
-import './style.css'
+import { IButtonStyles, IconButton, ILabelStyles, ITextFieldStyles, Label, TextField } from "@fluentui/react";
+import React, { useState } from "react";
+import './style.css';
 
 const narrowTextFieldStyles: Partial<ITextFieldStyles> = {
   fieldGroup: { width: 100 },
@@ -37,7 +37,7 @@ export default function NumberField(props: {
   }
 
   const _handleChange = (value?: string) => {
-    if (value && value !== '-' && parseInt(value) !== NaN)
+    if (value && value !== '-' && !isNaN(parseInt(value)))
       validateAndSetValue(parseInt(value))
   }
 
