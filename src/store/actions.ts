@@ -65,7 +65,7 @@ export const setEditPanelVisibility = (visibile: boolean): type.SystemAction => 
   visibile
 })
 
-export const setEditPanelScope = (scope: type.PanelScope, channelId: string, frameId?: string): type.SystemAction => ({
+export const setEditPanelScope = (scope: type.PanelScope, channelId?: string, frameId?: string): type.SystemAction => ({
   type: type.SET_EDIT_PANEL_SCOPE,
   scope: scope,
   meta: {

@@ -10,6 +10,7 @@ const FRAME_SIZE = 30 // in px
 
 const initialState: SystemState = {
   username: "Unknown",
+  lastModified: new Date(),
   filename: "Unnamed File",
   editPanel: {
     visibility: false,
@@ -22,8 +23,7 @@ const initialState: SystemState = {
     frameSize: FRAME_SIZE,
     accentColor: "#666666",
     altAccentColor: "#999999"
-  },
-  leftScroll: 0
+  }
 }
 
 export default (

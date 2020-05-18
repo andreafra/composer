@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
-import { TooltipHost, IconButton, IIconProps } from '@fluentui/react'
-import { useId } from '@uifabric/react-hooks'
+import { IconButton, IIconProps, TooltipHost } from '@fluentui/react';
+import { useId } from '@uifabric/react-hooks';
+import React, { useState } from 'react';
 
 
 interface FoldableDivProps {

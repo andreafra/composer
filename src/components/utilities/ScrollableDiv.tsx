@@ -1,7 +1,4 @@
-import React, { useRef, useEffect, useContext, Context, useState } from "react"
-import { useSelector, useDispatch } from "react-redux"
-import { ComposerState } from "types"
-import { setScroll } from "store/actions"
+import React, { useContext, useEffect, useRef, useState } from "react"
 
 export const ScrollContext = React.createContext({
   scroll: 0,
@@ -27,10 +24,6 @@ function ScrollableContainer(props: {
 function ScrollableDiv(props: {
   children: JSX.Element
 }) {
-
-  const dispatch = useDispatch()
-  // const scroll = useSelector((state: ComposerState)=> state.system.leftScroll)
-
   const _scrollCtx = useContext(ScrollContext)
 
   const divRef = useRef<HTMLDivElement>(null)
@@ -46,8 +39,6 @@ function ScrollableDiv(props: {
 
   const _handleScroll = () => {
     _scrollCtx.updateScroll(divRef.current?.scrollLeft || 0)
-    // dispatch(setScroll(divRef.current?.scrollLeft || 0))
-
   }
 
   return (
@@ -60,7 +51,5 @@ function ScrollableDiv(props: {
   )
 }
 
-export {
-  ScrollableContainer,
-  ScrollableDiv
-}
+export { ScrollableContainer, ScrollableDiv }
+

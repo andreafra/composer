@@ -5,21 +5,22 @@ import { setEditPanelVisibility } from 'store/actions'
 import { ComposerState } from 'types'
 import ActuatorConfig from './configs/actuator'
 import FrameConfig from './configs/frame'
+import SystemConfig from './configs/system'
 
 // The panel type and description are passed in by the PanelSizesExample component (later in this file)
 function EditPanel() {
-  const isOpen = useSelector((state: ComposerState) => state.system.editPanel.visibility)
+  const editPanel = useSelector((state: ComposerState) => state.system.editPanel)
   const dispatch = useDispatch()
 
   return (
     <div>
       <Panel
         isLightDismiss
-        isOpen={isOpen}
+        isOpen={editPanel.visibility}
         onDismiss={() => dispatch(setEditPanelVisibility(false))}
         type={PanelType.customNear}
         closeButtonAriaLabel="Close"
-        headerText={"Inspector" }
+        headerText={editPanel.scope.toLowerCase() + " options" }
         customWidth={"400px"}
       >
         <ContentSwitcher />
@@ -47,11 +48,4 @@ function ContentSwitcher() {
     default:
       return <p>No matching panel found</p>
   }
-}
-
-function SystemConfig() {
-  
-  return <div>
-    <h2>System config</h2>
-  </div>
 }
