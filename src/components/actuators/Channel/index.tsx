@@ -54,6 +54,16 @@ function Channel(props: ChannelProps) {
     dispatch(setEditPanelScope("FRAME", props.id, shortid.generate()))
   }
 
+  const handleDeleteActuatorBtn = () => {
+    // TODO: remove me
+    console.log("Delete actuator")
+  }
+
+  const handleRenameActuatoBtn = () => {
+    // TODO: remove me
+    console.log("rename actuator")
+  }
+
   const _items: ICommandBarItemProps[] = [
     {
       key: "newFrame",
@@ -61,6 +71,22 @@ function Channel(props: ChannelProps) {
       iconProps: {iconName: "Add"},
       onClick: () => handleNewFrameBtn()
     }
+  ]
+
+  const _overflowItems: ICommandBarItemProps[] = [
+    {
+      key: "renameActuator",
+      text: "Rename Actuator",
+      iconProps: {iconName: "Rename"},
+      onClick: () => handleRenameActuatoBtn()
+    },
+    {
+      key: "deleteActuator",
+      text: "Delete Actuator",
+      iconProps: {iconName: "Delete"},
+      onClick: () => handleDeleteActuatorBtn()
+    },
+
   ]
 
   return (
@@ -75,6 +101,7 @@ function Channel(props: ChannelProps) {
         <h3 className="Channel-title">{thisChannel.name}</h3>
         <CommandBar
           items={_items}
+          overflowItems={_overflowItems}
           ariaLabel="Use left and right arrow keys to navigate between commands"
         />
       </div>
