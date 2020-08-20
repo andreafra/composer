@@ -28,11 +28,13 @@ function SoundEditor() {
   // Set speed
   player._tempo = tempo
 
+  const [position, setPosition] = useState(0);
+
   const handlePlay = () => {
     if (play === false) {
       setPlay(true)
       player._melody = melody
-      Player.play(() => setPlay(false))
+      Player.play((t) => setPosition(t), () => setPlay(false))
     } else {
       handleStop()
     }
@@ -45,6 +47,10 @@ function SoundEditor() {
 
   const handleDownload = () => {
     DownloadJS(parsedOutput(), state.system.filename + ".json", "application/json")
+  }
+
+  const handleSave = () => {
+    console.log("Saving... lol")
   }
 
   const handleOptions = () => {
@@ -71,6 +77,12 @@ function SoundEditor() {
       text: 'Download',
       iconProps: { iconName: 'Download' },
       onClick: handleDownload
+    },
+    {
+      key: 'save',
+      text: 'Save',
+      iconProps: { iconName: 'Save' },
+      onClick: handleSave
     },
     {
       key: 'options',
@@ -101,7 +113,7 @@ function SoundEditor() {
         <>
           {pinToolbar ? <Layer>{toolbar}</Layer> : toolbar}
           <h3 className="App-title SoundEditor-title">Pitch</h3>
-          <SoundTimeline />
+          <SoundTimeline position={position} />
           <h3 className="App-title SoundEditor-title">Volume</h3>
           <VolumeTimeline />
         </>

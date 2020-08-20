@@ -18,6 +18,14 @@ function InstrumentPicker(props: any) {
   
   const options: IChoiceGroupOption[] = [
     {
+      key: 'square',
+      imageAlt: 'Square icon',
+      imageSrc: SquareWave1,
+      selectedImageSrc: SquareWave1,
+      imageSize: { width: IMAGE_SIZE, height: IMAGE_SIZE },
+      text: 'Square Wave',
+    },
+    {
       key: 'sine',
       imageAlt: 'Sine icon',
       imageSrc: SineWave,
@@ -34,14 +42,6 @@ function InstrumentPicker(props: any) {
       text: 'Triangle Wave',
     },
     {
-      key: 'square',
-      imageAlt: 'Square icon',
-      imageSrc: SquareWave1,
-      selectedImageSrc: SquareWave1,
-      imageSize: { width: IMAGE_SIZE, height: IMAGE_SIZE },
-      text: 'Square Wave',
-    },
-    {
       key: 'sawtooth',
       imageAlt: 'Sawtooth icon',
       imageSrc: SawtoothWave1,
@@ -55,7 +55,7 @@ function InstrumentPicker(props: any) {
     <ul>
       <ChoiceGroup 
         label="Select instrument" 
-        defaultSelectedKey="sine" 
+        defaultSelectedKey="square" 
         options={options}
         onChange={(e: any, option?: IChoiceGroupOption) => setInstrument(option!.key || "sine")}
       />

@@ -22,7 +22,7 @@ function ScrollableContainer(props: {
 }
 
 function ScrollableDiv(props: {
-  children: JSX.Element
+  children: JSX.Element | JSX.Element[]
 }) {
   const _scrollCtx = useContext(ScrollContext)
 

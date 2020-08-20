@@ -6,7 +6,7 @@ import { ComposerState, Note, Point, SoundFrame } from 'types'
 import { createNoteTable } from 'utils/SoundGenerator'
 import './style.css'
 import { ScrollableDiv, ScrollContext } from 'components/utilities/ScrollableDiv'
-
+import Player from 'utils/Player'
 /*
  * Funny story time: stuff you declare outside a function component 
  * doesn't get resetted when React decides on its own to refresh that
@@ -45,7 +45,7 @@ oscillator.start(0) // start now
  * @param props notes, melody, update (callback)
  * @return JSX Canvas element
  */
-function SoundTimeline(props: any) {
+function SoundTimeline(props: {position: number}) {
 
   const scrollCtx = useContext(ScrollContext)
 
@@ -62,19 +62,23 @@ function SoundTimeline(props: any) {
   const CELL_W = options.frameSize
   const CELL_H = 15
 
+  const TIMELINE_H = 30
+
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const timelineCanvasRef = useRef<HTMLCanvasElement>(null)
 
   const [lastCell, setLastCell]: [Point, any] = useState({ x: 0, y: 0 })
   const [isDrawing, setIsDrawing]: [boolean, any] = useState(false)
   const [type, setType]: [OscillatorType, any] = useState("sine")
 
-  const MAX_VOLUME = props.maxVolume || 0.2
+  const MAX_VOLUME = 0.2
 
   /**
    * This part renders the canvas after initialising it.
    */
   useEffect(() => {
     let canvas = canvasRef.current
+    // If canvas exists, update it
     if (canvas) {
       // Init canvas space
       ctx = canvas.getContext('2d')
@@ -88,9 +92,10 @@ function SoundTimeline(props: any) {
 
       // Render "loop"
       drawBackground()
-      drawLines(numberOfRows)
+      drawRows(numberOfRows)
       drawLabels(notes)
       drawNotes(melody)
+      drawColumns()
     }
   })
 
@@ -229,7 +234,7 @@ function SoundTimeline(props: any) {
    * Draw horizontal lines on the canvas
    * @param n Number of lines to draw
    */
-  const drawLines = (n: number) => {
+  const drawRows = (n: number) => {
     if (ctx) {
       for (let i = 0; i <= n; i++) {
         // Get height of a row
@@ -242,7 +247,6 @@ function SoundTimeline(props: any) {
         ctx.lineTo(CANVAS_W, marginTop)
         ctx.closePath()
         ctx.stroke()
-
       }
 
       ctx.strokeStyle = options.altAccentColor
@@ -297,6 +301,59 @@ function SoundTimeline(props: any) {
     }
   }
 
+  const drawColumns = () => {
+    let columns = CANVAS_W / (CELL_W * 4);
+    for (let index = 0; index < columns; index++) {
+      if (ctx) {
+        ctx.strokeStyle = options.accentColor
+        ctx.lineWidth = 0.3
+        ctx.beginPath()
+        ctx.moveTo(LEFT_PADDING + CELL_W * 4 * index, 0)
+        ctx.lineTo(LEFT_PADDING + CELL_W * 4 * index, CANVAS_H)
+        ctx.closePath()
+        ctx.stroke()
+      }
+    }
+  }
+
+  useEffect(() => {
+    let timeline = timelineCanvasRef.current
+    if (timeline) {
+      // Init canvas space
+      let t_ctx = timeline.getContext('2d')
+      let t_rect = timeline.getBoundingClientRect()
+
+      // Draw lines
+      let columns = CANVAS_W / (CELL_W * 4);
+      if (t_ctx) {
+        t_ctx.clearRect(0,0, CANVAS_W, TIMELINE_H);
+        for (let index = 0; index < columns; index++) {
+          t_ctx.strokeStyle = options.altAccentColor
+          t_ctx.lineWidth = 0.3
+          t_ctx.beginPath()
+          t_ctx.moveTo(LEFT_PADDING + CELL_W * 4 * index, 0)
+          t_ctx.lineTo(LEFT_PADDING + CELL_W * 4 * index, TIMELINE_H)
+          t_ctx.closePath()
+          t_ctx.stroke()
+
+          t_ctx.font = `14px sans-serif`
+          t_ctx.fillStyle = options.altAccentColor
+          t_ctx.fillText(index.toString(), LEFT_PADDING + CELL_W * 4 * index + 5, 25)
+
+          let triangleCenter = Player._instance ? LEFT_PADDING + Player._instance._position * CELL_W : LEFT_PADDING
+          t_ctx.fillStyle = "red"
+          t_ctx.beginPath()
+          t_ctx.moveTo(triangleCenter - 5, TIMELINE_H/2)
+          t_ctx.lineTo(triangleCenter, TIMELINE_H)
+          t_ctx.lineTo(triangleCenter + 5, TIMELINE_H/2)
+          t_ctx.lineTo(triangleCenter - 5, TIMELINE_H/2)
+          t_ctx.closePath()
+          t_ctx.fill()
+        }
+      }
+    }
+  })
+
   return (
     <>
     <InstrumentPicker
@@ -305,6 +362,13 @@ function SoundTimeline(props: any) {
       />
     <div className="SoundTimeline">
       <ScrollableDiv>
+        <canvas
+          className="timelineCanvas"
+          ref={timelineCanvasRef}
+          width={CANVAS_W}
+          height={TIMELINE_H}
+        >
+        </canvas>
         <canvas
           className="soundCanvas"
           ref={canvasRef}

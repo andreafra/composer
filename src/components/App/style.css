@@ -18,4 +18,9 @@
   overflow-x: scroll;
   overflow-y: hidden;
   height: 100%;
+  font-size: 0;
+}
+
+.App-scrollable * {
+  font-size: 1rem;
 }
