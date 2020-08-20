@@ -12,12 +12,16 @@ export const SET_FRAME = 'SET_FRAME'
 export const REMOVE_FRAME = 'REMOVE_FRAME'
 
 /* System */
+export const SET_FILE_PICKER_VISIBILITY = 'SET_FILE_PICKER_VISIBILITY'
 export const SET_EDIT_PANEL_VISIBILITY = 'SET_EDIT_PANEL_VISIBILITY'
 export const SET_EDIT_PANEL_SCOPE = 'SET_EDIT_PANEL_SCOPE'
 export const SET_USERNAME = 'SET_USERNAME'
 export const SET_FILENAME = 'SET_FILENAME'
 export const SET_EDITOR_OPTIONS = 'SET_EDITOR_OPTIONS'
 export const SET_LEFT_SCROLL = 'SET_LEFT_SCROLL'
+
+export const SET_COMPOSER = 'SET_COMPOSER'
+
 /* Dictionary */
 export interface IDictionary<V> {
   [index: string]: V
@@ -94,9 +98,14 @@ interface SetFrameAction {
 export type FrameAction = SetFrameAction | RemoveFrameAction
 export type ChannelAction = AddChannelAction | RemoveChannelAction | UpdateChannelAction | FrameAction
 
+interface SetFilePickerVisibility {
+  type: typeof SET_FILE_PICKER_VISIBILITY
+  visible: boolean
+}
+
 interface SetEditPanelVisibilityAction {
   type: typeof SET_EDIT_PANEL_VISIBILITY
-  visibile: boolean
+  visible: boolean
 }
 
 interface SetEditPanelScopeAction {
@@ -108,7 +117,7 @@ interface SetEditPanelScopeAction {
   }
 }
 
-export type SetEditPanelAction = SetEditPanelVisibilityAction | SetEditPanelScopeAction
+export type SetEditPanelAction = SetFilePickerVisibility | SetEditPanelVisibilityAction | SetEditPanelScopeAction
 
 interface SetUsernameAction {
   type: typeof SET_USERNAME
@@ -125,13 +134,19 @@ interface SetEditorOptionsAction {
   payload: EditorOptions
 }
 
-interface SetLeftScroll {
+interface SetLeftScrollAction {
   type: typeof SET_LEFT_SCROLL
   scroll: number
 }
 
-export type SystemAction = SetEditPanelAction | SetUsernameAction | SetFilenameAction | SetEditorOptionsAction | SetLeftScroll
+interface SetComposerAction {
+  type: typeof SET_COMPOSER
+  payload: ComposerState
+}
 
+export type SystemAction = SetEditPanelAction | SetUsernameAction | SetFilenameAction | SetEditorOptionsAction | SetLeftScrollAction
+
+export type FileAction = SetComposerAction
 
 /* System */
 export interface SystemState {
@@ -140,6 +155,7 @@ export interface SystemState {
   filename: string
   editPanel: EditPanelState
   editorOptions: EditorOptions
+  filePickerVisibility: boolean
 }
 
 export interface EditPanelState {

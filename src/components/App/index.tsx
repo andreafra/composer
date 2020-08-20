@@ -4,6 +4,7 @@ import SoundEditor from 'components/sound/SoundEditor'
 import { ScrollableContainer } from 'components/utilities/ScrollableDiv'
 import React from 'react'
 import './style.css'
+import { FilePicker } from 'components/utilities/FilePicker'
 
 function App() {
 
@@ -14,6 +15,7 @@ function App() {
         <ActuatorList />
       </ScrollableContainer>
       <EditPanel />
+      <FilePicker />
     </div>
   )
 }

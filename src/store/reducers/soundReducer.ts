@@ -6,7 +6,7 @@ import {
   SoundFrame
 } from 'types'
 
-const initialState: Array<SoundFrame|null> = []
+export const initialState: Array<SoundFrame|null> = []
 
 export default (
   state = initialState,

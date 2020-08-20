@@ -324,9 +324,21 @@ function SoundTimeline(props: {position: number}) {
       let t_rect = timeline.getBoundingClientRect()
 
       // Draw lines
+      let smallColumns = CANVAS_W / (CELL_W);
       let columns = CANVAS_W / (CELL_W * 4);
       if (t_ctx) {
         t_ctx.clearRect(0,0, CANVAS_W, TIMELINE_H);
+
+        for (let index = 0; index < smallColumns; index++) {
+          t_ctx.strokeStyle = options.altAccentColor
+          t_ctx.lineWidth = 0.3
+          t_ctx.beginPath()
+          t_ctx.moveTo(LEFT_PADDING + CELL_W * index, TIMELINE_H/2)
+          t_ctx.lineTo(LEFT_PADDING + CELL_W * index, TIMELINE_H)
+          t_ctx.closePath()
+          t_ctx.stroke()
+        }
+
         for (let index = 0; index < columns; index++) {
           t_ctx.strokeStyle = options.altAccentColor
           t_ctx.lineWidth = 0.3
@@ -338,7 +350,7 @@ function SoundTimeline(props: {position: number}) {
 
           t_ctx.font = `14px sans-serif`
           t_ctx.fillStyle = options.altAccentColor
-          t_ctx.fillText(index.toString(), LEFT_PADDING + CELL_W * 4 * index + 5, 25)
+          t_ctx.fillText(index.toString(), LEFT_PADDING + CELL_W * 4 * index + 5, 14)
 
           let triangleCenter = Player._instance ? LEFT_PADDING + Player._instance._position * CELL_W : LEFT_PADDING
           t_ctx.fillStyle = "red"

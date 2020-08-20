@@ -5,16 +5,19 @@ import FoldableDiv from 'components/utilities/FoldableDiv'
 import DownloadJS from 'downloadjs'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { setEditPanelScope, setEditPanelVisibility } from 'store/actions'
+import { setEditPanelScope, setEditPanelVisibility, setFilePickerVisibility } from 'store/actions'
 import { ComposerState } from 'types'
 import { useJSONFilteredOutput } from 'utils/JSONFilteredOutput'
 import Player from 'utils/Player'
 import './style.css'
+import FileManager from 'utils/FileManager'
 
 function SoundEditor() {
 
   const [pinToolbar, setPinToolbar] = useState(false)
   const [play, setPlay] = useState(false);
+
+  const fileManager = new FileManager()
 
   const dispatch = useDispatch()
   const state = useSelector((state: ComposerState) => state)
@@ -50,7 +53,12 @@ function SoundEditor() {
   }
 
   const handleSave = () => {
-    console.log("Saving... lol")
+    console.log("Saving file...")
+    fileManager.setFile(state)
+  }
+
+  const handleOpen = () => {
+    dispatch(setFilePickerVisibility(true))    
   }
 
   const handleOptions = () => {
@@ -83,6 +91,12 @@ function SoundEditor() {
       text: 'Save',
       iconProps: { iconName: 'Save' },
       onClick: handleSave
+    },
+    {
+      key: 'open',
+      text: 'Load',
+      iconProps: { iconName: 'OpenFolderHorizontal' },
+      onClick: handleOpen
     },
     {
       key: 'options',

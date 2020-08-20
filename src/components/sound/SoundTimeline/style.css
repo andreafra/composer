@@ -2,3 +2,7 @@
   overflow-x: scroll;
   background-color: white;
 }
+
+.soundCanvas, .timelineCanvas {
+  display: block;
+}

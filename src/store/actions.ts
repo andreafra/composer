@@ -60,9 +60,14 @@ export const setFrame = (payload: type.Frame, id: string, channelId: string): ty
   }
 })
 
-export const setEditPanelVisibility = (visibile: boolean): type.SystemAction => ({
+export const setFilePickerVisibility = (visible: boolean): type.SystemAction => ({
+  type: type.SET_FILE_PICKER_VISIBILITY,
+  visible: visible
+})
+
+export const setEditPanelVisibility = (visible: boolean): type.SystemAction => ({
   type: type.SET_EDIT_PANEL_VISIBILITY,
-  visibile
+  visible: visible
 })
 
 export const setEditPanelScope = (scope: type.PanelScope, channelId?: string, frameId?: string): type.SystemAction => ({
@@ -92,4 +97,9 @@ export const setEditorOptions = (payload: type.EditorOptions): type.SystemAction
 export const setScroll = (scroll: number): type.SystemAction => ({
   type: type.SET_LEFT_SCROLL,
   scroll: scroll
+})
+
+export const setState = (state: type.ComposerState): type.FileAction => ({
+  type: type.SET_COMPOSER,
+  payload: state
 })

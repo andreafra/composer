@@ -1,4 +1,4 @@
-import { SET_EDITOR_OPTIONS, SET_EDIT_PANEL_SCOPE, SET_EDIT_PANEL_VISIBILITY, SET_FILENAME, SET_USERNAME, SET_LEFT_SCROLL, SystemAction, SystemState } from 'types'
+import { SET_EDITOR_OPTIONS, SET_EDIT_PANEL_SCOPE, SET_EDIT_PANEL_VISIBILITY, SET_FILENAME, SET_USERNAME, SET_LEFT_SCROLL, SystemAction, SystemState, SET_FILE_PICKER_VISIBILITY } from 'types'
 
 // The margin from the left side of the screen
 const LEFT_PADDING = 30 // in px
@@ -8,7 +8,7 @@ const LENGTH = 5 // in seconds
 const FRAME_RESOLUTION = 100 // in ms
 const FRAME_SIZE = 30 // in px
 
-const initialState: SystemState = {
+export const initialState: SystemState = {
   username: "Unknown",
   lastModified: new Date(),
   filename: "Unnamed File",
@@ -23,7 +23,8 @@ const initialState: SystemState = {
     frameSize: FRAME_SIZE,
     accentColor: "#666666",
     altAccentColor: "#999999"
-  }
+  },
+  filePickerVisibility: false
 }
 
 export default (
@@ -32,12 +33,17 @@ export default (
 ) => {
   switch (action.type) {
 
+  case SET_FILE_PICKER_VISIBILITY:
+    return {
+      ...state,
+      filePickerVisibility: action.visible
+    }
   case SET_EDIT_PANEL_VISIBILITY:
     return {
       ...state,
       editPanel: {
         ...state.editPanel,
-        visibility: action.visibile
+        visibility: action.visible
       }
     }
   case SET_EDIT_PANEL_SCOPE:

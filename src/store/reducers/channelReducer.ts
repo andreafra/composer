@@ -1,6 +1,6 @@
 import { ADD_CHANNEL, Channel, ChannelAction, REMOVE_CHANNEL, REMOVE_FRAME, SET_FRAME, UPDATE_CHANNEL } from 'types'
 
-const initialState: Array<Channel> = []
+export const initialState: Array<Channel> = []
 
 export default (
   state = initialState,
