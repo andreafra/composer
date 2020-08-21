@@ -90,9 +90,12 @@ export default class FileManager {
   }
 
   deleteFile = (id: string) => {
-    this.storage.removeItem(id)
     let list = this.getSavedFilesList()
-    let newList = list.map(item => item.id !== id)
-    this.storage.setItem("SAVED_FILES", JSON.stringify(newList))
+    let newList = list.filter(item => item.id !== id)
+    console.log(id)
+    console.log(newList)
+    this.storage.setItem("SAVED_FILES", JSON.stringify({files: newList}))
+    this.storage.removeItem(id)
+    return newList
   }
 }

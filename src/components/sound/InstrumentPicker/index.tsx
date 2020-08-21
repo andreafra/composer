@@ -1,4 +1,4 @@
-import { ChoiceGroup, IChoiceGroupOption } from '@fluentui/react'
+import { ChoiceGroup, IChoiceGroupOption, IChoiceGroupStyles, IChoiceGroupOptionStyles } from '@fluentui/react'
 import { SawtoothWave1, SineWave, SquareWave1, TriangleWave } from 'assets/images'
 import React from 'react'
 import './style.css'
@@ -14,17 +14,9 @@ function InstrumentPicker(props: any) {
     props.update(value)
   }
 
-  const IMAGE_SIZE = 32
+  const IMAGE_SIZE = 64
   
   const options: IChoiceGroupOption[] = [
-    {
-      key: 'square',
-      imageAlt: 'Square icon',
-      imageSrc: SquareWave1,
-      selectedImageSrc: SquareWave1,
-      imageSize: { width: IMAGE_SIZE, height: IMAGE_SIZE },
-      text: 'Square Wave',
-    },
     {
       key: 'sine',
       imageAlt: 'Sine icon',
@@ -32,6 +24,14 @@ function InstrumentPicker(props: any) {
       selectedImageSrc: SineWave,
       imageSize: { width: IMAGE_SIZE, height: IMAGE_SIZE },
       text: 'Sine Wave', // This text is long to show text wrapping.
+    },
+    {
+      key: 'square',
+      imageAlt: 'Square icon',
+      imageSrc: SquareWave1,
+      selectedImageSrc: SquareWave1,
+      imageSize: { width: IMAGE_SIZE, height: IMAGE_SIZE },
+      text: 'Square Wave',
     },
     {
       key: 'triangle',
@@ -55,7 +55,7 @@ function InstrumentPicker(props: any) {
     <ul>
       <ChoiceGroup 
         label="Select instrument" 
-        defaultSelectedKey="square" 
+        defaultSelectedKey="sine" 
         options={options}
         onChange={(e: any, option?: IChoiceGroupOption) => setInstrument(option!.key || "sine")}
       />

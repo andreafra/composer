@@ -52,6 +52,10 @@ function SoundEditor() {
     DownloadJS(parsedOutput(), state.system.filename + ".json", "application/json")
   }
 
+  const handleSaveWithDownload = () => {
+    DownloadJS(JSON.stringify(state), state.system.filename + ".json", "application/json")
+  }
+
   const handleSave = () => {
     console.log("Saving file...")
     fileManager.setFile(state)
@@ -90,7 +94,22 @@ function SoundEditor() {
       key: 'save',
       text: 'Save',
       iconProps: { iconName: 'Save' },
-      onClick: handleSave
+      subMenuProps: {
+        items: [
+          {
+            key: 'save',
+            text: 'Save',
+            iconProps: { iconName: 'Save' },
+            onClick: handleSave
+          },
+          {
+            key: 'saveToPC',
+            text: 'Save to Computer',
+            iconProps: { iconName: 'Download' },
+            onClick: handleSaveWithDownload
+          }
+        ]
+      }
     },
     {
       key: 'open',

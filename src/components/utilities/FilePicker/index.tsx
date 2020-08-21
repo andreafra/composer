@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { Modal, getTheme, mergeStyleSets, Selection, FontWeights, DetailsList, DetailsListLayoutMode, Pivot, PivotItem, Label, IconButton, SelectionMode, FontIcon, DefaultButton } from '@fluentui/react';
+import { Modal, getTheme, mergeStyleSets, Selection, FontWeights, DetailsList, DetailsListLayoutMode, Pivot, PivotItem, Label, IconButton, SelectionMode, FontIcon, DefaultButton, Stack, IStackItemStyles, DefaultPalette, IStackStyles, CompoundButton } from '@fluentui/react';
 import { useSelector, useDispatch } from 'react-redux';
 import { ComposerState } from 'types';
 import { setFilePickerVisibility, setState } from 'store/actions';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import FileManager, {File, FileList} from 'utils/FileManager'
 
 export const FilePicker = () => {
@@ -13,7 +13,7 @@ export const FilePicker = () => {
   const dispatch = useDispatch()
   const state = useSelector((state: ComposerState) => state)
   const isFilePickerVisible = useSelector((state: ComposerState) => state.system.filePickerVisibility)
-  const [selectedItem, setSelectedItem]: [any, any] = useState(null)
+  const [selectedItem, setSelectedItem]: [File | null, any] = useState(null)
 
   const _onItemInvoked = (item: File): void => {
     fileManager.setFile(state)
@@ -25,50 +25,12 @@ export const FilePicker = () => {
     // TODO: Handle possible errors gracefully
   }
 
+  // TODO: Might want to refactor filemanager into an hook
+  const [items, setItems] = useState(fileManager.getSavedFilesList())
 
-  const items = fileManager.getSavedFilesList()
-
-  const classNames = mergeStyleSets({
-    fileIconHeaderIcon: {
-      padding: 0,
-      fontSize: '16px',
-    },
-    fileIconCell: {
-      textAlign: 'center',
-      selectors: {
-        '&:before': {
-          content: '.',
-          display: 'inline-block',
-          verticalAlign: 'middle',
-          height: '100%',
-          width: '0px',
-          visibility: 'hidden',
-        },
-      },
-    },
-    fileIconImg: {
-      verticalAlign: 'middle',
-      maxHeight: '24px',
-      maxWidth: '24px',
-    }
-  })
+  const inputFileRef = useRef<HTMLInputElement>(null);
 
   const _columns = [
-    {
-      key: 'column0',
-      name: '',
-      className: classNames.fileIconCell,
-      iconClassName: classNames.fileIconHeaderIcon,
-      ariaLabel: 'Column operations for File type, Press to sort on File type',
-      iconName: 'Page',
-      isIconOnly: true,
-      fieldName: 'name',
-      minWidth: 16,
-      maxWidth: 16,
-      onRender: () => {
-        return <FontIcon iconName="FileCode" className={classNames.fileIconImg} />;
-      }
-    },
     { key: 'column1', name: 'Name', fieldName: 'name', minWidth: 100, maxWidth: 200, isResizable: true },
     { key: 'column2', name: 'Last Modified', fieldName: 'lastModified', minWidth: 100, maxWidth: 300, isResizable: true }
   ]
@@ -92,26 +54,41 @@ export const FilePicker = () => {
   const _handleFileDelete = () => {
     // TODO: Not so easy, we gotta first create a blank file or something,
     // or you can't delete your active file
-    fileManager.deleteFile(selectedItem)
+    if (selectedItem) {
+      let newItems = fileManager.deleteFile((selectedItem as File).id)
+      setItems(newItems)
+    }
   }
 
-  const contextualButtons = () => {
-    if (selectedItem !== null)
-    return (
-      <DefaultButton
-        text={"Delete"}
-        iconProps={{ iconName: "Delete"}}
-        onClick={_handleFileDelete}
-        disabled={selectedItem === null}
-      />
-    )
-    else return
+  const _handleFileUploadBtn = () => {
+    if (inputFileRef.current)
+        inputFileRef.current.click()
+  }
+
+  const _handleUploadedFile = (e:any) => {
+    if (e.target) {
+      let file = e.target.files[0]
+      let reader = new FileReader()
+      // setup read event
+      reader.onload = (ev) => {
+        let rawContent = ev.target?.result
+        let parsedContent = JSON.parse(rawContent as string)
+        if (parsedContent) {
+          dispatch(setState(parsedContent))
+        } else {
+          console.error("Error parsing uploaded file!")
+        }
+      }
+      // start reading the file
+      reader.readAsText(file)
+    }
   }
 
   return (
       <Modal
         titleAriaId={"file-picker-modal"}
         isOpen={isFilePickerVisible}
+        onLayerDidMount={() => setItems(fileManager.getSavedFilesList())}
         onDismiss={() => dispatch(setFilePickerVisibility(false))}
         isBlocking={true}
         containerClassName={contentStyles.container}
@@ -134,7 +111,12 @@ export const FilePicker = () => {
                 'data-title': 'Local Files',
               }}
             >
-              <Label>Tip: Double click to open a file! {contextualButtons()}</Label>
+              <DefaultButton
+                text={"Delete"}
+                iconProps={{ iconName: "Delete"}}
+                onClick={_handleFileDelete}
+                disabled={selectedItem === null || selectedItem!.id === state.system.filename}
+              />
               <DetailsList
                 items={items}
                 columns={_columns}
@@ -147,7 +129,13 @@ export const FilePicker = () => {
               />
             </PivotItem>
             <PivotItem headerText="Upload">
-              <Label>Upload a file from your computer:</Label>
+              <CompoundButton
+                primary
+                secondaryText="Choose a save file from your computer"
+                onClick={_handleFileUploadBtn}>
+                Upload file
+              </CompoundButton>
+              <input type="file" id="input" ref={inputFileRef} style={{display: "none"}} onChange={(e) => _handleUploadedFile(e)}/>
             </PivotItem>
             <PivotItem headerText="OneDrive">
               <Label>Soon</Label>
@@ -191,6 +179,13 @@ const contentStyles = mergeStyleSets({
   },
 })
 
+const itemAlignmentsStackStyles: IStackStyles = {
+  root: {
+    background: DefaultPalette.themeTertiary,
+    height: 100,
+  },
+}
+
 const iconButtonStyles = {
   root: {
     color: theme.palette.neutralPrimary,
@@ -202,3 +197,23 @@ const iconButtonStyles = {
     color: theme.palette.neutralDark,
   },
 }
+
+const classNames = mergeStyleSets({
+  fileIconHeaderIcon: {
+    padding: 0,
+    fontSize: '16px',
+  },
+  fileIconCell: {
+    textAlign: 'center',
+    selectors: {
+      '&:before': {
+        content: '.',
+        display: 'inline-block',
+        verticalAlign: 'middle',
+        height: '100%',
+        width: '0px',
+        visibility: 'hidden',
+      },
+    },
+  }
+})
