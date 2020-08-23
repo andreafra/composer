@@ -14,39 +14,39 @@ function InstrumentPicker(props: any) {
     props.update(value)
   }
 
-  const IMAGE_SIZE = 64
+  const IMAGE_SIZE = 32
   
   const options: IChoiceGroupOption[] = [
     {
       key: 'sine',
-      imageAlt: 'Sine icon',
-      imageSrc: SineWave,
-      selectedImageSrc: SineWave,
-      imageSize: { width: IMAGE_SIZE, height: IMAGE_SIZE },
+      // imageAlt: 'Sine icon',
+      // imageSrc: SineWave,
+      // selectedImageSrc: SineWave,
+      // imageSize: { width: IMAGE_SIZE, height: IMAGE_SIZE },
       text: 'Sine Wave', // This text is long to show text wrapping.
     },
     {
       key: 'square',
-      imageAlt: 'Square icon',
-      imageSrc: SquareWave1,
-      selectedImageSrc: SquareWave1,
-      imageSize: { width: IMAGE_SIZE, height: IMAGE_SIZE },
+      // imageAlt: 'Square icon',
+      // imageSrc: SquareWave1,
+      // selectedImageSrc: SquareWave1,
+      // imageSize: { width: IMAGE_SIZE, height: IMAGE_SIZE },
       text: 'Square Wave',
     },
     {
       key: 'triangle',
-      imageAlt: 'Triangle icon',
-      imageSrc: TriangleWave,
-      selectedImageSrc: TriangleWave,
-      imageSize: { width: IMAGE_SIZE, height: IMAGE_SIZE },
+      // imageAlt: 'Triangle icon',
+      // imageSrc: TriangleWave,
+      // selectedImageSrc: TriangleWave,
+      // imageSize: { width: IMAGE_SIZE, height: IMAGE_SIZE },
       text: 'Triangle Wave',
     },
     {
       key: 'sawtooth',
-      imageAlt: 'Sawtooth icon',
-      imageSrc: SawtoothWave1,
-      selectedImageSrc: SawtoothWave1,
-      imageSize: { width: IMAGE_SIZE, height: IMAGE_SIZE },
+      // imageAlt: 'Sawtooth icon',
+      // imageSrc: SawtoothWave1,
+      // selectedImageSrc: SawtoothWave1,
+      // imageSize: { width: IMAGE_SIZE, height: IMAGE_SIZE },
       text: 'Sawtooth Wave',
     },
   ];

@@ -1,5 +1,5 @@
 import { Actuator } from "types"
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { SpinButton, Stack, IStackTokens } from "@fluentui/react"
 
 const StackTokens: Partial<IStackTokens> = { childrenGap: 10 };
@@ -10,15 +10,14 @@ function PinList(props: {
 }) {
   const actuator = props.actuator
 
-  const [pinValue, setPinValue]: [number[], any] = useState([])
+  const [pinValue, setPinValue]: [number[], any] = useState(new Array(actuator.pins.length))
   const [hasDuplicates, setHasDuplicates] = useState(false)
 
   const _handlePinIncrease = (value: string, index: number) => {
     const _num = parseInt(value)
     const _pins = pinValue.splice(0);
-    _pins[index] = _num < 100? _num + 1 : 100
+    _pins[index] = _num < 100 ? _num + 1 : 100
     setPinValue(_pins)
-    props.update(pinValue)
   }
 
   const _handlePinDecrease = (value: string, index: number) => {
@@ -26,8 +25,11 @@ function PinList(props: {
     const _pins = pinValue.splice(0);
     _pins[index] = _num > 0 ? _num - 1 : 0
     setPinValue(_pins)
-    props.update(pinValue)
   }
+
+  useEffect(() => {
+    props.update(pinValue)
+  }, [pinValue])
 
   const pins = actuator.pins.map((value, index) =>
     <SpinButton

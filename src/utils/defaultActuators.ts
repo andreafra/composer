@@ -14,6 +14,7 @@ export function initCustomActuators(source: Actuator[]) {
   source.forEach((actuator: object) => {
     if (verifyActuator(actuator))
       availableActuators.push(actuator as Actuator)
+    else console.error("Invalid Actuator!")
   })
 }
 
@@ -46,6 +47,10 @@ const defaultActuators: Actuator[] = [
     name: "Light (Single Led)",
     pins: ["Power"],
     fields: [
+      {
+        type: "BOOL",
+        name: "PWM (if ON, you can set the Intensity)"
+      },
       {
         type: "NUMBER",
         name: "Intensity",
@@ -81,6 +86,25 @@ const defaultActuators: Actuator[] = [
         name: "Angle",
         minValue: 0,
         maxValue: 180
+      }
+    ]
+  },
+  {
+    type: "MOTOR_STEPPER",
+    name: "Stepper Motor",
+    pins: ["Speed", "Steps"],
+    fields: [
+      {
+        type: "NUMBER",
+        name: "Speed (RPM)",
+        minValue: 0,
+        maxValue: 1000
+      },
+      {
+        type: "NUMBER",
+        name: "Speed (RPM)",
+        minValue: 0,
+        maxValue: 100
       }
     ]
   }

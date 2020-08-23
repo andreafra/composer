@@ -11,6 +11,7 @@ import { useJSONFilteredOutput } from 'utils/JSONFilteredOutput'
 import Player from 'utils/Player'
 import './style.css'
 import FileManager from 'utils/FileManager'
+import Compiler from 'compilers/arduino_v1'
 
 function SoundEditor() {
 
@@ -70,6 +71,9 @@ function SoundEditor() {
     dispatch(setEditPanelScope("SYSTEM"))
   }
 
+  const handleBuildArduino = () => {
+    console.log(new Compiler(state).build())
+  }
 
   const _items: ICommandBarItemProps[] = [
     {
@@ -88,7 +92,22 @@ function SoundEditor() {
       key: 'download',
       text: 'Download',
       iconProps: { iconName: 'Download' },
-      onClick: handleDownload
+      subMenuProps: {
+        items: [
+          {
+            key: 'download-json',
+            text: 'Download as JSON',
+            iconProps: { iconName: 'Save' },
+            onClick: handleDownload
+          },
+          {
+            key: 'download-arduino-sketch',
+            text: 'Download as Arduino Sketch',
+            iconProps: { iconName: 'Build' },
+            onClick: handleBuildArduino
+          }
+        ]
+      }
     },
     {
       key: 'save',

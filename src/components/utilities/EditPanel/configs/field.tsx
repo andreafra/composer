@@ -7,8 +7,6 @@ function FieldList(props: {
   spec: Field
   update: (value: string) => void
 }) {
-  console.log(props.value, props.spec)
-
   const spec = props.spec
   switch (spec.type) {
     case "NUMBER":
