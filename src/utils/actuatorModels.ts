@@ -44,7 +44,7 @@ const defaultActuators: Actuator[] = [
   },
   {
     type: "LIGHT_SINGLE_PWM",
-    name: "Light (Single Led. PWM)",
+    name: "Light (Single Led, PWM)",
     pins: ["Power"],
     variables: [
       {
@@ -147,6 +147,14 @@ const defaultActuators: Actuator[] = [
     type: "MOTOR_STEPPER_2",
     name: "Stepper Motor (2 Pins)",
     pins: ["Pin 1", "Pin 2"],
+    constants: [
+      {
+        type: "NUMBER",
+        name: "Steps",
+        minValue: 0,
+        maxValue: 1000
+      }
+    ],
     variables: [
       {
         type: "NUMBER",

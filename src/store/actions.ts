@@ -23,11 +23,6 @@ export const setVolume = (payload: type.SoundFrame, index: number): type.VolumeA
   }
 })
 
-export const addChannel = (payload: type.Channel): type.ChannelAction => ({
-  type: type.ADD_CHANNEL,
-  payload
-})
-
 export const removeChannel = (id: string): type.ChannelAction => ({
   type: type.REMOVE_CHANNEL,
   meta: {
@@ -35,8 +30,8 @@ export const removeChannel = (id: string): type.ChannelAction => ({
   }
 })
 
-export const updateChannel = (payload: type.Channel, id: string): type.ChannelAction => ({
-  type: type.UPDATE_CHANNEL,
+export const setChannel = (payload: type.Channel, id: string): type.ChannelAction => ({
+  type: type.SET_CHANNEL,
   payload,
   meta: {
     id: id
