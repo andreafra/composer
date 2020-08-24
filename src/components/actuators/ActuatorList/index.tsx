@@ -1,16 +1,30 @@
 import { CommandBar, ICommandBarItemProps } from '@fluentui/react/lib/CommandBar'
 import Channel from 'components/actuators/Channel'
-import React from 'react'
+import React, { useContext, createContext, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import shortid from 'shortid'
-import { setEditPanelScope, setEditPanelVisibility } from 'store/actions'
 import { Channel as ChannelType, ComposerState } from 'types'
 import './style.css'
 import FoldableDiv from 'components/utilities/FoldableDiv'
+import { DetailPanelCtx } from 'components/App'
+import ActuatorDetails from 'components/modals/ActuatorDetails'
+
+export const ActiveChannelCtx = createContext({
+  channelId: null,
+  frameId: null,
+  setChannelId: (id: string|null) => {},
+  setFrameId: (id: string|null) => {}
+})
 
 function ActuatorList(){
 
-  const dispatch = useDispatch()
+  const activeChannel = useContext(ActiveChannelCtx)
+  const [currentChannelId, setCurrentChannelId]: [string|null, any] = useState(activeChannel.channelId)
+  const [currentFrameId, setCurrentFrameId]: [string|null, any] = useState(activeChannel.frameId)
+  activeChannel.setChannelId = (id) => setCurrentChannelId(id)
+  activeChannel.setFrameId = (id) => setCurrentFrameId(id)
+  
+  const detailPanel = useContext(DetailPanelCtx)
   const channels = useSelector((state: ComposerState) => state.actuators)
 
   /**
@@ -18,8 +32,8 @@ function ActuatorList(){
    * the user can customize 
    */
   const handleNewActuatorBtn = () => {
-    dispatch(setEditPanelVisibility(true))
-    dispatch(setEditPanelScope("ACTUATOR", shortid.generate()))
+    detailPanel.changeValue("CHANNEL")
+    activeChannel.setChannelId(null)
   }
 
   // CammandBar items
@@ -28,7 +42,7 @@ function ActuatorList(){
       key: "newActuator",
       text: "New Actuator",
       iconProps: {iconName: "Add"},
-      onClick: () => handleNewActuatorBtn()
+      onClick: handleNewActuatorBtn
     }
   ]
 
@@ -54,6 +68,7 @@ function ActuatorList(){
           </div>
         </>
       </FoldableDiv>
+    <ActuatorDetails />
     </div>
   )
 }

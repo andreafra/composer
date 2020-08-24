@@ -1,6 +1,9 @@
 import { ADD_CHANNEL, Channel, ChannelAction, REMOVE_CHANNEL, REMOVE_FRAME, SET_FRAME, UPDATE_CHANNEL } from 'types'
+import FileManager from 'utils/FileManager';
 
-export const initialState: Array<Channel> = []
+const latestFile = new FileManager().getLatestFile();
+
+export const initialState: Array<Channel> = latestFile ? latestFile.actuators : []
 
 export default (
   state = initialState,

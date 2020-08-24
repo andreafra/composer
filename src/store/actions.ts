@@ -60,25 +60,6 @@ export const setFrame = (payload: type.Frame, id: string, channelId: string): ty
   }
 })
 
-export const setFilePickerVisibility = (visible: boolean): type.SystemAction => ({
-  type: type.SET_FILE_PICKER_VISIBILITY,
-  visible: visible
-})
-
-export const setEditPanelVisibility = (visible: boolean): type.SystemAction => ({
-  type: type.SET_EDIT_PANEL_VISIBILITY,
-  visible: visible
-})
-
-export const setEditPanelScope = (scope: type.PanelScope, channelId?: string, frameId?: string): type.SystemAction => ({
-  type: type.SET_EDIT_PANEL_SCOPE,
-  scope: scope,
-  meta: {
-    channelId: channelId,
-    frameId: frameId
-  }
-})
-
 export const setUsername = (username: string): type.SystemAction => ({
   type: type.SET_USERNAME,
   username: username
@@ -92,11 +73,6 @@ export const setFilename = (filename: string): type.SystemAction => ({
 export const setEditorOptions = (payload: type.EditorOptions): type.SystemAction => ({
   type: type.SET_EDITOR_OPTIONS,
   payload: payload
-})
-
-export const setScroll = (scroll: number): type.SystemAction => ({
-  type: type.SET_LEFT_SCROLL,
-  scroll: scroll
 })
 
 export const setState = (state: type.ComposerState): type.FileAction => ({

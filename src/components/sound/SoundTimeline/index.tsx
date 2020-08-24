@@ -7,6 +7,8 @@ import { createNoteTable } from 'utils/SoundGenerator'
 import './style.css'
 import { ScrollableDiv, ScrollContext } from 'components/utilities/ScrollableDiv'
 import Player from 'utils/Player'
+import { CurrentInstantMarkerCtx } from '../SoundEditor'
+import { LEFT_PADDING, ACCENT_COLOR, ACCENT_COLOR_ALT } from 'utils/constants'
 /*
  * Funny story time: stuff you declare outside a function component 
  * doesn't get resetted when React decides on its own to refresh that
@@ -45,9 +47,10 @@ oscillator.start(0) // start now
  * @param props notes, melody, update (callback)
  * @return JSX Canvas element
  */
-function SoundTimeline(props: {position: number}) {
+function SoundTimeline() {
 
   const scrollCtx = useContext(ScrollContext)
+  const currentInstantMarker = useContext(CurrentInstantMarkerCtx)
 
   const dispatch = useDispatch()
   const options = useSelector((state: ComposerState) => state.system.editorOptions)
@@ -57,8 +60,7 @@ function SoundTimeline(props: {position: number}) {
   // TODO: replace 3, 5 with actual parameters
   const notes = useMemo(() => createNoteTable(3, 5).reverse(), [])
 
-  const CANVAS_W = options.width + options.leftPadding
-  const LEFT_PADDING = options.leftPadding
+  const CANVAS_W = options.width + LEFT_PADDING
   const CELL_W = options.frameSize
   const CELL_H = 15
 
@@ -240,7 +242,7 @@ function SoundTimeline(props: {position: number}) {
         // Get height of a row
         let marginTop = CELL_H * i
 
-        ctx.strokeStyle = options.accentColor
+        ctx.strokeStyle = ACCENT_COLOR
         ctx.lineWidth = 0.3
         ctx.beginPath()
         ctx.moveTo(0, marginTop)
@@ -249,7 +251,7 @@ function SoundTimeline(props: {position: number}) {
         ctx.stroke()
       }
 
-      ctx.strokeStyle = options.altAccentColor
+      ctx.strokeStyle = ACCENT_COLOR_ALT
       ctx.beginPath()
       ctx.moveTo(LEFT_PADDING, 0)
       ctx.lineTo(LEFT_PADDING, CANVAS_H)
@@ -266,7 +268,7 @@ function SoundTimeline(props: {position: number}) {
     if (ctx) {
       let marginTop = CELL_H
       ctx.font = `${CELL_H - 3}px sans-serif`
-      ctx.fillStyle = options.accentColor
+      ctx.fillStyle = ACCENT_COLOR
       for (const note of _notes) {
         ctx.fillText(note.name, 5, marginTop - 2)
         marginTop += CELL_H
@@ -305,7 +307,7 @@ function SoundTimeline(props: {position: number}) {
     let columns = CANVAS_W / (CELL_W * 4);
     for (let index = 0; index < columns; index++) {
       if (ctx) {
-        ctx.strokeStyle = options.accentColor
+        ctx.strokeStyle = ACCENT_COLOR
         ctx.lineWidth = 0.3
         ctx.beginPath()
         ctx.moveTo(LEFT_PADDING + CELL_W * 4 * index, 0)
@@ -330,7 +332,7 @@ function SoundTimeline(props: {position: number}) {
         t_ctx.clearRect(0,0, CANVAS_W, TIMELINE_H);
 
         for (let index = 0; index < smallColumns; index++) {
-          t_ctx.strokeStyle = options.altAccentColor
+          t_ctx.strokeStyle = ACCENT_COLOR_ALT
           t_ctx.lineWidth = 0.3
           t_ctx.beginPath()
           t_ctx.moveTo(LEFT_PADDING + CELL_W * index, TIMELINE_H/2)
@@ -340,7 +342,7 @@ function SoundTimeline(props: {position: number}) {
         }
 
         for (let index = 0; index < columns; index++) {
-          t_ctx.strokeStyle = options.altAccentColor
+          t_ctx.strokeStyle = ACCENT_COLOR_ALT
           t_ctx.lineWidth = 0.3
           t_ctx.beginPath()
           t_ctx.moveTo(LEFT_PADDING + CELL_W * 4 * index, 0)
@@ -349,7 +351,7 @@ function SoundTimeline(props: {position: number}) {
           t_ctx.stroke()
 
           t_ctx.font = `14px sans-serif`
-          t_ctx.fillStyle = options.altAccentColor
+          t_ctx.fillStyle = ACCENT_COLOR_ALT
           t_ctx.fillText(index.toString(), LEFT_PADDING + CELL_W * 4 * index + 5, 14)
 
           let triangleCenter = Player._instance ? LEFT_PADDING + Player._instance._position * CELL_W : LEFT_PADDING

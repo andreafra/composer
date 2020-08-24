@@ -1,19 +1,18 @@
-import { useCustomActuators } from "utils/defaultActuators"
+import { useActuatorModels } from "utils/actuatorModels"
 import { useSelector, useDispatch } from "react-redux"
 import { ComposerState, Channel, Frame, Actuator } from "types"
 import React, { useState } from "react"
 import { getId, Stack, Label, TextField, Dropdown, IDropdownOption, PrimaryButton, IStackTokens } from "@fluentui/react"
 import shortid from "shortid"
-import { addChannel, setEditPanelVisibility } from "store/actions"
+import { addChannel } from "store/actions"
 
 import Pins from './pins'
 
 const StackTokens: Partial<IStackTokens> = { childrenGap: 10 };
 
 function ActuatorConfig() {
-  const actuators = useCustomActuators()
+  const actuators = useActuatorModels()
   const numOfActuators = useSelector((state: ComposerState) => state.actuators).length
-  const channelId = useSelector((state: ComposerState) => state.system.editPanel.channelId)
 
   const [actuatorName, setActuatorName] = useState(`Actuator #${numOfActuators + 1}`)
   const [showDetails, setShowDetails] = useState(false)
@@ -31,7 +30,7 @@ function ActuatorConfig() {
    */
   let newActuator: Channel = {
     name: actuatorName,
-    id: channelId || shortid.generate(),
+    id: shortid.generate(),
     type: actuator.type,
     pins: [],
     frames: new Map<string, Frame>()
@@ -50,7 +49,6 @@ function ActuatorConfig() {
 
   const _addActuator = () => {
     dispatch(addChannel(newActuator))
-    dispatch(setEditPanelVisibility(false))
   }
 
   return <Stack tokens={StackTokens}>
@@ -78,6 +76,7 @@ function ActuatorConfig() {
     : null
     }
   </Stack>
+  return (<></>)
 }
 
 export default ActuatorConfig

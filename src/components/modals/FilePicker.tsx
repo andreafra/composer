@@ -1,18 +1,21 @@
+import { CompoundButton, DefaultButton, DetailsList, DetailsListLayoutMode, IconButton, Label, Modal, Pivot, PivotItem, Selection, SelectionMode, ILayerProps } from '@fluentui/react';
+import { DetailPanelCtx } from 'components/App';
 import * as React from 'react';
-import { Modal, getTheme, mergeStyleSets, Selection, FontWeights, DetailsList, DetailsListLayoutMode, Pivot, PivotItem, Label, IconButton, SelectionMode, FontIcon, DefaultButton, Stack, IStackItemStyles, DefaultPalette, IStackStyles, CompoundButton } from '@fluentui/react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { ComposerState } from 'types';
-import { setFilePickerVisibility, setState } from 'store/actions';
-import { useState, useRef } from 'react';
-import FileManager, {File, FileList} from 'utils/FileManager'
+import FileManager, { File } from 'utils/FileManager';
+import { contentStyles, iconButtonStyles } from './styles';
+import { setState } from 'store/actions';
 
-export const FilePicker = () => {
+export default function FilePicker() {
   
   const fileManager = new FileManager()
 
   const dispatch = useDispatch()
+
+  const detailPanel = React.useContext(DetailPanelCtx)
   const state = useSelector((state: ComposerState) => state)
-  const isFilePickerVisible = useSelector((state: ComposerState) => state.system.filePickerVisibility)
   const [selectedItem, setSelectedItem]: [File | null, any] = useState(null)
 
   const _onItemInvoked = (item: File): void => {
@@ -83,14 +86,19 @@ export const FilePicker = () => {
       reader.readAsText(file)
     }
   }
+  
+  const _layerProps: ILayerProps = {
+    onLayerDidMount: () => setItems(fileManager.getSavedFilesList())
+  }
+
 
   return (
       <Modal
         titleAriaId={"file-picker-modal"}
-        isOpen={isFilePickerVisible}
-        onLayerDidMount={() => setItems(fileManager.getSavedFilesList())}
-        onDismiss={() => dispatch(setFilePickerVisibility(false))}
-        isBlocking={true}
+        isOpen={detailPanel.value === "FILE_PICKER"}
+        layerProps={_layerProps}
+        onDismiss={() => detailPanel.changeValue("NONE")}
+        isBlocking={false}
         containerClassName={contentStyles.container}
       >
         <div className={contentStyles.header}>
@@ -99,7 +107,7 @@ export const FilePicker = () => {
             styles={iconButtonStyles}
             iconProps={{ iconName: 'Cancel' }}
             ariaLabel="Close popup modal"
-            onClick={() => dispatch(setFilePickerVisibility(false))}
+            onClick={() => detailPanel.changeValue("NONE")}
           />
         </div>
         <div className={contentStyles.body}>
@@ -145,75 +153,3 @@ export const FilePicker = () => {
       </Modal>
   )
 }
-
-const theme = getTheme();
-
-const contentStyles = mergeStyleSets({
-  container: {
-    minWidth: 640,
-    minHeight: 520,
-    display: 'flex',
-    flexFlow: 'column nowrap',
-    alignItems: 'stretch',
-  },
-  header: [
-    theme.fonts.xLargePlus,
-    {
-      flex: '1 1 auto',
-      color: theme.palette.neutralPrimary,
-      display: 'flex',
-      alignItems: 'center',
-      fontWeight: FontWeights.semibold,
-      padding: '12px 12px 14px 24px',
-    },
-  ],
-  body: {
-    flex: '4 4 auto',
-    padding: '0 24px 24px 24px',
-    overflowY: 'hidden',
-    selectors: {
-      p: { margin: '14px 0' },
-      'p:first-child': { marginTop: 0 },
-      'p:last-child': { marginBottom: 0 },
-    },
-  },
-})
-
-const itemAlignmentsStackStyles: IStackStyles = {
-  root: {
-    background: DefaultPalette.themeTertiary,
-    height: 100,
-  },
-}
-
-const iconButtonStyles = {
-  root: {
-    color: theme.palette.neutralPrimary,
-    marginLeft: 'auto',
-    marginTop: '4px',
-    marginRight: '2px',
-  },
-  rootHovered: {
-    color: theme.palette.neutralDark,
-  },
-}
-
-const classNames = mergeStyleSets({
-  fileIconHeaderIcon: {
-    padding: 0,
-    fontSize: '16px',
-  },
-  fileIconCell: {
-    textAlign: 'center',
-    selectors: {
-      '&:before': {
-        content: '.',
-        display: 'inline-block',
-        verticalAlign: 'middle',
-        height: '100%',
-        width: '0px',
-        visibility: 'hidden',
-      },
-    },
-  }
-})
