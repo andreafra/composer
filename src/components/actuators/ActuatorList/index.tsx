@@ -1,6 +1,6 @@
 import { CommandBar, ICommandBarItemProps } from '@fluentui/react/lib/CommandBar'
 import Channel from 'components/actuators/Channel'
-import React, { useContext, createContext, useState } from 'react'
+import React, { useContext, createContext, useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import shortid from 'shortid'
 import { Channel as ChannelType, ComposerState } from 'types'
@@ -9,31 +9,23 @@ import FoldableDiv from 'components/utilities/FoldableDiv'
 import { DetailPanelCtx } from 'components/App'
 import ActuatorDetails from 'components/modals/ActuatorDetails'
 
-export const ActiveChannelCtx = createContext({
-  channelId: null,
-  frameId: null,
-  setChannelId: (id: string|null) => {},
-  setFrameId: (id: string|null) => {}
-})
-
 function ActuatorList(){
 
-  const activeChannel = useContext(ActiveChannelCtx)
-  const [currentChannelId, setCurrentChannelId]: [string|null, any] = useState(activeChannel.channelId)
-  const [currentFrameId, setCurrentFrameId]: [string|null, any] = useState(activeChannel.frameId)
-  activeChannel.setChannelId = (id) => setCurrentChannelId(id)
-  activeChannel.setFrameId = (id) => setCurrentFrameId(id)
-  
   const detailPanel = useContext(DetailPanelCtx)
+  
   const channels = useSelector((state: ComposerState) => state.actuators)
+
+  const [activeChannelId, setActiveChannelId] = useState("")
+  
 
   /**
    * On click, this function will open a panel where
    * the user can customize 
    */
-  const handleNewActuatorBtn = () => {
+  const _handleNewActuatorBtn = () => {
+    let newId = shortid.generate()
+    setActiveChannelId(newId)
     detailPanel.changeValue("CHANNEL")
-    activeChannel.setChannelId(null)
   }
 
   // CammandBar items
@@ -42,7 +34,7 @@ function ActuatorList(){
       key: "newActuator",
       text: "New Actuator",
       iconProps: {iconName: "Add"},
-      onClick: handleNewActuatorBtn
+      onClick: _handleNewActuatorBtn
     }
   ]
 
@@ -68,7 +60,7 @@ function ActuatorList(){
           </div>
         </>
       </FoldableDiv>
-    <ActuatorDetails />
+      <ActuatorDetails activeChannelId={activeChannelId} show={activeChannelId !== ""} onDismiss={() => setActiveChannelId("")} />
     </div>
   )
 }

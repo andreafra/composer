@@ -19,15 +19,10 @@ export default (
     }, [])
   
   case SET_CHANNEL:
-    let newState = state.splice(0)
-    let item = newState.find(i => i.id === action.meta.id)
-    if (item) {
-      let index = newState.indexOf(item)
-      newState[index] = action.payload
-    } else {
-      newState.push(action.payload)
-    }
-    return newState;
+    // TODO: Handle duplicate actuators
+    let oldState = state.splice(0)
+    oldState.push(action.payload)
+    return oldState;
 
   case SET_FRAME:
     return state.slice(0).reduce<Channel[]>((res, elem) => {

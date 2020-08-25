@@ -1,46 +1,40 @@
 import { Dropdown, getId, IconButton, IDropdownOption, ILayerProps, IStackTokens, Label, Modal, PrimaryButton, Stack, TextField } from "@fluentui/react";
-import { ActiveChannelCtx } from "components/actuators/ActuatorList";
 import { DetailPanelCtx } from "components/App";
 import ActuatorField from "components/utilities/ActuatorField";
 import NumberField from "components/utilities/NumberField";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import shortid from "shortid";
 import { setChannel } from "store/actions";
 import { Channel, ComposerState, Frame } from "types";
 import { useActuatorModels } from "utils/actuatorModels";
 import { contentStyles, iconButtonStyles } from "./styles";
 
-const stackTokens: IStackTokens = {
-  childrenGap: 10,
-}
-
-export default function ActuatorDetails() {
+export default function ActuatorDetails(props: {
+  activeChannelId: string,
+  show: boolean,
+  onDismiss: () => void
+}) {
   
   const detailPanel = React.useContext(DetailPanelCtx)
-  const activeChannel = React.useContext(ActiveChannelCtx)
 
   const actuatorModels = useActuatorModels()
 
   const dispatch = useDispatch()
   const actuators = useSelector((state: ComposerState) => state.actuators)
-  const _layerProps: ILayerProps = {
-    onLayerDidMount: () => {}
+  
+  const focusedChannel = actuators.find(a => a.id === props.activeChannelId)
+
+  const defaultActuator: Channel = {
+    name: `Actuator #${actuators.length + 1}`,
+    id: props.activeChannelId,
+    type: actuatorModels[0].type,
+    pins: [],
+    frames: new Map<string, Frame>(),
+    constants: []
   }
 
-  const focusedChannels = actuators.filter(a => a.id === activeChannel.channelId)
-  const focusedChannel = focusedChannels.length > 0 ? focusedChannels[0] : null
-
   const [isDisabled, setIsDisabled]: [boolean, any] = useState(true)
-
-  const [newActuator, setNewActuator]: [Channel, any] = useState({
-    name: focusedChannel ? focusedChannel.name : `Actuator #${actuators.length + 1}`,
-    id: activeChannel.channelId || shortid.generate(),
-    type: focusedChannel ? focusedChannel.type : actuatorModels[0].type,
-    pins: focusedChannel ? focusedChannel.pins : [],
-    frames: focusedChannel ? focusedChannel.frames : new Map<string, Frame>(),
-    constants: []
-  })
+  const [newActuator, setNewActuator]: [Channel, any] = useState(defaultActuator)
 
   const nameId = getId('nameInput');
 
@@ -51,6 +45,12 @@ export default function ActuatorDetails() {
     }
     return item
   })
+
+  const _layerProps: ILayerProps = {
+    onLayerDidMount: () => {
+      setNewActuator(focusedChannel ? focusedChannel : defaultActuator)
+    }
+  }
 
   const _generateActuatorFields = () => {
     let act = actuatorModels.find(a => a.type === newActuator.type)
@@ -119,7 +119,15 @@ export default function ActuatorDetails() {
   }
 
   const _handleSetChannel = () => {
+    // update the state
     dispatch(setChannel(newActuator, newActuator.id))
+    // close the modal
+    _handleDismiss()
+  }
+
+  const _handleDismiss = () => {
+    props.onDismiss()
+    detailPanel.changeValue("NONE")
   }
 
   const verifyConditions = () => {
@@ -138,16 +146,15 @@ export default function ActuatorDetails() {
 
   // DEBUG
   useEffect(() => {
-    console.log(newActuator)
     verifyConditions()
   })
 
   return (
     <Modal
       titleAriaId={"file-picker-modal"}
-      isOpen={detailPanel.value === "CHANNEL"}
+      isOpen={props.show && detailPanel.value === "CHANNEL"}
       layerProps={_layerProps}
-      onDismiss={() => detailPanel.changeValue("NONE")}
+      onDismiss={_handleDismiss}
       isBlocking={false}
       containerClassName={contentStyles.container}
     >
@@ -157,7 +164,7 @@ export default function ActuatorDetails() {
           styles={iconButtonStyles}
           iconProps={{ iconName: 'Cancel' }}
           ariaLabel="Close popup modal"
-          onClick={() => detailPanel.changeValue("NONE")}
+          onClick={_handleDismiss}
         />
       </div>
       <div className={contentStyles.body}>
@@ -184,4 +191,8 @@ export default function ActuatorDetails() {
       </div>
     </Modal>
   )
+}
+
+const stackTokens: IStackTokens = {
+  childrenGap: 10,
 }
