@@ -29,7 +29,7 @@ export default function ActuatorDetails(props: {
     id: props.activeChannelId,
     type: actuatorModels[0].type,
     pins: [],
-    frames: new Map<string, Frame>(),
+    frames: [],
     constants: []
   }
 
@@ -182,7 +182,6 @@ export default function ActuatorDetails(props: {
             options={options}
             onChange={_handleTypeChange}
             defaultSelectedKey={newActuator.type || actuatorModels[0].type}
-            styles={{ dropdown: { width: 300 }}}
           />
           {_generateActuatorFields()}
           {isDisabled ? (<p>Try update the pin values again if the button is disabled.</p>) : null}

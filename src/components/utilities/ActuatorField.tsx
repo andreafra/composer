@@ -10,22 +10,24 @@ export default function ActuatorField(
     value: any,
     minValue : number,
     maxValue : number,
-    onChange: (newValue: any) => void
+    onChange: (newValue: string) => void
   }) {
   
   const [value, setValue] = useState(props.value)
 
   const _handleNumberChange = (newValue: number) => {
-    setValue(newValue)
-    props.onChange(newValue)
+    setValue(String(newValue))
+    props.onChange(String(newValue))
   }
 
   const _handleBoolChange = (ev: any, checked?: boolean) => {
-    setValue(checked ? checked : false)
+    setValue(String(checked))
+    props.onChange(String(checked))
   }
 
   const _handleColorChange = (ev: any, color: IColor) => {
     setValue(color.str)
+    props.onChange(color.str)
   }
 
   switch (props.type) {
@@ -40,7 +42,7 @@ export default function ActuatorField(
     case "BOOL":
       return <Checkbox
       label={props.label}
-      checked={Boolean(value as boolean) || false}
+      checked={value === "true"}
       onChange={_handleBoolChange}
     />
     case "COLOR":

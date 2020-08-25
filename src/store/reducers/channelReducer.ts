@@ -9,41 +9,39 @@ export default (
   state = initialState,
   action: ChannelAction
 ) => {
+  let stateCopy = state.slice()
   switch (action.type) {
-
   case REMOVE_CHANNEL:
-    return state.reduce<Channel[]>((res, elem) => {
-      if(elem.id !== action.meta.id)
-        res.push(elem)
-      return res
-    }, [])
+    return stateCopy.filter(i => i.id !== action.meta.id)
   
   case SET_CHANNEL:
-    let newState = state.splice(0)
-    let item = newState.find(i => i.id === action.meta.id)
-    if (item) {
-      let index = newState.indexOf(item)
-      newState[index] = action.payload
-    } else {
-      newState.push(action.payload)
-    }
-    return newState;
+    let channelIndex = stateCopy.findIndex(ch => ch.id === action.meta.id)
+    if (channelIndex > -1)
+      stateCopy[channelIndex] = action.payload
+    else
+      stateCopy.push(action.payload)
+    return stateCopy
 
   case SET_FRAME:
-    return state.slice(0).reduce<Channel[]>((res, elem) => {
-      if(elem.id === action.meta.channelId)
-        elem.frames.set(action.payload.id, action.payload)
-        res.push(elem)
-      return res
-    }, [])
-  
+    stateCopy.forEach(ch => {
+      if (ch.id === action.meta.channelId) {
+        let frame = ch.frames.find(fr => fr.id === action.meta.id)
+        if (frame) {
+          ch.frames[ch.frames.indexOf(frame)] = action.payload
+        } else {
+          ch.frames.push(action.payload)
+        }
+      }
+    })
+    return stateCopy
+
   case REMOVE_FRAME:
-    return state.slice(0).reduce<Channel[]>((res, elem) => {
-      if(elem.id === action.meta.channelId)
-        elem.frames.delete(action.meta.id)
-        res.push(elem)
-      return res
-    }, [])
+    stateCopy.forEach(ch => {
+      if (ch.id === action.meta.channelId) {
+        ch.frames = ch.frames.filter(fr => fr.id !== action.meta.id)
+      }
+    })
+    return stateCopy
   
   default:
     return state
