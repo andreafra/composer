@@ -1,30 +1,23 @@
-import { SET_EDITOR_OPTIONS, SET_EDIT_PANEL_SCOPE, SET_EDIT_PANEL_VISIBILITY, SET_FILENAME, SET_USERNAME, SET_LEFT_SCROLL, SystemAction, SystemState, SET_FILE_PICKER_VISIBILITY } from 'types'
+import { SET_EDITOR_OPTIONS, SET_FILENAME, SET_LEFT_SCROLL, SET_USERNAME, SystemAction, SystemState } from 'types'
+import FileManager from 'utils/FileManager'
 
-// The margin from the left side of the screen
-const LEFT_PADDING = 30 // in px
 // The total length of the track/song/whatever
 const LENGTH = 5 // in seconds
 // A single "frame", meaning a block on the timeline
 const FRAME_RESOLUTION = 100 // in ms
 const FRAME_SIZE = 30 // in px
 
-export const initialState: SystemState = {
+const latestFile = new FileManager().getLatestFile();
+
+export const initialState: SystemState = latestFile ? latestFile.system : {
   username: "Unknown",
   lastModified: new Date(),
   filename: "Unnamed File",
-  editPanel: {
-    visibility: false,
-    scope: "SYSTEM"
-  },
   editorOptions: {
-    leftPadding: LEFT_PADDING,
     resolution: FRAME_RESOLUTION,
     width: LENGTH * 1000 / FRAME_RESOLUTION * FRAME_SIZE,
-    frameSize: FRAME_SIZE,
-    accentColor: "#666666",
-    altAccentColor: "#999999"
+    frameSize: FRAME_SIZE
   },
-  filePickerVisibility: false
 }
 
 export default (
@@ -32,30 +25,6 @@ export default (
   action: SystemAction
 ) => {
   switch (action.type) {
-
-  case SET_FILE_PICKER_VISIBILITY:
-    return {
-      ...state,
-      filePickerVisibility: action.visible
-    }
-  case SET_EDIT_PANEL_VISIBILITY:
-    return {
-      ...state,
-      editPanel: {
-        ...state.editPanel,
-        visibility: action.visible
-      }
-    }
-  case SET_EDIT_PANEL_SCOPE:
-    return {
-      ...state,
-      editPanel: {
-        ...state.editPanel,
-        scope: action.scope,
-        channelId: action.meta.channelId,
-        frameId: action.meta.frameId
-      }
-    }
   case SET_USERNAME:
     return {
       ...state,

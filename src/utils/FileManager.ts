@@ -79,7 +79,7 @@ export default class FileManager {
     return []
   }
 
-  getFile = (id: string) => {
+  getFile = (id: string) : ComposerState | null => {
     let rawFile = this.storage.getItem(id)
     if (rawFile) {
       let parsedFile = JSON.parse(rawFile)
@@ -97,5 +97,14 @@ export default class FileManager {
     this.storage.setItem("SAVED_FILES", JSON.stringify({files: newList}))
     this.storage.removeItem(id)
     return newList
+  }
+
+  getLatestFile = () : ComposerState | null => {
+    let files = this.getSavedFilesList()
+    files.sort((a, b) => new Date(b.lastModified).getTime() - new Date(a.lastModified).getTime())
+
+    if (files.length === 0) return null
+    let lastFile = files[0]
+    return this.getFile(lastFile.id)
   }
 }

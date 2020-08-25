@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setVolume, removeNote } from 'store/actions'
 import { ComposerState, Point, SoundFrame } from 'types'
 import './style.css'
+import { LEFT_PADDING, ACCENT_COLOR_ALT, ACCENT_COLOR } from 'utils/constants'
 
 let ctx: CanvasRenderingContext2D | null
 let rect: DOMRect | null
@@ -21,10 +22,8 @@ function VolumeTimeline(props: any) {
   const options = useSelector((state: ComposerState) => state.system.editorOptions)
   const melody = useSelector((state: ComposerState) => state.sound)
 
-  const CANVAS_W = options.width + options.leftPadding
+  const CANVAS_W = options.width + LEFT_PADDING
   const CANVAS_H = 70 // in px
-
-  const LEFT_PADDING = options.leftPadding
   
   const FRAME_W = options.frameSize
 
@@ -162,8 +161,8 @@ function VolumeTimeline(props: any) {
   const drawLabels = () => {
     if (ctx) {
       ctx.font = "12px sans-serif"
-      ctx.strokeStyle = options.altAccentColor
-      ctx.fillStyle = options.accentColor
+      ctx.strokeStyle = ACCENT_COLOR_ALT
+      ctx.fillStyle = ACCENT_COLOR
       ctx.fillText("100", 2, 14)
       ctx.fillText("0", 2, CANVAS_H - 2)
       ctx.moveTo(LEFT_PADDING, 0)
@@ -180,7 +179,7 @@ function VolumeTimeline(props: any) {
    */
   const drawRectangle = (x: number, y: number) => {
     if (ctx) {
-      ctx.fillStyle = options.accentColor
+      ctx.fillStyle = ACCENT_COLOR
       ctx.fillRect(LEFT_PADDING + x * FRAME_W, CANVAS_H - y, FRAME_W, CANVAS_H)
     }
   }

@@ -5,8 +5,11 @@ import {
   SET_VOLUME,
   SoundFrame
 } from 'types'
+import FileManager from 'utils/FileManager';
 
-export const initialState: Array<SoundFrame|null> = []
+const latestFile = new FileManager().getLatestFile();
+
+export const initialState: Array<SoundFrame|null> = latestFile ? latestFile.sound : []
 
 export default (
   state = initialState,

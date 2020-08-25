@@ -1,25 +1,31 @@
 import { CommandBar, ICommandBarItemProps } from '@fluentui/react/lib/CommandBar'
 import Channel from 'components/actuators/Channel'
-import React from 'react'
+import React, { useContext, createContext, useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import shortid from 'shortid'
-import { setEditPanelScope, setEditPanelVisibility } from 'store/actions'
 import { Channel as ChannelType, ComposerState } from 'types'
 import './style.css'
 import FoldableDiv from 'components/utilities/FoldableDiv'
+import { DetailPanelCtx } from 'components/App'
+import ActuatorDetails from 'components/modals/ActuatorDetails'
 
 function ActuatorList(){
 
-  const dispatch = useDispatch()
+  const detailPanel = useContext(DetailPanelCtx)
+  
   const channels = useSelector((state: ComposerState) => state.actuators)
+
+  const [activeChannelId, setActiveChannelId] = useState("")
+  
 
   /**
    * On click, this function will open a panel where
    * the user can customize 
    */
-  const handleNewActuatorBtn = () => {
-    dispatch(setEditPanelVisibility(true))
-    dispatch(setEditPanelScope("ACTUATOR", shortid.generate()))
+  const _handleNewActuatorBtn = () => {
+    let newId = shortid.generate()
+    setActiveChannelId(newId)
+    detailPanel.changeValue("CHANNEL")
   }
 
   // CammandBar items
@@ -28,7 +34,7 @@ function ActuatorList(){
       key: "newActuator",
       text: "New Actuator",
       iconProps: {iconName: "Add"},
-      onClick: () => handleNewActuatorBtn()
+      onClick: _handleNewActuatorBtn
     }
   ]
 
@@ -54,6 +60,7 @@ function ActuatorList(){
           </div>
         </>
       </FoldableDiv>
+      <ActuatorDetails activeChannelId={activeChannelId} show={activeChannelId !== ""} onDismiss={() => setActiveChannelId("")} />
     </div>
   )
 }

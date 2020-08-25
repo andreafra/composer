@@ -1,20 +1,19 @@
+/* Panel Visibility */
+export type DetailPanel = 'FILE_PICKER' | 'FILE_DETAILS' | 'CHANNEL' | 'FRAME' | 'NONE' 
+
 /* Redux Action Type */
 export const SET_NOTE = 'EDIT_NOTE'
 export const REMOVE_NOTE = 'REMOVE_NOTE'
 
 export const SET_VOLUME = 'SET_VOLUME'
 
-export const ADD_CHANNEL = 'ADD_CHANNEL'
+export const SET_CHANNEL = 'SET_CHANNEL'
 export const REMOVE_CHANNEL = 'REMOVE_CHANNEL'
-export const UPDATE_CHANNEL = 'UPDATE_CHANNEL'
 
 export const SET_FRAME = 'SET_FRAME'
 export const REMOVE_FRAME = 'REMOVE_FRAME'
 
 /* System */
-export const SET_FILE_PICKER_VISIBILITY = 'SET_FILE_PICKER_VISIBILITY'
-export const SET_EDIT_PANEL_VISIBILITY = 'SET_EDIT_PANEL_VISIBILITY'
-export const SET_EDIT_PANEL_SCOPE = 'SET_EDIT_PANEL_SCOPE'
 export const SET_USERNAME = 'SET_USERNAME'
 export const SET_FILENAME = 'SET_FILENAME'
 export const SET_EDITOR_OPTIONS = 'SET_EDITOR_OPTIONS'
@@ -58,11 +57,6 @@ export type VolumeAction = SetVolumeAction
 
 export type SoundAction = NoteAction | VolumeAction
 
-interface AddChannelAction {
-  type: typeof ADD_CHANNEL
-  payload: Channel
-}
-
 interface RemoveChannelAction {
   type: typeof REMOVE_CHANNEL
   meta: {
@@ -70,8 +64,8 @@ interface RemoveChannelAction {
   }
 }
 
-interface UpdateChannelAction {
-  type: typeof UPDATE_CHANNEL
+interface SetChannelAction {
+  type: typeof SET_CHANNEL
   payload: Channel
   meta: {
     id: string
@@ -96,28 +90,7 @@ interface SetFrameAction {
 }
 
 export type FrameAction = SetFrameAction | RemoveFrameAction
-export type ChannelAction = AddChannelAction | RemoveChannelAction | UpdateChannelAction | FrameAction
-
-interface SetFilePickerVisibility {
-  type: typeof SET_FILE_PICKER_VISIBILITY
-  visible: boolean
-}
-
-interface SetEditPanelVisibilityAction {
-  type: typeof SET_EDIT_PANEL_VISIBILITY
-  visible: boolean
-}
-
-interface SetEditPanelScopeAction {
-  type: typeof SET_EDIT_PANEL_SCOPE
-  scope: string
-  meta: {
-    channelId?: string
-    frameId?: string
-  }
-}
-
-export type SetEditPanelAction = SetFilePickerVisibility | SetEditPanelVisibilityAction | SetEditPanelScopeAction
+export type ChannelAction = SetChannelAction | RemoveChannelAction | FrameAction
 
 interface SetUsernameAction {
   type: typeof SET_USERNAME
@@ -144,7 +117,7 @@ interface SetComposerAction {
   payload: ComposerState
 }
 
-export type SystemAction = SetEditPanelAction | SetUsernameAction | SetFilenameAction | SetEditorOptionsAction | SetLeftScrollAction
+export type SystemAction = SetUsernameAction | SetFilenameAction | SetEditorOptionsAction | SetLeftScrollAction
 
 export type FileAction = SetComposerAction
 
@@ -153,9 +126,7 @@ export interface SystemState {
   username: string
   lastModified: Date
   filename: string
-  editPanel: EditPanelState
   editorOptions: EditorOptions
-  filePickerVisibility: boolean
 }
 
 export interface EditPanelState {
@@ -166,12 +137,9 @@ export interface EditPanelState {
 }
 
 export interface EditorOptions {
-  leftPadding: number,
   resolution: number,
   width: number,
-  frameSize: number,
-  accentColor: string
-  altAccentColor: string
+  frameSize: number
 }
 
 /* Composer */
@@ -208,6 +176,7 @@ export interface Channel {
   type: string
   pins: number[]
   frames: Map<string, Frame>
+  constants: any[]
 }
 
 export interface Frame {
@@ -235,5 +204,6 @@ export interface Actuator {
   type: string
   name: string
   pins: string[]
-  fields: Field[]
+  variables: Field[]
+  constants?: Field[]
 }

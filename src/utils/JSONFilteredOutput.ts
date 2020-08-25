@@ -1,10 +1,10 @@
 import { useSelector } from "react-redux"
 import { ComposerState } from "types"
-import { useCustomActuators } from "./defaultActuators"
+import { useActuatorModels } from "./actuatorModels"
 
 export function useJSONFilteredOutput() {
   const state = useSelector((state: ComposerState) => state)
-  const actuatorTypes = useCustomActuators()
+  const actuatorTypes = useActuatorModels()
 
   const _width = state.system.editorOptions.width // in px
   const _frameWidth = state.system.editorOptions.frameSize // in px
@@ -60,7 +60,7 @@ export function useJSONFilteredOutput() {
           // For each frame, iterate its fields
           frame.fields.forEach((field, index) => {
             const _field: IOutputActuatorField = {
-              type: _fieldTypes?.fields[index].type || "UNKNOWN",
+              type: _fieldTypes?.variables[index].type || "UNKNOWN",
               value: field
             }
 

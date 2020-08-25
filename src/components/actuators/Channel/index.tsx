@@ -1,12 +1,13 @@
 import { CommandBar, ICommandBarItemProps } from '@fluentui/react/lib/CommandBar'
 import Rect from 'components/actuators/Rect'
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import shortid from 'shortid'
-import { setEditPanelScope, setEditPanelVisibility } from 'store/actions'
 import { Channel as ChannelType, ComposerState } from 'types'
 import './style.css'
 import { ScrollableDiv } from 'components/utilities/ScrollableDiv'
+import { LEFT_PADDING } from 'utils/constants'
+import { DetailPanelCtx } from 'components/App'
 
 type ChannelProps = {
   id: string
@@ -14,8 +15,8 @@ type ChannelProps = {
 
 function Channel(props: ChannelProps) {
 
+  const detailPanel = useContext(DetailPanelCtx)
   const channels = useSelector((state: ComposerState) => state.actuators.filter(c => c.id === props.id))
-  const dispatch = useDispatch()
 
   let thisChannel: ChannelType = channels[0]
   if (!thisChannel) {
@@ -37,8 +38,7 @@ function Channel(props: ChannelProps) {
    * the user can customize 
    */
   const handleNewFrameBtn = () => {
-    dispatch(setEditPanelVisibility(true))
-    dispatch(setEditPanelScope("FRAME", props.id, shortid.generate()))
+    detailPanel.changeValue("CHANNEL")
   }
 
   const _items: ICommandBarItemProps[] = [
@@ -67,7 +67,7 @@ function Channel(props: ChannelProps) {
       </div>
       <div className="Channel-frames">
         <ScrollableDiv>
-          <div className="Channel-scrollable" style={{width: options.width, marginLeft: options.leftPadding}}>
+          <div className="Channel-scrollable" style={{width: options.width, marginLeft: LEFT_PADDING}}>
             {Array.from(thisChannel.frames).map(([value, frame]) => (
               <Rect
                 key={value}
