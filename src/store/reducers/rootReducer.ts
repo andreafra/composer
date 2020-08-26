@@ -1,8 +1,8 @@
-import { combineReducers, CombinedState } from "redux"
+import { CombinedState, combineReducers } from "redux"
+import { SET_COMPOSER } from "types"
 import channelReducer from "./channelReducer"
 import soundReducer from "./soundReducer"
 import systemReducer from "./systemReducer"
-import { SET_COMPOSER, SystemAction, FileAction, ChannelAction, SoundAction } from "types"
 
 // const rootReducer = combineReducers({
 //   system: systemReducer,

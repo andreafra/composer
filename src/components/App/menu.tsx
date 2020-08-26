@@ -2,7 +2,7 @@ import { CommandBar, ICommandBarItemProps, Layer } from "@fluentui/react"
 import Compiler from "compilers/arduino_v1"
 import DownloadJS from 'downloadjs'
 import React, { useContext, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
+import { useSelector } from "react-redux"
 import { ComposerState } from "types"
 import FileManager from "utils/FileManager"
 import { useJSONFilteredOutput } from "utils/JSONFilteredOutput"

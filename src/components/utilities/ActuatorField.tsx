@@ -1,5 +1,4 @@
-import { Field } from "types";
-import { Checkbox, ColorPicker, IColorPickerStyles, getColorFromString, IColor } from "@fluentui/react";
+import { Checkbox, ColorPicker, getColorFromString, IColor, IColorPickerStyles } from "@fluentui/react";
 import React, { useState } from "react";
 import NumberField from "./NumberField";
 

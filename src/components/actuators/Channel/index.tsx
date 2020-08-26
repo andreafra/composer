@@ -1,16 +1,17 @@
+import { DefaultButton, Dialog, DialogContent, DialogFooter, DialogType, PrimaryButton, TextField } from '@fluentui/react'
 import { CommandBar, ICommandBarItemProps } from '@fluentui/react/lib/CommandBar'
 import Rect from 'components/actuators/Rect'
-import React, { useState, useContext } from 'react'
+import { DetailPanelCtx } from 'components/App'
+import ActuatorDetails from 'components/modals/ActuatorDetails'
+import FrameDetails from 'components/modals/FrameDetails'
+import { ScrollableDiv } from 'components/utilities/ScrollableDiv'
+import React, { useContext, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import shortid from 'shortid'
+import { removeChannel, setChannel } from 'store/actions'
 import { Channel as ChannelType, ComposerState } from 'types'
-import './style.css'
-import { ScrollableDiv } from 'components/utilities/ScrollableDiv'
 import { LEFT_PADDING } from 'utils/constants'
-import { DetailPanelCtx } from 'components/App'
-import FrameDetails from 'components/modals/FrameDetails'
-import { Dialog, DialogFooter, PrimaryButton, DefaultButton, DialogType, hasOverflow, TextField, DialogContent, values } from '@fluentui/react'
-import { setChannel, removeChannel } from 'store/actions'
+import './style.css'
 
 type ChannelProps = {
   id: string
@@ -27,9 +28,10 @@ function Channel(props: ChannelProps) {
 
   const [mouseX, setMouseX] = useState(0)
   const [isMouseDown, setIsMouseDown] = useState(false)
+  const [isActuatorDetailsVisible, setIsActuatorDetailsVisible] = useState(false)
   const [isDeleteDialogVisible, setIsDeleteDialogVisible] = useState(false)
   const [isRenameDialogVisible, setIsRenameDialogVisible] = useState(false)
-  const [value, setValue] = useState(thisChannel.name)
+  const [channelName, setChannelName] = useState(channel.name)
   const onMouseMove = (e: any) => {
     if(isMouseDown) {
       setMouseX(e.pageX)
@@ -46,19 +48,24 @@ function Channel(props: ChannelProps) {
     detailPanel.changeValue("FRAME")
   }
 
+  const _handleUpdateChannelBtn = () => {    
+    setIsActuatorDetailsVisible(true)
+    detailPanel.changeValue("CHANNEL")
+  }
+
   const _handleDeleteActuator = () => {
     setIsDeleteDialogVisible(false)
-    // thisChannel
-    dispatch(removeChannel(thisChannel.id))
+    // channel
+    dispatch(removeChannel(channel.id))
   }
 
   const _handleRenameActuator = () => {
     setIsRenameDialogVisible(false)
     let newThisChannel = {
-      ...thisChannel,
-      name: value
+      ...channel,
+      name: channelName
     }
-    dispatch(setChannel(newThisChannel, thisChannel.id))
+    dispatch(setChannel(newThisChannel, channel.id))
   }
 
 
@@ -81,11 +88,17 @@ function Channel(props: ChannelProps) {
       iconProps: {iconName: "Delete"},
       onClick: () => setIsDeleteDialogVisible(true)
     },
+    {
+      key: "changeActuatorDetails",
+      text: "Details",
+      iconProps: {iconName: "Settings"},
+      onClick: _handleUpdateChannelBtn
+    },
   ]
 
   const _handleNameChange = (event: any, newValue?: string) => {
     if (newValue === undefined) return;
-    setValue(newValue)
+    setChannelName(newValue)
   }
 
   const _generateFrames = () => {
@@ -170,6 +183,7 @@ function Channel(props: ChannelProps) {
         activeFrameId={activeFrameId}
         onDismiss={() => setActiveFrameId("")}
       />
+      <ActuatorDetails activeChannelId={channel.id} show={isActuatorDetailsVisible} onDismiss={() => setIsActuatorDetailsVisible(false)} />
     </div>
   )} else {
     console.error("No Channel found with id: " + props.id)

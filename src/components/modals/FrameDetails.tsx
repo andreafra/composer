@@ -1,7 +1,7 @@
 import { IconButton, ILayerProps, IStackTokens, Modal, PrimaryButton, Stack } from "@fluentui/react";
 import { DetailPanelCtx } from "components/App";
 import ActuatorField from "components/utilities/ActuatorField";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setFrame } from "store/actions";
 import { ComposerState, Frame } from "types";
