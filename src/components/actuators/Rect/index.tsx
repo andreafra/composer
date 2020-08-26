@@ -17,6 +17,7 @@ type RectProps = {
   x: number
   frame: Frame
   shouldEdit: boolean
+  onDoubleClick: (id: string) => void
 }
 
 function Rect(props: RectProps){
@@ -124,8 +125,9 @@ function Rect(props: RectProps){
     setFrameStartX(props.frame.start * options.frameSize)
     setFrameWidth((props.frame.end - props.frame.start + 1) * options.frameSize)
   }, [props.frame.start, props.frame.end, options.frameSize])
-  const handleEditFrame = () => {
-    detailPanel.changeValue("FRAME")
+
+  const _handleEditFrame = () => {
+    props.onDoubleClick(props.frame.id)
   }
 
   return (
@@ -133,7 +135,7 @@ function Rect(props: RectProps){
       className="Rect"
       draggable={false}
       style={style}
-      onDoubleClick={handleEditFrame}
+      onDoubleClick={_handleEditFrame}
       onMouseDown={(e) => {
         setIsActive(true)
         setDragOffset(e.pageX - (FrameStartX + LEFT_PADDING))

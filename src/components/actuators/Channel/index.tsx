@@ -9,7 +9,7 @@ import React, { useContext, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import shortid from 'shortid'
 import { removeChannel, setChannel } from 'store/actions'
-import { Channel as ChannelType, ComposerState } from 'types'
+import { Channel as ChannelType, ComposerState, Frame } from 'types'
 import { LEFT_PADDING } from 'utils/constants'
 import './style.css'
 
@@ -110,12 +110,26 @@ function Channel(props: ChannelProps) {
           frame={frame}
           x={mouseX}
           shouldEdit={isMouseDown}
+          onDoubleClick={(id) => {
+            detailPanel.changeValue("FRAME")
+            console.log(id)
+            setActiveFrameId(id)
+          }}
         />)
       )
     }
     return null
   }
   
+  const newFrame: Frame = {
+    id: activeFrameId,
+    channelId: channel.id,
+    fields: [],
+    color: "#FF0000",
+    start: 0,
+    end: 0
+  }
+
   const dialogDeleteContentProps = {
     type: DialogType.normal,
     title: 'Delete',
@@ -179,8 +193,7 @@ function Channel(props: ChannelProps) {
         </DialogFooter>
       </Dialog>
       <FrameDetails
-        activeChannelId={channel.id}
-        activeFrameId={activeFrameId}
+        frame={channel.frames.find(fr => fr.id === activeFrameId) || newFrame}
         onDismiss={() => setActiveFrameId("")}
       />
       <ActuatorDetails activeChannelId={channel.id} show={isActuatorDetailsVisible} onDismiss={() => setIsActuatorDetailsVisible(false)} />

@@ -5,7 +5,7 @@ import NumberField from "components/utilities/NumberField";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setChannel } from "store/actions";
-import { Channel, ComposerState, Frame } from "types";
+import { Channel, ComposerState } from "types";
 import { useActuatorModels } from "utils/actuatorModels";
 import { contentStyles, iconButtonStyles } from "./styles";
 

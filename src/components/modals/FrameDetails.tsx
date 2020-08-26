@@ -9,8 +9,7 @@ import { useActuatorModels } from "utils/actuatorModels";
 import { contentStyles, iconButtonStyles } from "./styles";
 
 export default function FrameDetails(props: {
-  activeChannelId: string,
-  activeFrameId: string,
+  frame: Frame
   onDismiss: () => void
 }) {
   
@@ -20,41 +19,28 @@ export default function FrameDetails(props: {
 
   const dispatch = useDispatch()
   const actuators = useSelector((state: ComposerState) => state.actuators)
-  
-  const defaultFrame: Frame = {
-    id: props.activeFrameId,
-    channelId: props.activeChannelId,
-    fields: [],
-    color: "#FF0000",
-    start: 0,
-    end: 0
-  }
 
   const [isDisabled, setIsDisabled]: [boolean, any] = useState(true)
-  const [newFrame, setNewFrame]: [Frame, any] = useState(defaultFrame)
+  const [newFrame, setNewFrame]: [Frame, any] = useState(props.frame)
 
-  const focusedChannel = actuators.find(a => a.id === props.activeChannelId)
+  const focusedChannel = actuators.find(a => a.id === props.frame.channelId)
 
   // When the modal appears, set its content correctly
   const _layerProps: ILayerProps = {
     onLayerDidMount: () => {
-      let frames = focusedChannel!.frames;
-      if (frames.entries !== undefined)
-        setNewFrame(frames.find(f => f.id === props.activeFrameId) || defaultFrame)
-      else
-        setNewFrame(defaultFrame)
+      setNewFrame(props.frame)
     }
   }
 
   const _generateFrameFields = () => {
     if (!focusedChannel) return null
-    let act = actuatorModels.find(a => a.type === focusedChannel.type)
-    if (!act) return null
-    return act.variables.map((value, index) => <ActuatorField
+    let actModel = actuatorModels.find(a => a.type === focusedChannel.type)
+    if (!actModel) return null
+    return actModel.variables.map((value, index) => <ActuatorField
         key={value.name + "_" + index}
         label={value.name}
         type={value.type}
-        value={newFrame.fields[index]}
+        value={props.frame.fields[index]}
         minValue={value.minValue || 0}
         maxValue={value.maxValue || 100}
         onChange={v => _handleVariableChange(index, v)}
@@ -97,7 +83,7 @@ export default function FrameDetails(props: {
   return (
     <Modal
       titleAriaId={"file-picker-modal"}
-      isOpen={props.activeFrameId !== "" && detailPanel.value === "FRAME"}
+      isOpen={detailPanel.value === "FRAME"}
       layerProps={_layerProps}
       onDismiss={_handleDismiss}
       isBlocking={false}
