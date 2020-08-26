@@ -1,10 +1,9 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { ComposerState, Frame } from 'types'
-import './style.css'
-import { LEFT_PADDING } from 'utils/constants'
 import { setFrame } from 'store/actions'
-import { DetailPanelCtx } from 'components/App'
+import { ComposerState, Frame } from 'types'
+import { LEFT_PADDING } from 'utils/constants'
+import './style.css'
 
 interface RectStyle {
   backgroundColor: string
@@ -21,9 +20,6 @@ type RectProps = {
 }
 
 function Rect(props: RectProps){
-
-  const detailPanel = useContext(DetailPanelCtx)
-
   const dispatch = useDispatch()
   const options = useSelector((state: ComposerState) => state.system.editorOptions)
 

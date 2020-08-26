@@ -178,7 +178,7 @@ export default function ActuatorDetails(props: {
           />
           <Dropdown
             placeholder="Select an option"
-            label="Basic uncontrolled example"
+            label="Select actuator type"
             options={options}
             onChange={_handleTypeChange}
             defaultSelectedKey={newActuator.type || actuatorModels[0].type}

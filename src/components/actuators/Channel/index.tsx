@@ -112,7 +112,6 @@ function Channel(props: ChannelProps) {
           shouldEdit={isMouseDown}
           onDoubleClick={(id) => {
             detailPanel.changeValue("FRAME")
-            console.log(id)
             setActiveFrameId(id)
           }}
         />)
@@ -194,6 +193,7 @@ function Channel(props: ChannelProps) {
       </Dialog>
       <FrameDetails
         frame={channel.frames.find(fr => fr.id === activeFrameId) || newFrame}
+        show={detailPanel.value === "FRAME" && activeFrameId !== ""}
         onDismiss={() => setActiveFrameId("")}
       />
       <ActuatorDetails activeChannelId={channel.id} show={isActuatorDetailsVisible} onDismiss={() => setIsActuatorDetailsVisible(false)} />

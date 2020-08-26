@@ -1,15 +1,17 @@
-import { IconButton, ILayerProps, IStackTokens, Modal, PrimaryButton, Stack } from "@fluentui/react";
+import { IconButton, ILayerProps, IStackTokens, Modal, PrimaryButton, Stack, DefaultButton } from "@fluentui/react";
 import { DetailPanelCtx } from "components/App";
 import ActuatorField from "components/utilities/ActuatorField";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setFrame } from "store/actions";
+import { setFrame, removeFrame } from "store/actions";
 import { ComposerState, Frame } from "types";
 import { useActuatorModels } from "utils/actuatorModels";
 import { contentStyles, iconButtonStyles } from "./styles";
+import NumberField from "components/utilities/NumberField";
 
 export default function FrameDetails(props: {
   frame: Frame
+  show: boolean
   onDismiss: () => void
 }) {
   
@@ -18,6 +20,7 @@ export default function FrameDetails(props: {
   const actuatorModels = useActuatorModels()
 
   const dispatch = useDispatch()
+  const options = useSelector((state: ComposerState) => state.system.editorOptions)
   const actuators = useSelector((state: ComposerState) => state.actuators)
 
   const [isDisabled, setIsDisabled]: [boolean, any] = useState(true)
@@ -61,6 +64,13 @@ export default function FrameDetails(props: {
     _handleDismiss()
   }
 
+  const _handleDeleteFrame = () => {
+    // update the state
+    dispatch(removeFrame(newFrame.id, newFrame.channelId))
+    // close the modal
+    _handleDismiss()
+  }
+
   const _handleDismiss = () => {
     props.onDismiss()
     detailPanel.changeValue("NONE")
@@ -83,7 +93,7 @@ export default function FrameDetails(props: {
   return (
     <Modal
       titleAriaId={"file-picker-modal"}
-      isOpen={detailPanel.value === "FRAME"}
+      isOpen={props.show}
       layerProps={_layerProps}
       onDismiss={_handleDismiss}
       isBlocking={false}
@@ -100,9 +110,25 @@ export default function FrameDetails(props: {
       </div>
       <div className={contentStyles.body}>
         <Stack tokens={stackTokens}>
+          <NumberField
+            defaultValue={props.frame.start}
+            minValue={0}
+            maxValue={Math.floor(options.width/options.frameSize)}
+            onChange={v => setNewFrame({...newFrame, start: v})}
+            label={"Start"}
+          />
+          <NumberField
+            defaultValue={props.frame.end}
+            minValue={0}
+            maxValue={Math.floor(options.width/options.frameSize)}
+            onChange={v => setNewFrame({...newFrame, end: v})}
+            label={"End"}
+          />
+          <h4>Parameters</h4>
           {_generateFrameFields()}
           {isDisabled ? (<p>Try update the pin values again if the button is disabled.</p>) : null}
-          <PrimaryButton text="Set Actuator" onClick={_handleSetFrame} allowDisabledFocus disabled={isDisabled} />
+          <PrimaryButton text="Set Frame" onClick={_handleSetFrame} allowDisabledFocus disabled={isDisabled} />
+          <DefaultButton text="Delete Frame" onClick={_handleDeleteFrame} iconProps={{iconName: 'Delete'}} />
         </Stack>
       </div>
     </Modal>
