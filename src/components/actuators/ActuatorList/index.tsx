@@ -1,13 +1,13 @@
 import { CommandBar, ICommandBarItemProps } from '@fluentui/react/lib/CommandBar'
 import Channel from 'components/actuators/Channel'
-import React, { useContext, createContext, useState, useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { DetailPanelCtx } from 'components/App'
+import ActuatorDetails from 'components/modals/ActuatorDetails'
+import FoldableDiv from 'components/utilities/FoldableDiv'
+import React, { useContext, useState } from 'react'
+import { useSelector } from 'react-redux'
 import shortid from 'shortid'
 import { Channel as ChannelType, ComposerState } from 'types'
 import './style.css'
-import FoldableDiv from 'components/utilities/FoldableDiv'
-import { DetailPanelCtx } from 'components/App'
-import ActuatorDetails from 'components/modals/ActuatorDetails'
 
 function ActuatorList(){
 

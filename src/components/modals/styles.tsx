@@ -4,8 +4,8 @@ const theme = getTheme();
 
 export const contentStyles = mergeStyleSets({
   container: {
-    minWidth: 640,
-    minHeight: 520,
+    minWidth: 420,
+    minHeight: 320,
     display: 'flex',
     flexFlow: 'column nowrap',
     alignItems: 'stretch',

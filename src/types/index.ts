@@ -175,7 +175,7 @@ export interface Channel {
   id: string
   type: string
   pins: number[]
-  frames: Map<string, Frame>
+  frames: Frame[]
   constants: any[]
 }
 
