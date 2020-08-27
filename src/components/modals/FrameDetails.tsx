@@ -1,7 +1,7 @@
 import { IconButton, ILayerProps, IStackTokens, Modal, PrimaryButton, Stack, DefaultButton } from "@fluentui/react";
 import { DetailPanelCtx } from "components/App";
 import ActuatorField from "components/utilities/ActuatorField";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setFrame, removeFrame } from "store/actions";
 import { ComposerState, Frame } from "types";
@@ -76,14 +76,20 @@ export default function FrameDetails(props: {
     detailPanel.changeValue("NONE")
   }
 
+  useEffect(() => verifyConditions(), [newFrame.start, newFrame.end, newFrame.fields])
+
   const verifyConditions = () => {
     if (focusedChannel) {
       let act = actuatorModels.find(a => a.type === focusedChannel.type)
       if (act) {
         if (newFrame.fields.length === act.variables.length
-          && !newFrame.fields.some(v => v === undefined || v === null)) {
+          && newFrame.start <= newFrame.end && newFrame.start >= 0) {
+          let invalidFields = newFrame.fields.filter((value) => value === undefined || value === "")
+          if (invalidFields.length > 0)
+            setIsDisabled(true)
+          else  
             setIsDisabled(false)
-            return
+          return
         }
       }
     }

@@ -1,4 +1,4 @@
-import { DefaultButton, Dialog, DialogContent, DialogFooter, DialogType, PrimaryButton, TextField } from '@fluentui/react'
+import { DefaultButton, Dialog, DialogContent, DialogFooter, DialogType, PrimaryButton, TextField, getTheme } from '@fluentui/react'
 import { CommandBar, ICommandBarItemProps } from '@fluentui/react/lib/CommandBar'
 import Rect from 'components/actuators/Rect'
 import { DetailPanelCtx } from 'components/App'
@@ -12,6 +12,7 @@ import { removeChannel, setChannel } from 'store/actions'
 import { Channel as ChannelType, ComposerState, Frame } from 'types'
 import { LEFT_PADDING } from 'utils/constants'
 import './style.css'
+import { useActuatorModels } from 'utils/actuatorModels'
 
 type ChannelProps = {
   id: string
@@ -23,9 +24,10 @@ function Channel(props: ChannelProps) {
   const detailPanel = useContext(DetailPanelCtx)
   const channel = useSelector((state: ComposerState) => state.actuators.find(c => c.id === props.id) as ChannelType)
   const options = useSelector((state: ComposerState) => state.system.editorOptions)
+  const actuatorModels = useActuatorModels()
+  const theme = getTheme()
 
   const [activeFrameId, setActiveFrameId] = useState("")
-
   const [mouseX, setMouseX] = useState(0)
   const [isMouseDown, setIsMouseDown] = useState(false)
   const [isActuatorDetailsVisible, setIsActuatorDetailsVisible] = useState(false)
@@ -96,9 +98,35 @@ function Channel(props: ChannelProps) {
     },
   ]
 
+
+  const _farItems: ICommandBarItemProps[] = [
+    {
+      key: 'info',
+      text: `Id: ${channel.id}`,
+      // This needs an ariaLabel since it's icon-only
+      ariaLabel: `Id: ${channel.id}`,
+      iconOnly: true,
+      iconProps: { iconName: 'Info' },
+    },
+  ]
+
   const _handleNameChange = (event: any, newValue?: string) => {
     if (newValue === undefined) return;
     setChannelName(newValue)
+  }
+
+  const _generateFields = (frame: Frame) => {
+    let actModel = actuatorModels.find(a => a.type === channel.type)
+    if (!actModel) return null
+    return actModel.variables.map((title, index) => {
+      switch (title.type) {
+        case "COLOR":
+          return <span><b>{title.name}</b>: <div className="Rect-content--color" style={{backgroundColor: frame.fields[index]}}></div></span>
+        case "BOOL":
+        case "NUMBER":
+          return <span><b>{title.name}</b>: {frame.fields[index]}</span>
+      }    
+    })
   }
 
   const _generateFrames = () => {
@@ -108,6 +136,7 @@ function Channel(props: ChannelProps) {
         <Rect
           key={frame.id}
           frame={frame}
+          fields={_generateFields(frame)}
           x={mouseX}
           shouldEdit={isMouseDown}
           onDoubleClick={(id) => {
@@ -124,7 +153,7 @@ function Channel(props: ChannelProps) {
     id: activeFrameId,
     channelId: channel.id,
     fields: [],
-    color: "#FF0000",
+    color: theme.palette.accent,
     start: 0,
     end: 0
   }
@@ -155,6 +184,7 @@ function Channel(props: ChannelProps) {
         <h3 className="Channel-title">{channel.name}</h3>
         <CommandBar
           items={_items}
+          farItems={_farItems}
           ariaLabel="Use left and right arrow keys to navigate between commands"
         />
       </div>

@@ -15,6 +15,7 @@ interface RectStyle {
 type RectProps = {
   x: number
   frame: Frame
+  fields: JSX.Element[] | null
   shouldEdit: boolean
   onDoubleClick: (id: string) => void
 }
@@ -147,6 +148,9 @@ function Rect(props: RectProps){
         draggable={false}
         onMouseDown={() => setIsRightHandleActive(true)}
       ></div>
+      <div className="Rect-content">
+        {props.fields}
+      </div>
     </div>
   )
 }
