@@ -74,3 +74,7 @@ export const setState = (state: type.ComposerState): type.FileAction => ({
   type: type.SET_COMPOSER,
   payload: state
 })
+
+export const resetState = (): type.FileAction => ({
+  type: type.RESET_COMPOSER
+})

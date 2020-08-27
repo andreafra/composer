@@ -1,13 +1,13 @@
-import { IconButton, ILayerProps, IStackTokens, Modal, PrimaryButton, Stack, DefaultButton } from "@fluentui/react";
+import { DefaultButton, IconButton, ILayerProps, IStackTokens, Modal, PrimaryButton, Stack } from "@fluentui/react";
 import { DetailPanelCtx } from "components/App";
 import ActuatorField from "components/utilities/ActuatorField";
-import React, { useState, useEffect } from "react";
+import NumberField from "components/utilities/NumberField";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setFrame, removeFrame } from "store/actions";
+import { removeFrame, setFrame } from "store/actions";
 import { ComposerState, Frame } from "types";
 import { useActuatorModels } from "utils/actuatorModels";
 import { contentStyles, iconButtonStyles } from "./styles";
-import NumberField from "components/utilities/NumberField";
 
 export default function FrameDetails(props: {
   frame: Frame

@@ -121,11 +121,12 @@ function Channel(props: ChannelProps) {
     return actModel.variables.map((title, index) => {
       switch (title.type) {
         case "COLOR":
-          return <span><b>{title.name}</b>: <div className="Rect-content--color" style={{backgroundColor: frame.fields[index]}}></div></span>
+          return <span key={frame.id + title.type + index}><b>{title.name}</b>: <div className="Rect-content--color" style={{backgroundColor: frame.fields[index]}}></div></span>
         case "BOOL":
         case "NUMBER":
-          return <span><b>{title.name}</b>: {frame.fields[index]}</span>
-      }    
+        default:
+          return <span key={frame.id + title.type + index}><b>{title.name}</b>: {frame.fields[index]}</span>
+      }
     })
   }
 

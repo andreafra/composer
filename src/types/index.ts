@@ -20,6 +20,7 @@ export const SET_EDITOR_OPTIONS = 'SET_EDITOR_OPTIONS'
 export const SET_LEFT_SCROLL = 'SET_LEFT_SCROLL'
 
 export const SET_COMPOSER = 'SET_COMPOSER'
+export const RESET_COMPOSER = 'RESET_COMPOSER'
 
 /* Dictionary */
 export interface IDictionary<V> {
@@ -117,9 +118,13 @@ interface SetComposerAction {
   payload: ComposerState
 }
 
+interface ResetComposerAction {
+  type: typeof RESET_COMPOSER
+}
+
 export type SystemAction = SetUsernameAction | SetFilenameAction | SetEditorOptionsAction | SetLeftScrollAction
 
-export type FileAction = SetComposerAction
+export type FileAction = SetComposerAction | ResetComposerAction
 
 /* System */
 export interface SystemState {

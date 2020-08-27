@@ -9,7 +9,7 @@ const FRAME_SIZE = 30 // in px
 
 const latestFile = new FileManager().getLatestFile();
 
-export const initialState: SystemState = latestFile ? latestFile.system : {
+export const defaultState: SystemState = {
   username: "Unknown",
   lastModified: new Date(),
   filename: "Unnamed File",
@@ -19,6 +19,8 @@ export const initialState: SystemState = latestFile ? latestFile.system : {
     frameSize: FRAME_SIZE
   },
 }
+
+export const initialState: SystemState = latestFile ? latestFile.system : defaultState
 
 export default (
   state = initialState,
