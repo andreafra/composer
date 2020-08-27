@@ -16,10 +16,14 @@ export default (
   
   case SET_CHANNEL:
     let channelIndex = stateCopy.findIndex(ch => ch.id === action.meta.id)
-    if (channelIndex > -1)
+    if (channelIndex > -1) {
+      if (action.payload.type !== stateCopy[channelIndex].type) {
+        action.payload.frames = []
+      }
       stateCopy[channelIndex] = action.payload
-    else
+    } else {
       stateCopy.push(action.payload)
+    }
     return stateCopy
 
   case SET_FRAME:

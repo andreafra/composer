@@ -58,7 +58,7 @@ export default function ActuatorDetails(props: {
     let items = []
     // Add pins
     items.push(act.pins.map((value, index) => <NumberField
-      defaultValue={0}
+      defaultValue={newActuator.pins[index] || 0}
       minValue={0}
       maxValue={255}
       label={value}

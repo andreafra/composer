@@ -46,7 +46,7 @@ export default function ActuatorField(
     />
     case "COLOR":
       return <ColorPicker
-      color={getColorFromString("#" + value as string) as IColor || getColorFromString("#FF0000")}
+      color={getColorFromString(value) as IColor || getColorFromString("#FF0000")}
       onChange={_handleColorChange}
       alphaType={"none"}
       showPreview={true}

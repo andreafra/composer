@@ -23,7 +23,7 @@ function Rect(props: RectProps){
   const dispatch = useDispatch()
   const options = useSelector((state: ComposerState) => state.system.editorOptions)
 
-  const [FrameStartX, setFrameStartX]: [number, any] = useState(props.frame.start * options.frameSize)
+  const [frameStartX, setFrameStartX]: [number, any] = useState(props.frame.start * options.frameSize)
   const [FrameWidth, setFrameWidth]: [number, any] = useState((props.frame.end - props.frame.start + 1) * options.frameSize)
   // True if I'm editing this rectangle
   const [isActive, setIsActive] = useState(false)
@@ -32,12 +32,12 @@ function Rect(props: RectProps){
   const [isRightHandleActive, setIsRightHandleActive] = useState(false)
   const [dragOffset, setDragOffset] = useState(0)
 
-  const FrameEndX: number = FrameStartX + FrameWidth
+  const frameEndX: number = frameStartX + FrameWidth
 
   const style: RectStyle = {
     backgroundColor: props.frame.color,
     width: FrameWidth + "px",
-    marginLeft: FrameStartX + "px",
+    marginLeft: frameStartX + "px",
     zIndex: isActive ? 10000 : 0
   }
 
@@ -45,20 +45,20 @@ function Rect(props: RectProps){
     if(props.shouldEdit && isActive) {
       // If I'm editing the rectangle
       let newWidth: number = FrameWidth
-      let newMargin: number = FrameStartX
+      let newMargin: number = frameStartX
 
       if(isLeftHandleActive) { // Drag left handle
         newMargin = props.x - LEFT_PADDING // - options.frameSize
-        newWidth = FrameEndX - newMargin
+        newWidth = frameEndX - newMargin
         if (props.x <= LEFT_PADDING){
           newMargin = 0 
-          newWidth = FrameWidth + FrameStartX
+          newWidth = FrameWidth + frameStartX
         }
       } else if(isRightHandleActive) { // Drag right handle
-        newWidth = props.x - FrameStartX - LEFT_PADDING //- options.frameSize
-        newMargin = FrameStartX
+        newWidth = props.x - frameStartX - LEFT_PADDING //- options.frameSize
+        newMargin = frameStartX
         if(props.x >= options.width){
-          newWidth = (options.width - FrameStartX)
+          newWidth = (options.width - frameStartX)
         }
       } else { // drag the Rect around (it just works)
         newWidth = FrameWidth
@@ -91,9 +91,9 @@ function Rect(props: RectProps){
           sizeInFrames += 1
         }
 
-        let marginInFrames: number = Math.floor(FrameStartX / options.frameSize)
+        let marginInFrames: number = Math.floor(frameStartX / options.frameSize)
         let newMargin = options.frameSize * marginInFrames
-        if (FrameStartX % options.frameSize > options.frameSize * 0.5) {
+        if (frameStartX % options.frameSize > options.frameSize * 0.5) {
           // Then I'm in the next frame (I add a frame)
           newMargin += options.frameSize
           marginInFrames += 1
@@ -134,7 +134,7 @@ function Rect(props: RectProps){
       onDoubleClick={_handleEditFrame}
       onMouseDown={(e) => {
         setIsActive(true)
-        setDragOffset(e.pageX - (FrameStartX + LEFT_PADDING))
+        setDragOffset(e.pageX - (frameStartX + LEFT_PADDING))
       }}
     >
       <div 
