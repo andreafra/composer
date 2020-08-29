@@ -8,11 +8,16 @@ export default class Compiler {
     this.options = state.system.editorOptions;
     this.sound = state.sound;
     this.actuators = state.actuators;
+
+    // sort each actuator frames
+    this.actuators.forEach(act => {
+      act.frames.sort((a, b) => a.start - b.start)
+    })
   }
 
   build = () => {
     return this.header()
-    + this.speaker()
+    + this.getSoundDefs()
     + this.getActuatorsDefs()
     + this.setup()
     + this.loop()
@@ -60,7 +65,7 @@ void loop() {
   }
 
   // TODO: Fix PIN 9
-  speaker = () => {
+  getSoundDefs = () => {
     return `// INITIALIZE SOUND DEVICE
 #define SOUND_PIN 9
 ${this.generateNotes()}
@@ -113,7 +118,14 @@ ${this.generateNotes()}
   }
 
   getActuatorsSetup = () => {
-    return ""
+    let code = ""
+    this.actuators.forEach(act => {
+      code += `// ACTUATOR: ${act.name} [${act.type}]\n`
+      act.pins.forEach(pin => {
+        code += `  pinMode(${pin.toString()}, OUTPUT);\n`
+      })
+    })
+    return code;
   }
 
   getActuatorsLoop = () => {
