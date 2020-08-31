@@ -1,14 +1,20 @@
-import { ComposerState, EditorOptions, SoundFrame, Channel } from "types";
+import { ComposerState, EditorOptions, SoundFrame, Channel, Actuator } from "types";
+import { useActuatorModels } from "utils/actuatorModels";
+import SoundBlueprint from "./blueprints/sound"
+import ActuatorBP_1pin_digital from "./blueprints/actuator_1pin_digital"
 
+const SOUND_PIN = "9";
 export default class Compiler {
-  options: EditorOptions;
-  sound: (SoundFrame | null)[];
-  actuators: Channel[];
+  options: EditorOptions
+  sound: (SoundFrame | null)[]
+  actuators: Channel[]
+  actuatorDefs: Actuator[]
+
   constructor(state: ComposerState) {
     this.options = state.system.editorOptions;
     this.sound = state.sound;
     this.actuators = state.actuators;
-
+    this.actuatorDefs = useActuatorModels();
     // sort each actuator frames
     this.actuators.forEach(act => {
       act.frames.sort((a, b) => a.start - b.start)
@@ -32,49 +38,34 @@ export default class Compiler {
 
   setup = () => {
     return `void setup() {
-  // SOUND BUZZER
-  pinMode(SOUND_PIN, OUTPUT);
-  // SETUP LED, MOTORS
+  ${this.getSoundSetup()}
   ${this.getActuatorsSetup()}
 }
 `
   }
 
   loop = () => {
-    return `// HANDLE UPDATE RATE
+    return `\n// Handle update rate
 long lastUpdate = 0;
-int updates = 0;
-
-int soundCounter = 0;
-int soundTicksRemaining = 0;
+int currentFrame = 0;
 
 void loop() {
   unsigned long currentUpdateMillis = millis();
   
-  if (currentUpdateMillis - lastUpdate > FRAME_LENGTH_MS && updates < FILE_LENGTH) {
+  if (currentUpdateMillis - lastUpdate > FRAME_LENGTH_MS && currentFrame < FILE_LENGTH) {
     lastUpdate = currentUpdateMillis;
-    // Every frame, execute this block of code
-    
+    // Every frame, execute this block of code    
     ${this.getSoundLoop()}
-    // SETUP LED, MOTORS
     ${this.getActuatorsLoop()}
-    updates++;
+    currentFrame++;
   }
 }
 `
   }
 
-  // TODO: Fix PIN 9
-  getSoundDefs = () => {
-    return `// INITIALIZE SOUND DEVICE
-#define SOUND_PIN 9
-${this.generateNotes()}
-`
-  }
-
   generateNotes = () => {
-    let notes_freq = "const int SOUND_FREQ[] = {" // the frequencies to play
-    let notes_length = "const byte SOUND_DURATION[] = {" // how long each frequency lasts
+    let notes_freq = "" // the frequencies to play
+    let notes_length = "" // how long each frequency lasts
     let lastFreq = undefined // the last frequency added
     let lastFreqQty = 0 // how many identical freqs have been parsed consecutively
     let intervals = 0 // how many different sequences of freqs are in the array
@@ -94,42 +85,142 @@ ${this.generateNotes()}
       }
       i++
     }
-    notes_freq += "};"
-    notes_length += "};"
-    return notes_freq + "\n" + notes_length + `\n#define SOUND_SIZE ${intervals - 1}`
+    return {
+      freq: notes_freq,
+      duration: notes_length,
+      size: intervals.toString()
+    }
+  }
+
+  getSoundDefs = () => {
+    let notes = this.generateNotes()
+    let code = SoundBlueprint.definition
+    .replace("$pin", SOUND_PIN)
+    .replace("$size", notes.size)
+    .replace("$freq_array", notes.freq)
+    .replace("$duration_array", notes.duration)
+    return code
+  }
+
+  getSoundSetup = () => {
+    return SoundBlueprint.setup
   }
 
   getSoundLoop = () => {
-    return `// SOUND: Tone - Square Wave
-    if (soundCounter < SOUND_SIZE) {
-      if (soundTicksRemaining == 0) {
-        tone(SOUND_PIN, SOUND_FREQ[soundCounter], SOUND_DURATION[soundCounter] * FRAME_LENGTH_MS);
-        soundTicksRemaining = SOUND_DURATION[soundCounter] - 1;
-        soundCounter++;
-      } else {
-        soundTicksRemaining--;
-      }
-    } else noTone(SOUND_PIN);
-    `
+    return SoundBlueprint.loop
   }
   
+  getActuatorBlueprint = (type: String) => {
+    switch(type) {
+      case "LIGHT_SINGLE":
+      case "MOTOR_DC":
+        return ActuatorBP_1pin_digital
+      case "LIGHT_SINGLE_PWM":
+      case "MOTOR_DC_PWM":
+        return
+      case "LIGHT_RGB":
+        return
+      case "LIGHT_RGB_PWM":
+        return
+      case "MOTOR_DC_H_BRIDGE":
+        return
+      case "MOTOR_SERVO":
+        return
+      case "MOTOR_STEPPER_2":
+        return
+      case "MOTOR_STEPPER_4":
+        return
+    }
+  }
+
   getActuatorsDefs = () => {
-    return ""
+    let allDefCode = ""
+    this.actuators.forEach((act, actIndex) => {
+      // For each actuator/channel
+      // Get the definitions for this actuator
+      let bp = this.getActuatorBlueprint(act.type)
+      let actDef = this.actuatorDefs.find(a => a.type === act.type)
+      if (actDef === undefined) throw new Error("No actuator definition found for type " + act.type)
+      if (bp === undefined) throw new Error("No blueprint found for type " + act.type)
+
+      let defCode = bp.definition
+      .replace(/\$id/g, act.type + "_" + actIndex)
+      .replace("$size", act.frames.length.toString())
+      act.pins.forEach((pinValue, pinIndex) => {
+        let re = new RegExp("\\$pin" + (pinIndex + 1), "g")
+        defCode = defCode.replace(re, pinValue.toString())
+      })
+      // Generate frames for this actuator
+      let frames = ""
+      act.frames.forEach(frame => {
+        let str = bp!.item
+        str = str.replace("$start", frame.start.toString())
+        str = str.replace("$end", frame.end.toString())
+        frame.fields.forEach((fieldValue, fieldIndex) => {
+          switch(actDef!.variables[fieldIndex].type) {
+            case "NUMBER":
+            default:
+              str = str.replace("$pin"+(fieldIndex+1), fieldValue.toString())
+              break;
+            case "BOOL":
+              str = str.replace("$pin"+(fieldIndex+1), fieldValue === "true" ? "HIGH" : "LOW")
+              break;
+            case "COLOR":
+              let color = hexToRgb(fieldValue)
+              str = str.replace("$pinR", color.r.toString())
+              str = str.replace("$pinG", color.g.toString())
+              str = str.replace("$pinB", color.b.toString())
+              break;
+          }
+        })
+        frames += str + ","
+      })
+      defCode = defCode.replace("$array_values", frames)
+      allDefCode += defCode + "\n"
+    })
+
+    return allDefCode
   }
 
   getActuatorsSetup = () => {
-    let code = ""
-    this.actuators.forEach(act => {
-      code += `// ACTUATOR: ${act.name} [${act.type}]\n`
-      act.pins.forEach(pin => {
-        code += `  pinMode(${pin.toString()}, OUTPUT);\n`
+    let allSetupCode = ""
+    this.actuators.forEach((act, actIndex) => {
+      let bp = this.getActuatorBlueprint(act.type)
+      if (bp === undefined) throw new Error("No blueprint found for type " + act.type)
+
+      let setupCode = bp.setup
+      .replace(/\$id/g, act.type + "_" + actIndex)
+
+      act.pins.forEach((pinValue, pinIndex) => {
+        let re = new RegExp("\\$pin" + (pinIndex + 1), "g")
+        setupCode = setupCode.replace(re, pinValue.toString())
       })
+      allSetupCode += setupCode
     })
-    return code;
+    return allSetupCode
   }
 
   getActuatorsLoop = () => {
-    return ""
-  }
+    let allLoopCode = ""
+    this.actuators.forEach((act, actIndex) => {
+      let bp = this.getActuatorBlueprint(act.type)
+      if (bp === undefined) throw new Error("No blueprint found for type " + act.type)
 
+      let loopCode = bp.loop
+      .replace(/\$id/g, act.type + "_" + actIndex)
+
+      allLoopCode += loopCode
+    })
+    return allLoopCode
+  }
+}
+
+// See https://stackoverflow.com/a/11508164
+function hexToRgb(hex: string) {
+  var bigint = parseInt(hex, 16)
+  var r = (bigint >> 16) & 255
+  var g = (bigint >> 8) & 255
+  var b = bigint & 255
+
+  return {r: r, g: g, b: b}
 }

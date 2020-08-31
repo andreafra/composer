@@ -89,10 +89,8 @@ const defaultActuators: Actuator[] = [
     pins: ["Power"],
     variables: [
       {
-        type: "NUMBER",
-        name: "Speed",
-        minValue: 0,
-        maxValue: 100
+        type: "BOOL",
+        name: "On/Off"
       }
     ]
   },
