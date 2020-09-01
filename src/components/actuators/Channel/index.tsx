@@ -13,6 +13,7 @@ import { Channel as ChannelType, ComposerState, Frame } from 'types'
 import { LEFT_PADDING } from 'utils/constants'
 import './style.css'
 import { useActuatorModels } from 'utils/actuatorModels'
+import Timeline from 'components/utilities/Timeline'
 
 type ChannelProps = {
   id: string
@@ -35,7 +36,7 @@ function Channel(props: ChannelProps) {
   const [isRenameDialogVisible, setIsRenameDialogVisible] = useState(false)
   const [channelName, setChannelName] = useState(channel.name)
   const onMouseMove = (e: any) => {
-    if(isMouseDown) {
+    if (isMouseDown) {
       setMouseX(e.pageX)
     }
   }
@@ -50,7 +51,7 @@ function Channel(props: ChannelProps) {
     detailPanel.changeValue("FRAME")
   }
 
-  const _handleUpdateChannelBtn = () => {    
+  const _handleUpdateChannelBtn = () => {
     setIsActuatorDetailsVisible(true)
     detailPanel.changeValue("CHANNEL")
   }
@@ -75,25 +76,25 @@ function Channel(props: ChannelProps) {
     {
       key: "newFrame",
       text: "New Frame",
-      iconProps: {iconName: "Add"},
+      iconProps: { iconName: "Add" },
       onClick: _handleNewFrameBtn
     },
     {
       key: "renameActuator",
       text: "Rename",
-      iconProps:{iconName: "Rename"},
+      iconProps: { iconName: "Rename" },
       onClick: () => setIsRenameDialogVisible(true)
     },
     {
       key: "deleteActuator",
       text: "Delete",
-      iconProps: {iconName: "Delete"},
+      iconProps: { iconName: "Delete" },
       onClick: () => setIsDeleteDialogVisible(true)
     },
     {
       key: "changeActuatorDetails",
       text: "Details",
-      iconProps: {iconName: "Settings"},
+      iconProps: { iconName: "Settings" },
       onClick: _handleUpdateChannelBtn
     },
   ]
@@ -121,7 +122,7 @@ function Channel(props: ChannelProps) {
     return actModel.variables.map((title, index) => {
       switch (title.type) {
         case "COLOR":
-          return <span key={frame.id + title.type + index}><b>{title.name}</b>: <div className="Rect-content--color" style={{backgroundColor: frame.fields[index]}}></div></span>
+          return <span key={frame.id + title.type + index}><b>{title.name}</b>: <div className="Rect-content--color" style={{ backgroundColor: frame.fields[index] }}></div></span>
         case "BOOL":
         case "NUMBER":
         default:
@@ -149,7 +150,7 @@ function Channel(props: ChannelProps) {
     }
     return null
   }
-  
+
   const newFrame: Frame = {
     id: activeFrameId,
     channelId: channel.id,
@@ -172,64 +173,67 @@ function Channel(props: ChannelProps) {
     closeButtonAriaLabel: 'Done',
     subText: 'Choose a new name for the Actuator:',
   }
-  
-  if (channel) {return (
-    <div
-      className="Channel"
-      onMouseMove={e => onMouseMove(e)}
-      onMouseDown={() => setIsMouseDown(true)}
-      onMouseUp={() => setIsMouseDown(false)}
-      onMouseLeave={() => setIsMouseDown(false)}
-    >
-      <div className="Channel-toolbox">
-        <h3 className="Channel-title">{channel.name}</h3>
-        <CommandBar
-          items={_items}
-          farItems={_farItems}
-          ariaLabel="Use left and right arrow keys to navigate between commands"
-        />
-      </div>
-      <div className="Channel-frames">
-        <ScrollableDiv>
-          <div className="Channel-scrollable" style={{width: options.width, marginLeft: LEFT_PADDING}}>
-            {_generateFrames()}
-          </div>
-        </ScrollableDiv>
-      </div>
-      <Dialog
-        hidden={!isDeleteDialogVisible}
-        onDismiss={() => setIsDeleteDialogVisible(false)}
-        dialogContentProps={dialogDeleteContentProps}
+
+  if (channel) {
+    return (
+      <div
+        className="Channel"
+        onMouseMove={e => onMouseMove(e)}
+        onMouseDown={() => setIsMouseDown(true)}
+        onMouseUp={() => setIsMouseDown(false)}
+        onMouseLeave={() => setIsMouseDown(false)}
       >
-        <DialogFooter>
-          <PrimaryButton onClick={_handleDeleteActuator} text="Yes" />
-          <DefaultButton onClick={() => setIsDeleteDialogVisible(false)} text="No" />
-        </DialogFooter>
-      </Dialog>
-      <Dialog
-        hidden={!isRenameDialogVisible}
-        onDismiss={() => setIsRenameDialogVisible(false)}
-        dialogContentProps={dialogRenameContentProps}
-      >
-     <DialogContent>
-        <TextField  
-          placeholder="Enter new name" 
-          onChange = {_handleNameChange}
+        <div className="Channel-toolbox">
+          <h3 className="Channel-title">{channel.name}</h3>
+          <CommandBar
+            items={_items}
+            farItems={_farItems}
+            ariaLabel="Use left and right arrow keys to navigate between commands"
+          />
+        </div>
+        <div className="Channel-frames">
+          <ScrollableDiv>
+            <Timeline />
+            <div className="Channel-scrollable" style={{ width: options.width, marginLeft: LEFT_PADDING }}>
+              {_generateFrames()}
+            </div>
+          </ScrollableDiv>
+        </div>
+        <Dialog
+          hidden={!isDeleteDialogVisible}
+          onDismiss={() => setIsDeleteDialogVisible(false)}
+          dialogContentProps={dialogDeleteContentProps}
+        >
+          <DialogFooter>
+            <PrimaryButton onClick={_handleDeleteActuator} text="Yes" />
+            <DefaultButton onClick={() => setIsDeleteDialogVisible(false)} text="No" />
+          </DialogFooter>
+        </Dialog>
+        <Dialog
+          hidden={!isRenameDialogVisible}
+          onDismiss={() => setIsRenameDialogVisible(false)}
+          dialogContentProps={dialogRenameContentProps}
+        >
+          <DialogContent>
+            <TextField
+              placeholder="Enter new name"
+              onChange={_handleNameChange}
+            />
+          </DialogContent>
+          <DialogFooter>
+            {/* <PrimaryButton onClick={() => {}} text="" /> */}
+            <DefaultButton onClick={_handleRenameActuator} text="Done" />
+          </DialogFooter>
+        </Dialog>
+        <FrameDetails
+          frame={channel.frames.find(fr => fr.id === activeFrameId) || newFrame}
+          show={detailPanel.value === "FRAME" && activeFrameId !== ""}
+          onDismiss={() => setActiveFrameId("")}
         />
-        </DialogContent>
-        <DialogFooter>
-          {/* <PrimaryButton onClick={() => {}} text="" /> */}
-          <DefaultButton onClick={_handleRenameActuator} text="Done" />
-        </DialogFooter>
-      </Dialog>
-      <FrameDetails
-        frame={channel.frames.find(fr => fr.id === activeFrameId) || newFrame}
-        show={detailPanel.value === "FRAME" && activeFrameId !== ""}
-        onDismiss={() => setActiveFrameId("")}
-      />
-      <ActuatorDetails activeChannelId={channel.id} show={isActuatorDetailsVisible} onDismiss={() => setIsActuatorDetailsVisible(false)} />
-    </div>
-  )} else {
+        <ActuatorDetails activeChannelId={channel.id} show={isActuatorDetailsVisible} onDismiss={() => setIsActuatorDetailsVisible(false)} />
+      </div>
+    )
+  } else {
     console.error("No Channel found with id: " + props.id)
     return null
   }

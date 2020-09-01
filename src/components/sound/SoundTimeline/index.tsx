@@ -1,14 +1,11 @@
-import InstrumentPicker from 'components/sound/InstrumentPicker'
-import React, { useEffect, useMemo, useRef, useState, useContext } from 'react'
+import { ScrollContext } from 'components/utilities/ScrollableDiv'
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { removeNote, setNote } from 'store/actions'
 import { ComposerState, Note, Point, SoundFrame } from 'types'
+import { ACCENT_COLOR, ACCENT_COLOR_ALT, LEFT_PADDING } from 'utils/constants'
 import { createNoteTable } from 'utils/SoundGenerator'
 import './style.css'
-import { ScrollableDiv, ScrollContext } from 'components/utilities/ScrollableDiv'
-import Player from 'utils/Player'
-import { CurrentInstantMarkerCtx } from '../SoundEditor'
-import { LEFT_PADDING, ACCENT_COLOR, ACCENT_COLOR_ALT } from 'utils/constants'
 /*
  * Funny story time: stuff you declare outside a function component 
  * doesn't get resetted when React decides on its own to refresh that
@@ -24,23 +21,23 @@ let CANVAS_H = 0 // in px
 let numberOfRows = 0
 
 // ===== Sound Generator =====
-let AudioContext = window.AudioContext
-let audioCtx = new AudioContext();
+// let AudioContext = window.AudioContext
+// let audioCtx = new AudioContext();
 
-// create Oscillator and gain node
-let oscillator = audioCtx.createOscillator()
-let gainNode = audioCtx.createGain()
+// // create Oscillator and gain node
+// let oscillator = audioCtx.createOscillator()
+// let gainNode = audioCtx.createGain()
 
-// connect oscillator to gain node to speakers
-oscillator.connect(gainNode)
-gainNode.connect(audioCtx.destination)
+// // connect oscillator to gain node to speakers
+// oscillator.connect(gainNode)
+// gainNode.connect(audioCtx.destination)
 
-// set default options
-oscillator.detune.value = 100 // value in cents, IDK what this does :)
-oscillator.frequency.value = 0 // pitch
-oscillator.type = "sine" // instrument
-gainNode.gain.value = 0 // volume
-oscillator.start(0) // start now
+// // set default options
+// oscillator.detune.value = 100 // value in cents, IDK what this does :)
+// oscillator.frequency.value = 0 // pitch
+// oscillator.type = "sine" // instrument
+// gainNode.gain.value = 0 // volume
+// oscillator.start(0) // start now
 
 /**
  * This component builds a canvas with the lines for actual melody composition.
@@ -50,7 +47,6 @@ oscillator.start(0) // start now
 function SoundTimeline() {
 
   const scrollCtx = useContext(ScrollContext)
-  const currentInstantMarker = useContext(CurrentInstantMarkerCtx)
 
   const dispatch = useDispatch()
   const options = useSelector((state: ComposerState) => state.system.editorOptions)
@@ -64,13 +60,12 @@ function SoundTimeline() {
   const CELL_W = options.frameSize
   const CELL_H = 15
 
-  const TIMELINE_H = 30
-
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const timelineCanvasRef = useRef<HTMLCanvasElement>(null)
 
   const [lastCell, setLastCell]: [Point, any] = useState({ x: 0, y: 0 })
   const [isDrawing, setIsDrawing]: [boolean, any] = useState(false)
+
+  // TODO: Replace completely
   const [type, setType]: [OscillatorType, any] = useState("sine")
 
   const MAX_VOLUME = 0.2
@@ -148,8 +143,8 @@ function SoundTimeline() {
     setLastCell({x: -1, y: -1})
     
     // Stop playing sound
-    oscillator.frequency.value = 0 // pitch
-    gainNode.gain.value = 0 // volume
+    // oscillator.frequency.value = 0 // pitch
+    // gainNode.gain.value = 0 // volume
   }
 
   /**
@@ -168,19 +163,19 @@ function SoundTimeline() {
 
       // ALWAYS: play sound preview
       // Update the frequency
-      oscillator.frequency.value = notes[cell.y] ? notes[cell.y].freq : 0// pitch
+      // oscillator.frequency.value = notes[cell.y] ? notes[cell.y].freq : 0// pitch
 
       // Update the instrument
       // Prevents the sine function from being "resetted/recentered",
       // which produces an annoying buzz, basically it's not "smooth"
-      if (type !== "sine")
-        oscillator.type = type
+      // if (type !== "sine")
+      //   oscillator.type = type
       
       // Update the volume
       let frame = melody[cell.x - 1]
       let volume = 0.5 * MAX_VOLUME;
       if (frame && frame.volume) volume = frame.volume * MAX_VOLUME
-      gainNode.gain.value = volume // volume
+      // gainNode.gain.value = volume // volume
 
       // when I change cell...
       // optimized: only when cell changes
@@ -318,84 +313,19 @@ function SoundTimeline() {
     }
   }
 
-  useEffect(() => {
-    let timeline = timelineCanvasRef.current
-    if (timeline) {
-      // Init canvas space
-      let t_ctx = timeline.getContext('2d')
-      let t_rect = timeline.getBoundingClientRect()
-
-      // Draw lines
-      let smallColumns = CANVAS_W / (CELL_W);
-      let columns = CANVAS_W / (CELL_W * 4);
-      if (t_ctx) {
-        t_ctx.clearRect(0,0, CANVAS_W, TIMELINE_H);
-
-        for (let index = 0; index < smallColumns; index++) {
-          t_ctx.strokeStyle = ACCENT_COLOR_ALT
-          t_ctx.lineWidth = 0.3
-          t_ctx.beginPath()
-          t_ctx.moveTo(LEFT_PADDING + CELL_W * index, TIMELINE_H/2)
-          t_ctx.lineTo(LEFT_PADDING + CELL_W * index, TIMELINE_H)
-          t_ctx.closePath()
-          t_ctx.stroke()
-        }
-
-        for (let index = 0; index < columns; index++) {
-          t_ctx.strokeStyle = ACCENT_COLOR_ALT
-          t_ctx.lineWidth = 0.3
-          t_ctx.beginPath()
-          t_ctx.moveTo(LEFT_PADDING + CELL_W * 4 * index, 0)
-          t_ctx.lineTo(LEFT_PADDING + CELL_W * 4 * index, TIMELINE_H)
-          t_ctx.closePath()
-          t_ctx.stroke()
-
-          t_ctx.font = `14px sans-serif`
-          t_ctx.fillStyle = ACCENT_COLOR_ALT
-          t_ctx.fillText(index.toString(), LEFT_PADDING + CELL_W * 4 * index + 5, 14)
-
-          let triangleCenter = Player._instance ? LEFT_PADDING + Player._instance._position * CELL_W : LEFT_PADDING
-          t_ctx.fillStyle = "red"
-          t_ctx.beginPath()
-          t_ctx.moveTo(triangleCenter - 5, TIMELINE_H/2)
-          t_ctx.lineTo(triangleCenter, TIMELINE_H)
-          t_ctx.lineTo(triangleCenter + 5, TIMELINE_H/2)
-          t_ctx.lineTo(triangleCenter - 5, TIMELINE_H/2)
-          t_ctx.closePath()
-          t_ctx.fill()
-        }
-      }
-    }
-  })
-
   return (
-    <>
-    <InstrumentPicker
-        currentType={type}
-        update={(t: OscillatorType) => setType(t)}
-      />
     <div className="SoundTimeline">
-      <ScrollableDiv>
-        <canvas
-          className="timelineCanvas"
-          ref={timelineCanvasRef}
-          width={CANVAS_W}
-          height={TIMELINE_H}
-        >
-        </canvas>
-        <canvas
-          className="soundCanvas"
-          ref={canvasRef}
-          width={CANVAS_W}
-          height={CANVAS_H}
-          onMouseMove={(e) => onInputMove(e)}
-          onMouseDown={(e) => onInputStart(e)}
-          onMouseUp={onInputStop}
-          onMouseLeave={onInputStop}
-        ></canvas>
-      </ScrollableDiv>
+      <canvas
+        className="soundCanvas"
+        ref={canvasRef}
+        width={CANVAS_W}
+        height={CANVAS_H}
+        onMouseMove={(e) => onInputMove(e)}
+        onMouseDown={(e) => onInputStart(e)}
+        onMouseUp={onInputStop}
+        onMouseLeave={onInputStop}
+      ></canvas>
     </div>
-    </>
   )
 }
 

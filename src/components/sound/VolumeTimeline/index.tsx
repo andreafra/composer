@@ -1,10 +1,10 @@
-import { ScrollableDiv, ScrollContext } from 'components/utilities/ScrollableDiv'
-import React, { useEffect, useRef, useState, useContext } from 'react'
+import { ScrollContext } from 'components/utilities/ScrollableDiv'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { setVolume, removeNote } from 'store/actions'
+import { removeNote, setVolume } from 'store/actions'
 import { ComposerState, Point, SoundFrame } from 'types'
+import { ACCENT_COLOR, ACCENT_COLOR_ALT, LEFT_PADDING } from 'utils/constants'
 import './style.css'
-import { LEFT_PADDING, ACCENT_COLOR_ALT, ACCENT_COLOR } from 'utils/constants'
 
 let ctx: CanvasRenderingContext2D | null
 let rect: DOMRect | null
@@ -202,18 +202,17 @@ function VolumeTimeline(props: any) {
  
   return (
     <div className="VolumeTimeline">
-      <ScrollableDiv>
-        <canvas
-          className="volumeCanvas"
-          ref={canvasRef}
-          width={CANVAS_W}
-          height={CANVAS_H}
-          onMouseMove={(e) => onInputMove(e)}
-          onMouseDown={(e) =>onInputStart(e)}
-          onMouseUp={(e) => onInputStop(e)}
-          onMouseLeave={(e) => onInputStop(e)}
-        ></canvas>
-      </ScrollableDiv>
+      <span className="VolumeTimeline-title">Volume</span>
+      <canvas
+        className="volumeCanvas"
+        ref={canvasRef}
+        width={CANVAS_W}
+        height={CANVAS_H}
+        onMouseMove={(e) => onInputMove(e)}
+        onMouseDown={(e) =>onInputStart(e)}
+        onMouseUp={(e) => onInputStop(e)}
+        onMouseLeave={(e) => onInputStop(e)}
+      ></canvas>
     </div>
   )
 }

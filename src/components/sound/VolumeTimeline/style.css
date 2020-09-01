@@ -1,4 +1,11 @@
 .VolumeTimeline {
-  overflow-x: scroll;
+  overflow-x: visible;
   background-color: white;
+}
+
+.VolumeTimeline-title {
+  font-weight: bold;
+  display: block;
+  margin-left: 30px;
+  padding: 0.2em 0.3em;
 }

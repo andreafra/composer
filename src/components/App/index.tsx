@@ -13,13 +13,24 @@ export const DetailPanelCtx = createContext<{value: DetailPanel, changeValue: Fu
   changeValue: (value: DetailPanel) => {}
 })
 
+export const CurrentInstantMarkerCtx = createContext<{value: number, changeValue: Function}>({
+  value: 0,
+  changeValue: (value: number) => {}
+})
+
 function App() {
 
   const [activePanel, setActivePanel]: [DetailPanel, any] = useState("NONE")
+  const [currentInstant, setCurrentInstant]: [number, any] = useState(0)
+
   const detailPanel = useContext(DetailPanelCtx)
-  
+  const currentInstantCtx = useContext(CurrentInstantMarkerCtx)
+
   detailPanel.value = activePanel
   detailPanel.changeValue = (value: DetailPanel) => setActivePanel(value)
+
+  currentInstantCtx.value = currentInstant
+  currentInstantCtx.changeValue = (value: number) => setCurrentInstant(value)
 
   return (
     <div className="App">
