@@ -2,6 +2,8 @@ import { ComposerState, EditorOptions, SoundFrame, Channel, Actuator } from "typ
 import { useActuatorModels } from "utils/actuatorModels";
 import SoundBlueprint from "./blueprints/sound"
 import ActuatorBP_1pin_digital from "./blueprints/actuator_1pin_digital"
+import ActuatorBP_1pin_analog from "./blueprints/actuator_1pin_analog"
+import ActuatorBP_3pin_rgb from "./blueprints/actuator_3pin_rgb"
 
 const SOUND_PIN = "9";
 export default class Compiler {
@@ -117,9 +119,9 @@ void loop() {
         return ActuatorBP_1pin_digital
       case "LIGHT_SINGLE_PWM":
       case "MOTOR_DC_PWM":
-        return
+        return ActuatorBP_1pin_analog
       case "LIGHT_RGB":
-        return
+        return ActuatorBP_3pin_rgb
       case "LIGHT_RGB_PWM":
         return
       case "MOTOR_DC_H_BRIDGE":

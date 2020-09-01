@@ -49,7 +49,9 @@ const defaultActuators: Actuator[] = [
     variables: [
       {
         type: "NUMBER",
-        name: "Intensity"
+        name: "Intensity",
+        minValue: 0,
+        maxValue: 255
       }
     ]
   },
@@ -103,7 +105,7 @@ const defaultActuators: Actuator[] = [
         type: "NUMBER",
         name: "Speed",
         minValue: 0,
-        maxValue: 100
+        maxValue: 255
       }
     ]
   },
@@ -116,7 +118,7 @@ const defaultActuators: Actuator[] = [
         type: "NUMBER",
         name: "Speed",
         minValue: 0,
-        maxValue: 100
+        maxValue: 255
       },
       {
         type: "BOOL",
@@ -162,7 +164,7 @@ const defaultActuators: Actuator[] = [
       },
       {
         type: "NUMBER",
-        name: "Speed (RPM)",
+        name: "Steps",
         minValue: 0,
         maxValue: 100
       }

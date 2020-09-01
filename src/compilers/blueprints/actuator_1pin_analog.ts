@@ -1,5 +1,5 @@
 /**
- * Actuator blueprint for a single digital pin.
+ * Actuator blueprint for a single PWM pin.
  * The code that uses this file must replace:
  * - $pin1 with the pin1 value
  * - $array_values with a concatenated string of $id_TYPE struct elements
@@ -25,11 +25,11 @@ export default {
   // actuator: $id
   if ($id_currFrameIndex < $id_SIZE) {
     if (currentFrame == $id[$id_currFrameIndex].end + 1) {
-      digitalWrite($id_PIN1, LOW);
+      analogWrite($id_PIN1, 0);
       $id_currFrameIndex++;
     }
     if (currentFrame == $id[$id_currFrameIndex].start) {
-      digitalWrite($id_PIN1, $id[$id_currFrameIndex].pin1);
+      analogWrite($id_PIN1, $id[$id_currFrameIndex].pin1);
     }
   }
   `,
