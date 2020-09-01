@@ -1,11 +1,17 @@
-import { ComposerState, EditorOptions, SoundFrame, Channel, Actuator } from "types";
+import { Actuator, Channel, ComposerState, EditorOptions, SoundFrame } from "types";
 import { useActuatorModels } from "utils/actuatorModels";
-import SoundBlueprint from "./blueprints/sound"
-import ActuatorBP_1pin_digital from "./blueprints/actuator_1pin_digital"
-import ActuatorBP_1pin_analog from "./blueprints/actuator_1pin_analog"
-import ActuatorBP_3pin_rgb from "./blueprints/actuator_3pin_rgb"
+import ActuatorBP_1pin_analog from "./blueprints/actuator_1pin_analog";
+import ActuatorBP_1pin_digital from "./blueprints/actuator_1pin_digital";
+import ActuatorBP_1pin_servo from "./blueprints/actuator_1pin_servo";
+import ActuatorBP_2pin_stepper from "./blueprints/actuator_2pin_stepper";
+import ActuatorBP_3pin_dc_hbridge from "./blueprints/actuator_3pin_dc_hbridge";
+import ActuatorBP_3pin_rgb from "./blueprints/actuator_3pin_rgb";
+import ActuatorBP_3pin_rgb_pwm from "./blueprints/actuator_3pin_rgb_pwm";
+import ActuatorBP_4pin_stepper from "./blueprints/actuator_4pin_stepper";
+import SoundBlueprint from "./blueprints/sound";
 
 const SOUND_PIN = "9";
+
 export default class Compiler {
   options: EditorOptions
   sound: (SoundFrame | null)[]
@@ -123,15 +129,15 @@ void loop() {
       case "LIGHT_RGB":
         return ActuatorBP_3pin_rgb
       case "LIGHT_RGB_PWM":
-        return
+        return ActuatorBP_3pin_rgb_pwm
       case "MOTOR_DC_H_BRIDGE":
-        return
+        return ActuatorBP_3pin_dc_hbridge
       case "MOTOR_SERVO":
-        return
+        return ActuatorBP_1pin_servo
       case "MOTOR_STEPPER_2":
-        return
+        return ActuatorBP_2pin_stepper
       case "MOTOR_STEPPER_4":
-        return
+        return ActuatorBP_4pin_stepper
     }
   }
 
@@ -152,6 +158,10 @@ void loop() {
         let re = new RegExp("\\$pin" + (pinIndex + 1), "g")
         defCode = defCode.replace(re, pinValue.toString())
       })
+      act.constants.forEach((constValue, constIndex) => {
+        let re = new RegExp("\\$const" + (constIndex + 1), "g")
+        defCode = defCode.replace(re, constValue.toString())
+      })
       // Generate frames for this actuator
       let frames = ""
       act.frames.forEach(frame => {
@@ -162,16 +172,16 @@ void loop() {
           switch(actDef!.variables[fieldIndex].type) {
             case "NUMBER":
             default:
-              str = str.replace("$pin"+(fieldIndex+1), fieldValue.toString())
+              str = str.replace("$var"+(fieldIndex+1), fieldValue.toString())
               break;
             case "BOOL":
-              str = str.replace("$pin"+(fieldIndex+1), fieldValue === "true" ? "HIGH" : "LOW")
+              str = str.replace("$var"+(fieldIndex+1), fieldValue === "true" ? "HIGH" : "LOW")
               break;
             case "COLOR":
-              let color = hexToRgb(fieldValue)
-              str = str.replace("$pinR", color.r.toString())
-              str = str.replace("$pinG", color.g.toString())
-              str = str.replace("$pinB", color.b.toString())
+              let color = hexToRgb(fieldValue.replace("#", ""))
+              str = str.replace("$var1", color.r.toString())
+              str = str.replace("$var2", color.g.toString())
+              str = str.replace("$var3", color.b.toString())
               break;
           }
         })

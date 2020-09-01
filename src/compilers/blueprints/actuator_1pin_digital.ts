@@ -12,7 +12,7 @@ export default {
   #define $id_SIZE $size
   typedef struct $id_TYPE {
     int start, end;
-    byte pin1;
+    byte value;
   } $id_TYPE;
   const $id_TYPE $id[$id_SIZE] = {$array_values};
   byte $id_currFrameIndex = 0;
@@ -29,9 +29,9 @@ export default {
       $id_currFrameIndex++;
     }
     if (currentFrame == $id[$id_currFrameIndex].start) {
-      digitalWrite($id_PIN1, $id[$id_currFrameIndex].pin1);
+      digitalWrite($id_PIN1, $id[$id_currFrameIndex].value);
     }
   }
   `,
-  item: `{$start, $end, $pin1}`
+  item: `{$start, $end, $var1}`
 }

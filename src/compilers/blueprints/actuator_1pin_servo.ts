@@ -1,15 +1,17 @@
 /**
- * Actuator blueprint for a single PWM pin.
+ * Actuator blueprint for a servo motor using a PWM pin.
  * The code that uses this file must replace:
- * - $pin1 with the pin1 value
+ * - $pin1 is the servo signal
  * - $array_values with a concatenated string of $id_TYPE struct elements
  * - $size with the generated array size
  */
 export default {
   definition:`
   // actuator: $id
+  #include <Servo.h>
   #define $id_PIN1 $pin1
   #define $id_SIZE $size
+  Servo $id_servo;
   typedef struct $id_TYPE {
     int start, end;
     byte value;
@@ -18,18 +20,16 @@ export default {
   byte $id_currFrameIndex = 0;
   `,
   setup: `
-  // actuator $id
-  pinMode($id_PIN1, OUTPUT);
+  // actuator: $id
+  $id_servo.attach($id_PIN1);
+  $id_servo.write(90);
   `,
   loop: `
   // actuator: $id
   if ($id_currFrameIndex < $id_SIZE) {
-    if (currentFrame == $id[$id_currFrameIndex].end + 1) {
-      analogWrite($id_PIN1, 0);
-      $id_currFrameIndex++;
-    }
     if (currentFrame == $id[$id_currFrameIndex].start) {
-      analogWrite($id_PIN1, $id[$id_currFrameIndex].value);
+      $id_servo.write($id[$id_currFrameIndex].value);
+      $id_currFrameIndex++;
     }
   }
   `,
