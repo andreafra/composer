@@ -1,7 +1,7 @@
-import { CommandBarButton, IContextualMenuProps, Stack, IStackStyles, getTheme, IStyle, ICommandBarItemProps, CommandBar } from "@fluentui/react";
-import React, { CSSProperties, useContext } from "react";
-import { SoundEditorOptionsCtx } from ".";
+import { CommandBar, ICommandBarItemProps, IContextualMenuProps } from "@fluentui/react";
+import React, { useContext } from "react";
 import usePlayer from "utils/Player2";
+import { SoundEditorOptionsCtx } from ".";
 
 export default function SoundEditorMenu() {
 
@@ -38,8 +38,8 @@ export default function SoundEditorMenu() {
     {
       key: "play",
       text: "Play",
-      iconProps: { iconName: player.isPlaying ? "Pause" : "Play" },
-      onClick: () => player.isPlaying ? player.pause() : player.play()
+      iconProps: { iconName: "Play" },
+      onClick: () => player.play()
     },
     {
       key: "stop",

@@ -3,14 +3,10 @@ import VolumeTimeline from 'components/sound/VolumeTimeline'
 import FoldableDiv from 'components/utilities/FoldableDiv'
 import { ScrollableDiv } from 'components/utilities/ScrollableDiv'
 import Timeline from 'components/utilities/Timeline'
-import React, { useState, createContext, useContext } from 'react'
-import InstrumentPicker from '../InstrumentPicker'
-import './style.css'
-
-import usePlayer from 'utils/Player2'
-import { useSelector } from 'react-redux'
-import { ComposerState, InstrumentType, MouseMode } from 'types'
+import React, { createContext, useContext, useState } from 'react'
+import { InstrumentType, MouseMode } from 'types'
 import SoundEditorMenu from './menu'
+import './style.css'
 
 export const SoundEditorOptionsCtx = createContext<{
   instrumentType: InstrumentType,
