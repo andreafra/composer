@@ -22,23 +22,23 @@ let CANVAS_H = 0 // in px
 let numberOfRows = 0
 
 // ===== Sound Generator =====
-// let AudioContext = window.AudioContext
-// let audioCtx = new AudioContext();
+let AudioContext = window.AudioContext
+let audioCtx = new AudioContext();
 
-// // create Oscillator and gain node
-// let oscillator = audioCtx.createOscillator()
-// let gainNode = audioCtx.createGain()
+// create Oscillator and gain node
+let oscillator = audioCtx.createOscillator()
+let gainNode = audioCtx.createGain()
 
-// // connect oscillator to gain node to speakers
-// oscillator.connect(gainNode)
-// gainNode.connect(audioCtx.destination)
+// connect oscillator to gain node to speakers
+oscillator.connect(gainNode)
+gainNode.connect(audioCtx.destination)
 
-// // set default options
-// oscillator.detune.value = 100 // value in cents, IDK what this does :)
-// oscillator.frequency.value = 0 // pitch
-// oscillator.type = "sine" // instrument
-// gainNode.gain.value = 0 // volume
-// oscillator.start(0) // start now
+// set default options
+oscillator.detune.value = 100 // value in cents, IDK what this does :)
+oscillator.frequency.value = 0 // pitch
+oscillator.type = "sine" // instrument
+gainNode.gain.value = 0.0 // volume
+oscillator.start(0) // start now
 
 /**
  * This component builds a canvas with the lines for actual melody composition.
@@ -144,8 +144,8 @@ function SoundTimeline() {
     setLastCell({x: -1, y: -1})
     
     // Stop playing sound
-    // oscillator.frequency.value = 0 // pitch
-    // gainNode.gain.value = 0 // volume
+    oscillator.frequency.value = 0 // pitch
+    gainNode.gain.value = 0 // volume
   }
 
   /**
@@ -164,19 +164,19 @@ function SoundTimeline() {
 
       // ALWAYS: play sound preview
       // Update the frequency
-      // oscillator.frequency.value = notes[cell.y] ? notes[cell.y].freq : 0// pitch
+      oscillator.frequency.value = notes[cell.y] ? notes[cell.y].freq : 0// pitch
 
       // Update the instrument
       // Prevents the sine function from being "resetted/recentered",
       // which produces an annoying buzz, basically it's not "smooth"
-      // if (type !== "sine")
-      //   oscillator.type = type
+      if (type !== "sine")
+        oscillator.type = type
       
       // Update the volume
       let frame = melody[cell.x - 1]
       let volume = 0.5 * MAX_VOLUME;
       if (frame && frame.volume) volume = frame.volume * MAX_VOLUME
-      // gainNode.gain.value = volume // volume
+      gainNode.gain.value = volume // volume
 
       // when I change cell...
       // optimized: only when cell changes

@@ -29,9 +29,10 @@ export default function usePlayer() {
 
     return Offline(({ transport }) => {
       const synth = new Synth().toDestination();
-      newMelody.forEach((note) =>
+      newMelody.forEach((note) => {
+        synth.oscillator.baseType = note.type as OscillatorType
         synth.triggerAttackRelease(note.freq, note.duration, note.start)
-      )
+      })
       // make sure to start the transport
       transport.start(0);
     }, melody.length * durationInSeconds).then((buffer) => {
@@ -124,11 +125,11 @@ export default function usePlayer() {
             let timeAtStep = (player.immediate() - timeAtStart) * 1000 // in MS
 
             currentFrameCtx.changeValue((offset*1000 + timeAtStep)/options.resolution)
-            console.log("HELLO")
             // Stop when we're done with the melody
             if (timeAtStep >= (melody.length * options.resolution - offset*1000) + options.resolution/2) {
               setIsPlaying(false)
               _player.stop()
+              currentFrameCtx.changeValue(0)
               clearInterval(update)
             }
           }, options.resolution)
