@@ -1,3 +1,4 @@
+import { getTheme } from '@fluentui/react'
 import { CurrentInstantMarkerCtx } from 'components/App'
 import { ScrollContext } from 'components/utilities/ScrollableDiv'
 import React, { useContext, useEffect, useRef, useState } from 'react'
@@ -5,7 +6,6 @@ import { useSelector } from 'react-redux'
 import { ComposerState, Point } from 'types'
 import { ACCENT_COLOR_ALT, LEFT_PADDING } from 'utils/constants'
 import './style.css'
-import { getTheme } from '@fluentui/react'
 
 // Canvas ref, module-scoped so it doesn't get resetted.
 let rect: DOMRect | null
@@ -97,13 +97,13 @@ function Timeline() {
       let smallColumns = TIMELINE_W / (CELL_W);
       let columns = TIMELINE_W / (CELL_W * 4);
       if (ctx) {
-        ctx.clearRect(0,0, TIMELINE_W, TIMELINE_H);
+        ctx.clearRect(0, 0, TIMELINE_W, TIMELINE_H);
 
         for (let index = 0; index < smallColumns; index++) {
           ctx.strokeStyle = ACCENT_COLOR_ALT
           ctx.lineWidth = 0.3
           ctx.beginPath()
-          ctx.moveTo(LEFT_PADDING + CELL_W * index, TIMELINE_H/2)
+          ctx.moveTo(LEFT_PADDING + CELL_W * index, TIMELINE_H / 2)
           ctx.lineTo(LEFT_PADDING + CELL_W * index, TIMELINE_H)
           ctx.closePath()
           ctx.stroke()
@@ -128,10 +128,10 @@ function Timeline() {
 
           ctx.fillStyle = theme.palette.accent
           ctx.beginPath()
-          ctx.moveTo(triangleCenter - 5, TIMELINE_H/2)
+          ctx.moveTo(triangleCenter - 5, TIMELINE_H / 2)
           ctx.lineTo(triangleCenter, TIMELINE_H)
-          ctx.lineTo(triangleCenter + 5, TIMELINE_H/2)
-          ctx.lineTo(triangleCenter - 5, TIMELINE_H/2)
+          ctx.lineTo(triangleCenter + 5, TIMELINE_H / 2)
+          ctx.lineTo(triangleCenter - 5, TIMELINE_H / 2)
           ctx.closePath()
           ctx.fill()
         }
@@ -139,7 +139,7 @@ function Timeline() {
     }
   })
 
-  return (  
+  return (
     <div className="Timeline">
       <canvas
         className="Timeline-canvas"

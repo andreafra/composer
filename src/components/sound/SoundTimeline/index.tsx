@@ -2,10 +2,11 @@ import { ScrollContext } from 'components/utilities/ScrollableDiv'
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { removeNote, setNote } from 'store/actions'
-import { ComposerState, Note, Point, SoundFrame } from 'types'
+import { ComposerState, Note, Point, SoundFrame, InstrumentType } from 'types'
 import { ACCENT_COLOR, ACCENT_COLOR_ALT, LEFT_PADDING } from 'utils/constants'
 import { createNoteTable } from 'utils/SoundGenerator'
 import './style.css'
+import { SoundEditorOptionsCtx } from '../SoundEditor'
 /*
  * Funny story time: stuff you declare outside a function component 
  * doesn't get resetted when React decides on its own to refresh that
@@ -47,6 +48,7 @@ let numberOfRows = 0
 function SoundTimeline() {
 
   const scrollCtx = useContext(ScrollContext)
+  const soundEditorOptions = useContext(SoundEditorOptionsCtx)
 
   const dispatch = useDispatch()
   const options = useSelector((state: ComposerState) => state.system.editorOptions)
@@ -65,8 +67,7 @@ function SoundTimeline() {
   const [lastCell, setLastCell]: [Point, any] = useState({ x: 0, y: 0 })
   const [isDrawing, setIsDrawing]: [boolean, any] = useState(false)
 
-  // TODO: Replace completely
-  const [type, setType]: [OscillatorType, any] = useState("sine")
+  const type = soundEditorOptions.instrumentType
 
   const MAX_VOLUME = 0.2
 
@@ -102,7 +103,7 @@ function SoundTimeline() {
    * @param time The x position of the note
    * @param type The instrument used
    */
-  const addNote = (time: number, row: number, type: OscillatorType) => {
+  const addNote = (time: number, row: number, type: InstrumentType) => {
     for (let i = melody.length; i < time; i++) {
       dispatch(removeNote(i))
     }
@@ -181,9 +182,9 @@ function SoundTimeline() {
       // optimized: only when cell changes
       if (lastCell.x !== cell.x || lastCell.y !== cell.y) {
         setLastCell(cell)
-        if (e.ctrlKey) {
+        if (e.ctrlKey || soundEditorOptions.mouseMode === "erase") {
           deleteNote(cell.x - 1)
-        } else {
+        } else if (soundEditorOptions.mouseMode === "draw") {
           // Pass note to data structure
           addNote(cell.x - 1, cell.y, type)
         }
@@ -331,7 +332,7 @@ function SoundTimeline() {
 
 export default SoundTimeline
 
-const getColorFromInstrument = (instrument: OscillatorType) => {
+const getColorFromInstrument = (instrument: string) => {
   switch (instrument) {
     case "sine":
       return "red"

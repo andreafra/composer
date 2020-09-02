@@ -156,11 +156,14 @@ export interface ComposerState {
 
 /* Sound */
 
+export type InstrumentType =  "sine" | "square" | "sawtooth" | "triangle"
+export type MouseMode =  "draw" | "erase"
+
 export interface SoundFrame {
   note: Note
   pitch: number
   volume: number
-  type: OscillatorType
+  type: InstrumentType
 }
 
 export interface Note {
