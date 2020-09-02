@@ -1,9 +1,8 @@
 import { CurrentInstantMarkerCtx } from "components/App"
-import { useContext, useEffect, useState, useMemo, useCallback } from "react"
+import { useContext, useState } from "react"
 import { useSelector } from "react-redux"
-import { Offline, Oscillator, Synth, Volume, Player, PolySynth, ToneEvent, Sequence, Transport } from "tone"
+import { Offline, Player, Synth, Volume } from "tone"
 import { ComposerState, SoundFrame } from "types"
-import { generate } from "shortid"
 
 const volume = new Volume(-12).toDestination()
 const synth = new Synth().connect(volume).toDestination();

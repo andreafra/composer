@@ -1,13 +1,14 @@
-import { CommandBar, ICommandBarItemProps, Layer, Dialog, DialogFooter, PrimaryButton, DefaultButton, DialogType } from "@fluentui/react"
+import { CommandBar, DefaultButton, Dialog, DialogFooter, DialogType, FontWeights, getTheme, ICommandBarItemProps, IconButton, Layer, mergeStyleSets, Modal, PrimaryButton, TextField } from "@fluentui/react"
 import Compiler from "compilers/arduino_v1"
+import { iconButtonStyles } from "components/modals/styles"
 import DownloadJS from 'downloadjs'
-import React, { useContext, useState } from "react"
-import { useSelector, useDispatch } from "react-redux"
+import React, { useContext, useState, useRef } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { resetState } from "store/actions"
 import { ComposerState } from "types"
 import FileManager from "utils/FileManager"
 import { useJSONFilteredOutput } from "utils/JSONFilteredOutput"
 import { DetailPanelCtx } from "."
-import { resetState } from "store/actions"
 
 export default function Menu() {
 
@@ -21,6 +22,7 @@ export default function Menu() {
 
   const [pinToolbar, setPinToolbar] = useState(false)
   const [isNewFileDialogVisible, setIsNewFileDialogVisible] = useState(false)
+  const [isArduinoCodeVisible, setIsArduinoCodeVisible] = useState(false)
 
   const handleDownload = () => {
     DownloadJS(parsedOutput(), state.system.filename + ".json", "application/json")
@@ -44,7 +46,8 @@ export default function Menu() {
   }
 
   const handleBuildArduino = () => {
-    console.log(new Compiler(state).build())
+    setIsArduinoCodeVisible(true)
+    // console.log(new Compiler(state).build())
   }
 
   const handleNewFile = () => {
@@ -137,6 +140,15 @@ export default function Menu() {
     subText: 'Do you want to create a new file?',
   }
 
+  const codeRef = useRef<HTMLTextAreaElement>(null)
+
+  const _handleCodeCopy = () => {
+    if (codeRef && codeRef.current) {
+      codeRef.current.select()
+      document.execCommand("copy")
+    }
+  }
+
   return (
     <>
       {pinToolbar ? <Layer>{toolbar}</Layer> : toolbar}
@@ -150,6 +162,74 @@ export default function Menu() {
           <DefaultButton onClick={() => setIsNewFileDialogVisible(false)} text="No" />
         </DialogFooter>
       </Dialog>
+      <Modal
+        isOpen={isArduinoCodeVisible}
+        onDismiss={() => setIsArduinoCodeVisible(false)}
+        containerClassName={contentStyles.container}
+      >
+        <div className={contentStyles.header}>
+          <span id="Arduino-Code">Code</span>
+          <IconButton
+            styles={iconButtonStyles}
+            iconProps={{ iconName: "Cancel" }}
+            ariaLabel="Close popup modal"
+            onClick={() => setIsArduinoCodeVisible(false)}
+          />
+        </div>
+        <div className={contentStyles.body}>
+          <TextField
+            label="Click on code to copy it!"
+            multiline
+            rows={10}
+            disabled
+            defaultValue={new Compiler(state).build()}
+            styles={{root: { fontFamily: "monospace"}}}
+          />
+          <textarea
+            readOnly={true}
+            style={{height: 0, width: 0, border: "none", padding: 0, opacity: 0}}
+            value={new Compiler(state).build()}
+            ref={codeRef}
+          ></textarea>
+          <PrimaryButton
+            text="Copy Code"
+            iconProps={{iconName: "Copy"}}
+            onClick={_handleCodeCopy}
+          />
+        </div>
+      </Modal>
     </>
   )
 }
+
+const theme = getTheme();
+const contentStyles = mergeStyleSets({
+  container: {
+    width: 600,
+    display: 'flex',
+    flexFlow: 'column nowrap',
+    alignItems: 'stretch',
+  },
+  header: [
+    theme.fonts.xLargePlus,
+    {
+      flex: '1 1 auto',
+      borderTop: `4px solid ${theme.palette.themePrimary}`,
+      color: theme.palette.neutralPrimary,
+      display: 'flex',
+      alignItems: 'center',
+      fontWeight: FontWeights.semibold,
+      padding: '12px 12px 14px 24px',
+    },
+  ],
+  body: {
+    flex: '4 4 auto',
+    padding: '0 24px 24px 24px',
+    overflowY: 'hidden',
+    selectors: {
+      p: { margin: '14px 0' },
+      'p:first-child': { marginTop: 0 },
+      'p:last-child': { marginBottom: 0 },
+    },
+  },
+})
