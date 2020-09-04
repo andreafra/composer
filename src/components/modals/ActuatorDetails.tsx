@@ -56,6 +56,7 @@ export default function ActuatorDetails(props: {
     let act = actuatorModels.find(a => a.type === newActuator.type)
     if (!act) return null
     let items = []
+    items.push(<h3>Pins:</h3>)
     // Add pins
     items.push(act.pins.map((value, index) => <NumberField
       defaultValue={newActuator.pins[index] || 0}
@@ -66,6 +67,7 @@ export default function ActuatorDetails(props: {
     />))
     // Add constants
     if (act.constants) {
+      items.push(<h3>Constants:</h3>)
       items.push(act.constants?.map((value, index) => <ActuatorField
         label={value.name}
         type={value.type}

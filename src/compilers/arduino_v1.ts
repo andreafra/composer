@@ -78,7 +78,7 @@ void loop() {
     let lastFreqQty = 0 // how many identical freqs have been parsed consecutively
     let intervals = 0 // how many different sequences of freqs are in the array
     let i = 0
-    while(i <= this.sound.length) {
+    while(i < this.sound.length) {
       let freq = Math.round(this.sound[i]?.note.freq || 0)
       if (freq === lastFreq) {
         lastFreqQty++
@@ -92,6 +92,11 @@ void loop() {
         intervals++
       }
       i++
+    }
+    // Add last note
+    if (lastFreq !== undefined) {
+      notes_freq += lastFreq.toString() + ","
+      notes_length += lastFreqQty.toString() + ","
     }
     return {
       freq: notes_freq,

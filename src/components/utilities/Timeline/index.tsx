@@ -120,7 +120,7 @@ function Timeline() {
 
           ctx.font = `12px sans-serif`
           ctx.fillStyle = ACCENT_COLOR_ALT
-          ctx.fillText(`${index * options.resolution}ms`, LEFT_PADDING + CELL_W * 4 * index + 5, 12)
+          ctx.fillText(`${index * options.resolution * 4}ms`, LEFT_PADDING + CELL_W * 4 * index + 5, 12)
 
           let triangleCenter = LEFT_PADDING + (currentInstantCtx.value - 1) * options.frameSize
           if (triangleCenter < LEFT_PADDING)
