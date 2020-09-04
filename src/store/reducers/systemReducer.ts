@@ -16,7 +16,8 @@ export const defaultState: SystemState = {
   editorOptions: {
     resolution: FRAME_RESOLUTION,
     width: LENGTH * 1000 / FRAME_RESOLUTION * FRAME_SIZE,
-    frameSize: FRAME_SIZE
+    frameSize: FRAME_SIZE,
+    speakerPin: 9
   },
 }
 

@@ -10,8 +10,6 @@ import ActuatorBP_3pin_rgb_pwm from "./blueprints/actuator_3pin_rgb_pwm";
 import ActuatorBP_4pin_stepper from "./blueprints/actuator_4pin_stepper";
 import SoundBlueprint from "./blueprints/sound";
 
-const SOUND_PIN = "9";
-
 export default class Compiler {
   options: EditorOptions
   sound: (SoundFrame | null)[]
@@ -108,7 +106,7 @@ void loop() {
   getSoundDefs = () => {
     let notes = this.generateNotes()
     let code = SoundBlueprint.definition
-    .replace("$pin", SOUND_PIN)
+    .replace("$pin", this.options.speakerPin.toString())
     .replace("$size", notes.size)
     .replace("$freq_array", notes.freq)
     .replace("$duration_array", notes.duration)

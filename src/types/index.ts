@@ -134,17 +134,11 @@ export interface SystemState {
   editorOptions: EditorOptions
 }
 
-export interface EditPanelState {
-  scope: PanelScope
-  visibility: boolean
-  channelId?: string
-  frameId?: string
-}
-
 export interface EditorOptions {
   resolution: number,
   width: number,
-  frameSize: number
+  frameSize: number,
+  speakerPin: number
 }
 
 /* Composer */
