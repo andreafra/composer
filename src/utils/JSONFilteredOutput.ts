@@ -2,6 +2,9 @@ import { useSelector } from "react-redux"
 import { ComposerState } from "types"
 import { useActuatorModels } from "./actuatorModels"
 
+/**
+ * Optimises the JSON file for the user to download
+ */
 export function useJSONFilteredOutput() {
   const state = useSelector((state: ComposerState) => state)
   const actuatorTypes = useActuatorModels()

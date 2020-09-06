@@ -11,6 +11,11 @@ interface FoldableDivProps {
 const hideIcon: IIconProps = { iconName: 'Hide3' };
 const viewIcon: IIconProps = { iconName: 'View' };
 
+/**
+ * The user can hide parts of the editor by clicking
+ * on the eye icon.
+ */
+
 export default function FoldableDiv(props: FoldableDivProps) {
   const [isVisible, setIsVisible] = useState(true)
   const tooltipId = useId('tooltip');

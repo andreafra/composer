@@ -19,6 +19,14 @@ type ChannelProps = {
   id: string
 }
 
+/**
+ * Channel is a functional component that renders
+ * the List of Rects. Users can add a new Frame (in the form of 
+ * a rectangle, hense Rects) in the Channel. They also 
+ * can delete the Channel and edit the Name of the Channel and modify some 
+ * of its details.
+ */
+
 function Channel(props: ChannelProps) {
 
   const dispatch = useDispatch()

@@ -9,6 +9,12 @@ import shortid from 'shortid'
 import { Channel as ChannelType, ComposerState } from 'types'
 import './style.css'
 
+/**
+ * ActuatorList is a functional component that renders 
+ * the Actuator List consisting of a Channel component
+ * for each actuator defined by the user. Implements the 
+ * ability for users to add a new actuator
+ */
 function ActuatorList(){
 
   const detailPanel = useContext(DetailPanelCtx)

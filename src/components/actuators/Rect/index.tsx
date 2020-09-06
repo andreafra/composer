@@ -20,6 +20,11 @@ type RectProps = {
   onDoubleClick: (id: string) => void
 }
 
+/**
+ * Rect is a funcitonal component thar represents an action in the Channel
+ * Rect can be dragged, or modified by clicking on its sides.
+ */
+
 function Rect(props: RectProps){
   const dispatch = useDispatch()
   const options = useSelector((state: ComposerState) => state.system.editorOptions)
@@ -61,7 +66,7 @@ function Rect(props: RectProps){
         if(props.x >= options.width){
           newWidth = (options.width - frameStartX)
         }
-      } else { // drag the Rect around (it just works)
+      } else { // drag the Rect around 
         newWidth = FrameWidth
         if(props.x - dragOffset <= LEFT_PADDING) { // Stop at left margin
           newMargin = 0 

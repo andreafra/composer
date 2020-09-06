@@ -2,6 +2,10 @@ import { Checkbox, ColorPicker, getColorFromString, IColor, IColorPickerStyles }
 import React, { useState } from "react";
 import NumberField from "./NumberField";
 
+/**
+ * Adapts the input asked in the dialog windows 
+ * for the type of actuator the user picked.
+ */
 export default function ActuatorField(
   props: {
     label: string,

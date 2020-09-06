@@ -9,6 +9,12 @@ import { ComposerState, Frame } from "types";
 import { useActuatorModels } from "utils/actuatorModels";
 import { contentStyles, iconButtonStyles } from "./styles";
 
+/**
+ * Frame Details is the dialog window that appears when clicling 
+ * on "New Frame" on the Channel bar. The user can pick the start and the end
+ * of the frame.
+ */
+
 export default function FrameDetails(props: {
   frame: Frame
   show: boolean

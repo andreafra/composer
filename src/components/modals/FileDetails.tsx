@@ -11,6 +11,12 @@ const stackTokens: IStackTokens = {
   childrenGap: 10,
 }
 
+/**
+ * File Details is the dialog window in the top bar
+ * where the user can change the Name of the file, its author,
+ * Resolution (ms), Frame size(px) and total Lenght(ms) of the timeline
+ */
+
 export default function FileDetails() {
   
   const detailPanel = React.useContext(DetailPanelCtx)
