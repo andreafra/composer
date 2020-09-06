@@ -10,12 +10,28 @@ import ActuatorBP_3pin_rgb_pwm from "./blueprints/actuator_3pin_rgb_pwm";
 import ActuatorBP_4pin_stepper from "./blueprints/actuator_4pin_stepper";
 import SoundBlueprint from "./blueprints/sound";
 
+/**
+ * A compiler is a class handling the creation of source code
+ * for a specific platform, providing a function to export it as a string.
+ * The download of the file should be handled separately in the
+ * src/components/App/menu.tsx.
+ * 
+ * This file provides an example on how to retrieve data from the store,
+ * how to process it, and how to assemble it, in this case to produce
+ * an Arduino Scratch file, that can be compiled and uploaded to a board.
+ * 
+ * Utilizes template code contained in the blueprint/ folder.
+ */
 export default class Compiler {
   options: EditorOptions
   sound: (SoundFrame | null)[]
   actuators: Channel[]
   actuatorDefs: Actuator[]
 
+  /**
+   * Creates a new instance of the compiler by saving locally the various fields to parse.
+   * @param state The state of the app that you want to export.
+   */
   constructor(state: ComposerState) {
     this.options = state.system.editorOptions;
     this.sound = state.sound;
@@ -27,7 +43,11 @@ export default class Compiler {
     })
   }
 
-  build = () => {
+  /**
+   * Returns a string containing the compiled file,
+   * by assembling the various parts of it.
+   */
+  build = (): string => {
     return this.header()
     + this.getSoundDefs()
     + this.getActuatorsDefs()
@@ -35,6 +55,9 @@ export default class Compiler {
     + this.loop()
   }
   
+  /**
+   * Returns global, general definitions to use in the source file.
+   */
   header = () => {
     return `// FRAME SIZE AND TOTAL LENGTH
 #define FRAME_LENGTH_MS ${this.options.resolution}
@@ -42,6 +65,10 @@ export default class Compiler {
 `
   }
 
+  /**
+   * Returns an assembled arduino setup() function.
+   * Code in this function will be executed once.
+   */
   setup = () => {
     return `void setup() {
   ${this.getSoundSetup()}
@@ -50,6 +77,10 @@ export default class Compiler {
 `
   }
 
+  /**
+   * Returns an assembled arduino loop() function.
+   * Code in this function will be executed iteratively.
+   */
   loop = () => {
     return `\n// Handle update rate
 long lastUpdate = 0;
@@ -69,6 +100,11 @@ void loop() {
 `
   }
 
+  /**
+   * Returns an objet containing a string of notes frequencies, comma separated,
+   * a string of notes lengths in milliseconds, comma separated, and the number
+   * of notes/lengths contained in each string.
+   */
   generateNotes = () => {
     let notes_freq = "" // the frequencies to play
     let notes_length = "" // how long each frequency lasts
@@ -103,6 +139,10 @@ void loop() {
     }
   }
 
+  /**
+   * Return sound related macros and global variables.
+   * Replaces variables starting with $.
+   */
   getSoundDefs = () => {
     let notes = this.generateNotes()
     let code = SoundBlueprint.definition
@@ -113,14 +153,24 @@ void loop() {
     return code
   }
 
+  /**
+   * Return sound related setup fetched from the blueprint.
+   */
   getSoundSetup = () => {
     return SoundBlueprint.setup
   }
 
+  /**
+   * Return sound related loop fetched from the blueprint.
+   */
   getSoundLoop = () => {
     return SoundBlueprint.loop
   }
   
+  /**
+   * Return a matching blueprint for the actuator of the type
+   * passed as parameter.
+   */
   getActuatorBlueprint = (type: String) => {
     switch(type) {
       case "LIGHT_SINGLE":
@@ -144,6 +194,11 @@ void loop() {
     }
   }
 
+  /**
+   * Generate a string containing all the actuators macro, global variables,
+   * data structures, etc.
+   * Replaces keywords with the $ prefix.
+   */
   getActuatorsDefs = () => {
     let allDefCode = ""
     this.actuators.forEach((act, actIndex) => {
@@ -197,6 +252,9 @@ void loop() {
     return allDefCode
   }
 
+  /**
+   * Returns the setup code based on the blueprint of each actuator.
+   */
   getActuatorsSetup = () => {
     let allSetupCode = ""
     this.actuators.forEach((act, actIndex) => {
@@ -215,6 +273,9 @@ void loop() {
     return allSetupCode
   }
 
+  /**
+   * Returns the loop code based on the blueprint of each actuator.
+   */
   getActuatorsLoop = () => {
     let allLoopCode = ""
     this.actuators.forEach((act, actIndex) => {
@@ -230,6 +291,9 @@ void loop() {
   }
 }
 
+/**
+ * Convert an HEX color string into an object containing the R, G, B values.
+ */
 // See https://stackoverflow.com/a/11508164
 function hexToRgb(hex: string) {
   var bigint = parseInt(hex, 16)
