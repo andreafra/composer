@@ -2,6 +2,11 @@ import { ChoiceGroup, IChoiceGroupOption } from '@fluentui/react'
 import React from 'react'
 import './style.css'
 
+/**
+ * The IstrumentPicker is a DropDown in the Sound bar
+ * where the User can pick from Sine, Square, Triangle, Sawtooth waves. 
+ */
+
 function InstrumentPicker(props: any) {
 
   // "custom" breaks the app, since it needs an appropriate initialization

@@ -15,6 +15,11 @@ const labelStyle: ILabelStyles = {
     flexGrow: 1
   }
 }
+
+/**
+ * NumberField is a component for the selection of a number in the various
+ * dialogs windows in the editor.
+ */
 export default function NumberField(props: {
   defaultValue: number,
   minValue: number,

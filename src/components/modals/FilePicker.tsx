@@ -8,6 +8,12 @@ import FileManager, { File } from 'utils/FileManager';
 import { contentStyles, iconButtonStyles } from './styles';
 import { setState } from 'store/actions';
 
+/**
+ * FilePicker is the dialog window in the top bar that appears
+ * when clicking "Load". The user can Load a saved file from the current session, 
+ * or load a file from their computer or from OneDrive
+ */
+
 export default function FilePicker() {
   
   const fileManager = new FileManager()
