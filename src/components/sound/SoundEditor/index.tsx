@@ -20,6 +20,10 @@ export const SoundEditorOptionsCtx = createContext<{
   changeMouseMode: (value: MouseMode) => {}
 })
 
+/**
+ * Manages the Sound Timeline and Volume Timeline
+ */
+
 function SoundEditor() {
 
   const soundEditorOptionsCtx = useContext(SoundEditorOptionsCtx)

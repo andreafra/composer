@@ -9,6 +9,12 @@ import { Channel, ComposerState } from "types";
 import { useActuatorModels } from "utils/actuatorModels";
 import { contentStyles, iconButtonStyles } from "./styles";
 
+/**
+ * ActuatorDetails represents the dialog window in the 
+ * Channel bar when clicking "Details" or "New Actuator". The user can modify 
+ * name, type of actuator and pin.
+ */
+
 export default function ActuatorDetails(props: {
   activeChannelId: string,
   show: boolean,

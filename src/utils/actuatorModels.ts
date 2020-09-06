@@ -30,6 +30,11 @@ export function useActuatorModels() {
   return availableActuators
 }
 
+/**
+ * Default components that appear in the New Actuator Dialog 
+ * The user can add to this list if the want to add more actuators
+ */
+
 const defaultActuators: Actuator[] = [
   {
     type: "LIGHT_SINGLE",
