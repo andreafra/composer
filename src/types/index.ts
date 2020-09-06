@@ -1,23 +1,27 @@
+/* Panel Visibility */
+export type DetailPanel = 'FILE_PICKER' | 'FILE_DETAILS' | 'CHANNEL' | 'FRAME' | 'NONE' 
+
 /* Redux Action Type */
 export const SET_NOTE = 'EDIT_NOTE'
 export const REMOVE_NOTE = 'REMOVE_NOTE'
 
 export const SET_VOLUME = 'SET_VOLUME'
 
-export const ADD_CHANNEL = 'ADD_CHANNEL'
+export const SET_CHANNEL = 'SET_CHANNEL'
 export const REMOVE_CHANNEL = 'REMOVE_CHANNEL'
-export const UPDATE_CHANNEL = 'UPDATE_CHANNEL'
 
 export const SET_FRAME = 'SET_FRAME'
 export const REMOVE_FRAME = 'REMOVE_FRAME'
 
 /* System */
-export const SET_EDIT_PANEL_VISIBILITY = 'SET_EDIT_PANEL_VISIBILITY'
-export const SET_EDIT_PANEL_SCOPE = 'SET_EDIT_PANEL_SCOPE'
 export const SET_USERNAME = 'SET_USERNAME'
 export const SET_FILENAME = 'SET_FILENAME'
 export const SET_EDITOR_OPTIONS = 'SET_EDITOR_OPTIONS'
 export const SET_LEFT_SCROLL = 'SET_LEFT_SCROLL'
+
+export const SET_COMPOSER = 'SET_COMPOSER'
+export const RESET_COMPOSER = 'RESET_COMPOSER'
+
 /* Dictionary */
 export interface IDictionary<V> {
   [index: string]: V
@@ -54,11 +58,6 @@ export type VolumeAction = SetVolumeAction
 
 export type SoundAction = NoteAction | VolumeAction
 
-interface AddChannelAction {
-  type: typeof ADD_CHANNEL
-  payload: Channel
-}
-
 interface RemoveChannelAction {
   type: typeof REMOVE_CHANNEL
   meta: {
@@ -66,8 +65,8 @@ interface RemoveChannelAction {
   }
 }
 
-interface UpdateChannelAction {
-  type: typeof UPDATE_CHANNEL
+interface SetChannelAction {
+  type: typeof SET_CHANNEL
   payload: Channel
   meta: {
     id: string
@@ -92,23 +91,7 @@ interface SetFrameAction {
 }
 
 export type FrameAction = SetFrameAction | RemoveFrameAction
-export type ChannelAction = AddChannelAction | RemoveChannelAction | UpdateChannelAction | FrameAction
-
-interface SetEditPanelVisibilityAction {
-  type: typeof SET_EDIT_PANEL_VISIBILITY
-  visibile: boolean
-}
-
-interface SetEditPanelScopeAction {
-  type: typeof SET_EDIT_PANEL_SCOPE
-  scope: string
-  meta: {
-    channelId: string
-    frameId?: string
-  }
-}
-
-export type SetEditPanelAction = SetEditPanelVisibilityAction | SetEditPanelScopeAction
+export type ChannelAction = SetChannelAction | RemoveChannelAction | FrameAction
 
 interface SetUsernameAction {
   type: typeof SET_USERNAME
@@ -125,37 +108,37 @@ interface SetEditorOptionsAction {
   payload: EditorOptions
 }
 
-interface SetLeftScroll {
+interface SetLeftScrollAction {
   type: typeof SET_LEFT_SCROLL
   scroll: number
 }
 
-export type SystemAction = SetEditPanelAction | SetUsernameAction | SetFilenameAction | SetEditorOptionsAction | SetLeftScroll
+interface SetComposerAction {
+  type: typeof SET_COMPOSER
+  payload: ComposerState
+}
 
+interface ResetComposerAction {
+  type: typeof RESET_COMPOSER
+}
+
+export type SystemAction = SetUsernameAction | SetFilenameAction | SetEditorOptionsAction | SetLeftScrollAction
+
+export type FileAction = SetComposerAction | ResetComposerAction
 
 /* System */
 export interface SystemState {
   username: string
+  lastModified: Date
   filename: string
-  editPanel: EditPanelState
   editorOptions: EditorOptions
-  leftScroll: number
-}
-
-export interface EditPanelState {
-  scope: PanelScope
-  visibility: boolean
-  channelId?: string
-  frameId?: string
 }
 
 export interface EditorOptions {
-  leftPadding: number,
   resolution: number,
   width: number,
   frameSize: number,
-  accentColor: string
-  altAccentColor: string
+  speakerPin: number
 }
 
 /* Composer */
@@ -167,11 +150,14 @@ export interface ComposerState {
 
 /* Sound */
 
+export type InstrumentType =  "sine" | "square" | "sawtooth" | "triangle"
+export type MouseMode =  "draw" | "erase"
+
 export interface SoundFrame {
   note: Note
   pitch: number
   volume: number
-  type: OscillatorType
+  type: InstrumentType
 }
 
 export interface Note {
@@ -191,7 +177,8 @@ export interface Channel {
   id: string
   type: string
   pins: number[]
-  frames: Map<string, Frame>
+  frames: Frame[]
+  constants: any[]
 }
 
 export interface Frame {
@@ -219,5 +206,6 @@ export interface Actuator {
   type: string
   name: string
   pins: string[]
-  fields: Field[]
+  variables: Field[]
+  constants?: Field[]
 }

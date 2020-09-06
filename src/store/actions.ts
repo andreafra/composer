@@ -23,11 +23,6 @@ export const setVolume = (payload: type.SoundFrame, index: number): type.VolumeA
   }
 })
 
-export const addChannel = (payload: type.Channel): type.ChannelAction => ({
-  type: type.ADD_CHANNEL,
-  payload
-})
-
 export const removeChannel = (id: string): type.ChannelAction => ({
   type: type.REMOVE_CHANNEL,
   meta: {
@@ -35,8 +30,8 @@ export const removeChannel = (id: string): type.ChannelAction => ({
   }
 })
 
-export const updateChannel = (payload: type.Channel, id: string): type.ChannelAction => ({
-  type: type.UPDATE_CHANNEL,
+export const setChannel = (payload: type.Channel, id: string): type.ChannelAction => ({
+  type: type.SET_CHANNEL,
   payload,
   meta: {
     id: id
@@ -60,20 +55,6 @@ export const setFrame = (payload: type.Frame, id: string, channelId: string): ty
   }
 })
 
-export const setEditPanelVisibility = (visibile: boolean): type.SystemAction => ({
-  type: type.SET_EDIT_PANEL_VISIBILITY,
-  visibile
-})
-
-export const setEditPanelScope = (scope: type.PanelScope, channelId: string, frameId?: string): type.SystemAction => ({
-  type: type.SET_EDIT_PANEL_SCOPE,
-  scope: scope,
-  meta: {
-    channelId: channelId,
-    frameId: frameId
-  }
-})
-
 export const setUsername = (username: string): type.SystemAction => ({
   type: type.SET_USERNAME,
   username: username
@@ -89,7 +70,11 @@ export const setEditorOptions = (payload: type.EditorOptions): type.SystemAction
   payload: payload
 })
 
-export const setScroll = (scroll: number): type.SystemAction => ({
-  type: type.SET_LEFT_SCROLL,
-  scroll: scroll
+export const setState = (state: type.ComposerState): type.FileAction => ({
+  type: type.SET_COMPOSER,
+  payload: state
+})
+
+export const resetState = (): type.FileAction => ({
+  type: type.RESET_COMPOSER
 })

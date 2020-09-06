@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { setEditPanelScope, setEditPanelVisibility, setFrame } from 'store/actions'
+import { setFrame } from 'store/actions'
 import { ComposerState, Frame } from 'types'
+import { LEFT_PADDING } from 'utils/constants'
 import './style.css'
 
 interface RectStyle {
@@ -14,16 +15,17 @@ interface RectStyle {
 type RectProps = {
   x: number
   frame: Frame
+  fields: JSX.Element[] | null
   shouldEdit: boolean
+  onDoubleClick: (id: string) => void
 }
 
 function Rect(props: RectProps){
-
   const dispatch = useDispatch()
   const options = useSelector((state: ComposerState) => state.system.editorOptions)
 
-  const [lastFrameStartX, setLastFrameStartX]: [number, any] = useState(props.frame.start * options.frameSize)
-  const [lastFrameWidth, setLastFrameWidth]: [number, any] = useState((props.frame.end - props.frame.start + 1) * options.frameSize)
+  const [frameStartX, setFrameStartX]: [number, any] = useState(props.frame.start * options.frameSize)
+  const [FrameWidth, setFrameWidth]: [number, any] = useState((props.frame.end - props.frame.start + 1) * options.frameSize)
   // True if I'm editing this rectangle
   const [isActive, setIsActive] = useState(false)
   // Am I dragging the left or right handle?
@@ -31,34 +33,47 @@ function Rect(props: RectProps){
   const [isRightHandleActive, setIsRightHandleActive] = useState(false)
   const [dragOffset, setDragOffset] = useState(0)
 
-  const lastFrameEndX: number = lastFrameStartX + lastFrameWidth
+  const frameEndX: number = frameStartX + FrameWidth
 
   const style: RectStyle = {
     backgroundColor: props.frame.color,
-    width: lastFrameWidth + "px",
-    marginLeft: lastFrameStartX + "px",
+    width: FrameWidth + "px",
+    marginLeft: frameStartX + "px",
     zIndex: isActive ? 10000 : 0
   }
 
   const handleResize = () => {
     if(props.shouldEdit && isActive) {
       // If I'm editing the rectangle
-      let newWidth: number = lastFrameWidth
-      let newMargin: number = lastFrameStartX
+      let newWidth: number = FrameWidth
+      let newMargin: number = frameStartX
 
-      if(isLeftHandleActive) {
-        newMargin = props.x - options.frameSize
-        newWidth = lastFrameEndX - newMargin
-      } else if(isRightHandleActive) {
-        newWidth = props.x - lastFrameStartX - options.frameSize
-        newMargin = lastFrameStartX
-      } else {
-        // drag the Rect around (it just works)
-        newMargin = props.x - dragOffset - options.frameSize
+      if(isLeftHandleActive) { // Drag left handle
+        newMargin = props.x - LEFT_PADDING // - options.frameSize
+        newWidth = frameEndX - newMargin
+        if (props.x <= LEFT_PADDING){
+          newMargin = 0 
+          newWidth = FrameWidth + frameStartX
+        }
+      } else if(isRightHandleActive) { // Drag right handle
+        newWidth = props.x - frameStartX - LEFT_PADDING //- options.frameSize
+        newMargin = frameStartX
+        if(props.x >= options.width){
+          newWidth = (options.width - frameStartX)
+        }
+      } else { // drag the Rect around (it just works)
+        newWidth = FrameWidth
+        if(props.x - dragOffset <= LEFT_PADDING) { // Stop at left margin
+          newMargin = 0 
+        } else if(props.x + (FrameWidth - dragOffset) >= options.width + LEFT_PADDING) { // Stop at right margin
+          newMargin = options.width - FrameWidth
+        } else {
+          newMargin = props.x - dragOffset - options.frameSize
+        }
       }
-
-      setLastFrameWidth(newWidth >= options.frameSize ? newWidth : options.frameSize)
-      setLastFrameStartX(newMargin)
+     
+      setFrameWidth(newWidth >= options.frameSize ? newWidth : options.frameSize)
+      setFrameStartX(newMargin)
     }
   }
 
@@ -69,24 +84,24 @@ function Rect(props: RectProps){
       if(isActive) {
         // how many frames the rect spans through.
         // Example: this Rect is long 3 frames.
-        let sizeInFrames: number = Math.floor(lastFrameWidth / options.frameSize)
+        let sizeInFrames: number = Math.floor(FrameWidth / options.frameSize)
         let newWidth = options.frameSize * sizeInFrames
-        if (lastFrameWidth % options.frameSize > options.frameSize * 0.5) {
+        if (FrameWidth % options.frameSize > options.frameSize * 0.5) {
           // Then I'm in the next frame (I add a frame)
           newWidth += options.frameSize
           sizeInFrames += 1
         }
 
-        let marginInFrames: number = Math.floor(lastFrameStartX / options.frameSize)
+        let marginInFrames: number = Math.floor(frameStartX / options.frameSize)
         let newMargin = options.frameSize * marginInFrames
-        if (lastFrameStartX % options.frameSize > options.frameSize * 0.5) {
+        if (frameStartX % options.frameSize > options.frameSize * 0.5) {
           // Then I'm in the next frame (I add a frame)
           newMargin += options.frameSize
           marginInFrames += 1
         }
         // Handle mouse up
-        setLastFrameStartX(newMargin)
-        setLastFrameWidth(newWidth)
+        setFrameStartX(newMargin)
+        setFrameWidth(newWidth)
         
         // deep clone
         const frameCopy: Frame = JSON.parse(JSON.stringify(props.frame))
@@ -104,12 +119,12 @@ function Rect(props: RectProps){
   useEffect(() => fitToTimeline(), [props.shouldEdit])
   // Update from outside
   useEffect(() => {
-    setLastFrameStartX(props.frame.start * options.frameSize)
-    setLastFrameWidth((props.frame.end - props.frame.start + 1) * options.frameSize)
+    setFrameStartX(props.frame.start * options.frameSize)
+    setFrameWidth((props.frame.end - props.frame.start + 1) * options.frameSize)
   }, [props.frame.start, props.frame.end, options.frameSize])
-  const handleEditFrame = () => {
-    dispatch(setEditPanelScope("FRAME", props.frame.channelId, props.frame.id))
-    dispatch(setEditPanelVisibility(true))
+
+  const _handleEditFrame = () => {
+    props.onDoubleClick(props.frame.id)
   }
 
   return (
@@ -117,10 +132,10 @@ function Rect(props: RectProps){
       className="Rect"
       draggable={false}
       style={style}
-      onDoubleClick={handleEditFrame}
+      onDoubleClick={_handleEditFrame}
       onMouseDown={(e) => {
         setIsActive(true)
-        setDragOffset(e.pageX - (lastFrameStartX + options.leftPadding))
+        setDragOffset(e.pageX - (frameStartX + LEFT_PADDING))
       }}
     >
       <div 
@@ -133,6 +148,9 @@ function Rect(props: RectProps){
         draggable={false}
         onMouseDown={() => setIsRightHandleActive(true)}
       ></div>
+      <div className="Rect-content">
+        {props.fields}
+      </div>
     </div>
   )
 }

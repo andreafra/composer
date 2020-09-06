@@ -1,4 +1,8 @@
 .SoundTimeline {
-  overflow-x: scroll;
+  overflow-x: visible;
   background-color: white;
+}
+
+.soundCanvas, .timelineCanvas {
+  display: block;
 }

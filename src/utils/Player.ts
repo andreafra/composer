@@ -75,7 +75,7 @@ export default class Player {
     Player._instance!._melody = m
   }
 
-  static play(callback: () => void) {
+  static play(updatePosition: (t: number) => void, callback: () => void) {
     if (!Player.instance._isPlaying) {
       Player.instance._isPlaying = true
 
@@ -100,6 +100,7 @@ export default class Player {
         }
         // Go to next frame
         Player.instance._position += 1
+        updatePosition(Player.instance._position)
       }, Player.instance!._tempo)
     }
   }

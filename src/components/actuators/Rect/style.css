@@ -3,6 +3,10 @@
   position: absolute;
   height: 100px;
   z-index: 0;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  border-radius: 5px;
+  /* Prevent content from overflowing */
+  overflow: hidden;
 }
 
 .Rect-left {
@@ -21,4 +25,26 @@
   float: right;
   transform: translate(+50%);
   /* background-color: rgba(128, 0, 128, 0.253) */
+}
+
+.Rect-content {
+  position: absolute;
+  padding: 0.2em 0.1em;
+}
+
+.Rect-content * {
+  white-space: nowrap;
+  font-size: 0.8rem !important;
+}
+
+.Rect-content span {
+  display: block;
+}
+
+.Rect-content--color {
+  display: inline-block;
+  height: 0.9em;
+  width: 0.9em;
+  vertical-align: baseline;
+  border: 1px solid white;
 }

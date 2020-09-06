@@ -1,7 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { ScrollContext } from 'components/utilities/ScrollableDiv'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { setVolume } from 'store/actions'
+import { removeNote, setVolume } from 'store/actions'
 import { ComposerState, Point, SoundFrame } from 'types'
+import { ACCENT_COLOR, ACCENT_COLOR_ALT, LEFT_PADDING } from 'utils/constants'
 import './style.css'
 
 let ctx: CanvasRenderingContext2D | null
@@ -14,14 +16,14 @@ let rect: DOMRect | null
  */
 function VolumeTimeline(props: any) {
 
+  const scrollCtx = useContext(ScrollContext)
+
   const dispatch = useDispatch()
   const options = useSelector((state: ComposerState) => state.system.editorOptions)
   const melody = useSelector((state: ComposerState) => state.sound)
 
-  const CANVAS_W = options.width + options.leftPadding
+  const CANVAS_W = options.width + LEFT_PADDING
   const CANVAS_H = 70 // in px
-
-  const LEFT_PADDING = options.leftPadding
   
   const FRAME_W = options.frameSize
 
@@ -54,6 +56,10 @@ function VolumeTimeline(props: any) {
    * @param volume 
    */
   const addFrame = (time: number, volume: number) => {
+    for (let i = melody.length; i < time; i++) {
+      dispatch(removeNote(i))
+    }
+
     let percentVolume = volume / CANVAS_H // from px value to 0-1 value
     // update parent component
     const _oldFrame: SoundFrame = melody[time] || {
@@ -120,7 +126,7 @@ function VolumeTimeline(props: any) {
    */
   const getInputPos = (e: any): Point => {
     if (rect) return {
-      x: e.pageX,
+      x: e.clientX + scrollCtx.scroll,
       y: e.clientY - rect.top
     }
     return { x: -1, y: -1 }
@@ -134,7 +140,7 @@ function VolumeTimeline(props: any) {
    */
   const getFrame = (position: Point): Point => {
     return {
-      x: Math.floor(position.x / FRAME_W),
+      x: Math.floor((position.x - LEFT_PADDING) / FRAME_W) + 1,
       y: CANVAS_H - position.y
     }
   }
@@ -155,12 +161,12 @@ function VolumeTimeline(props: any) {
   const drawLabels = () => {
     if (ctx) {
       ctx.font = "12px sans-serif"
-      ctx.strokeStyle = options.altAccentColor
-      ctx.fillStyle = options.accentColor
+      ctx.strokeStyle = ACCENT_COLOR_ALT
+      ctx.fillStyle = ACCENT_COLOR
       ctx.fillText("100", 2, 14)
       ctx.fillText("0", 2, CANVAS_H - 2)
-      ctx.moveTo(FRAME_W, 0)
-      ctx.lineTo(FRAME_W, CANVAS_H)
+      ctx.moveTo(LEFT_PADDING, 0)
+      ctx.lineTo(LEFT_PADDING, CANVAS_H)
       ctx.stroke()
     }
   }
@@ -173,8 +179,8 @@ function VolumeTimeline(props: any) {
    */
   const drawRectangle = (x: number, y: number) => {
     if (ctx) {
-      ctx.fillStyle = options.accentColor
-      ctx.fillRect(x * FRAME_W, CANVAS_H - y, FRAME_W, CANVAS_H)
+      ctx.fillStyle = ACCENT_COLOR
+      ctx.fillRect(LEFT_PADDING + x * FRAME_W, CANVAS_H - y, FRAME_W, CANVAS_H)
     }
   }
 
@@ -189,15 +195,14 @@ function VolumeTimeline(props: any) {
       
       if (frame) {
         const volume = frame.volume * CANVAS_H // from 0-1 value to px value
-        drawRectangle(index + 1, volume)
+        drawRectangle(index, volume)
       }
     }
   }
  
   return (
-    <div 
-      className="VolumeTimeline"
-    >
+    <div className="VolumeTimeline">
+      <span className="VolumeTimeline-title">Volume</span>
       <canvas
         className="volumeCanvas"
         ref={canvasRef}

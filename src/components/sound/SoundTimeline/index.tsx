@@ -1,11 +1,12 @@
-import InstrumentPicker from 'components/sound/InstrumentPicker'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { ScrollContext } from 'components/utilities/ScrollableDiv'
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { removeNote, setNote } from 'store/actions'
-import { ComposerState, Note, Point, SoundFrame } from 'types'
+import { ComposerState, Note, Point, SoundFrame, InstrumentType } from 'types'
+import { ACCENT_COLOR, ACCENT_COLOR_ALT, LEFT_PADDING } from 'utils/constants'
 import { createNoteTable } from 'utils/SoundGenerator'
 import './style.css'
-
+import { SoundEditorOptionsCtx } from '../SoundEditor'
 /*
  * Funny story time: stuff you declare outside a function component 
  * doesn't get resetted when React decides on its own to refresh that
@@ -36,7 +37,7 @@ gainNode.connect(audioCtx.destination)
 oscillator.detune.value = 100 // value in cents, IDK what this does :)
 oscillator.frequency.value = 0 // pitch
 oscillator.type = "sine" // instrument
-gainNode.gain.value = 0 // volume
+gainNode.gain.value = 0.0 // volume
 oscillator.start(0) // start now
 
 /**
@@ -44,7 +45,11 @@ oscillator.start(0) // start now
  * @param props notes, melody, update (callback)
  * @return JSX Canvas element
  */
-function SoundTimeline(props: any) {
+function SoundTimeline() {
+
+  const scrollCtx = useContext(ScrollContext)
+  const soundEditorOptions = useContext(SoundEditorOptionsCtx)
+
   const dispatch = useDispatch()
   const options = useSelector((state: ComposerState) => state.system.editorOptions)
   const melody = useSelector((state: ComposerState) => state.sound)
@@ -53,8 +58,7 @@ function SoundTimeline(props: any) {
   // TODO: replace 3, 5 with actual parameters
   const notes = useMemo(() => createNoteTable(3, 5).reverse(), [])
 
-  const CANVAS_W = options.width + options.leftPadding
-  const LEFT_PADDING = options.leftPadding
+  const CANVAS_W = options.width + LEFT_PADDING
   const CELL_W = options.frameSize
   const CELL_H = 15
 
@@ -62,15 +66,17 @@ function SoundTimeline(props: any) {
 
   const [lastCell, setLastCell]: [Point, any] = useState({ x: 0, y: 0 })
   const [isDrawing, setIsDrawing]: [boolean, any] = useState(false)
-  const [type, setType]: [OscillatorType, any] = useState("sine")
 
-  const MAX_VOLUME = props.maxVolume || 0.2
+  const type = soundEditorOptions.instrumentType
+
+  const MAX_VOLUME = 0.2
 
   /**
    * This part renders the canvas after initialising it.
    */
   useEffect(() => {
     let canvas = canvasRef.current
+    // If canvas exists, update it
     if (canvas) {
       // Init canvas space
       ctx = canvas.getContext('2d')
@@ -84,9 +90,10 @@ function SoundTimeline(props: any) {
 
       // Render "loop"
       drawBackground()
-      drawLines(numberOfRows)
+      drawRows(numberOfRows)
       drawLabels(notes)
       drawNotes(melody)
+      drawColumns()
     }
   })
 
@@ -96,7 +103,10 @@ function SoundTimeline(props: any) {
    * @param time The x position of the note
    * @param type The instrument used
    */
-  const addNote = (time: number, row: number, type: OscillatorType) => {
+  const addNote = (time: number, row: number, type: InstrumentType) => {
+    for (let i = melody.length; i < time; i++) {
+      dispatch(removeNote(i))
+    }
     // update parent component
     const _oldNote = melody[time]
     const _newNote: SoundFrame = {
@@ -172,9 +182,9 @@ function SoundTimeline(props: any) {
       // optimized: only when cell changes
       if (lastCell.x !== cell.x || lastCell.y !== cell.y) {
         setLastCell(cell)
-        if (e.ctrlKey) {
+        if (e.ctrlKey || soundEditorOptions.mouseMode === "erase") {
           deleteNote(cell.x - 1)
-        } else {
+        } else if (soundEditorOptions.mouseMode === "draw") {
           // Pass note to data structure
           addNote(cell.x - 1, cell.y, type)
         }
@@ -189,7 +199,7 @@ function SoundTimeline(props: any) {
    */
   const getInputPos = (e: any): Point => {
     if (rect) return {
-      x: e.pageX, // - rect.left,
+      x: e.clientX + scrollCtx.scroll, // - rect.left,
       y: e.clientY - rect.top
     }
     return { x: -1, y: -1 }
@@ -203,7 +213,7 @@ function SoundTimeline(props: any) {
    */
   const getCell = (position: Point): Point => {
     return {
-      x: Math.floor(position.x / CELL_W),
+      x: Math.floor((position.x - LEFT_PADDING) / CELL_W) + 1,
       y: Math.floor(position.y / CELL_H)
     }
   }
@@ -222,26 +232,25 @@ function SoundTimeline(props: any) {
    * Draw horizontal lines on the canvas
    * @param n Number of lines to draw
    */
-  const drawLines = (n: number) => {
+  const drawRows = (n: number) => {
     if (ctx) {
       for (let i = 0; i <= n; i++) {
         // Get height of a row
         let marginTop = CELL_H * i
 
-        ctx.strokeStyle = options.accentColor
+        ctx.strokeStyle = ACCENT_COLOR
         ctx.lineWidth = 0.3
         ctx.beginPath()
         ctx.moveTo(0, marginTop)
         ctx.lineTo(CANVAS_W, marginTop)
         ctx.closePath()
         ctx.stroke()
-
       }
 
-      ctx.strokeStyle = options.altAccentColor
+      ctx.strokeStyle = ACCENT_COLOR_ALT
       ctx.beginPath()
-      ctx.moveTo(CELL_W, 0)
-      ctx.lineTo(CELL_W, CANVAS_H)
+      ctx.moveTo(LEFT_PADDING, 0)
+      ctx.lineTo(LEFT_PADDING, CANVAS_H)
       ctx.closePath()
       ctx.stroke()
     }
@@ -255,7 +264,7 @@ function SoundTimeline(props: any) {
     if (ctx) {
       let marginTop = CELL_H
       ctx.font = `${CELL_H - 3}px sans-serif`
-      ctx.fillStyle = options.accentColor
+      ctx.fillStyle = ACCENT_COLOR
       for (const note of _notes) {
         ctx.fillText(note.name, 5, marginTop - 2)
         marginTop += CELL_H
@@ -272,7 +281,7 @@ function SoundTimeline(props: any) {
   const drawRectangle = (x: number, y: number, color: string) => {
     if (ctx) {
       ctx.fillStyle = color
-      ctx.fillRect(x * CELL_W, y * CELL_H, CELL_W, CELL_H)
+      ctx.fillRect(LEFT_PADDING + x * CELL_W, y * CELL_H, CELL_W, CELL_H)
     }
   }
 
@@ -286,19 +295,27 @@ function SoundTimeline(props: any) {
       const frame = melody[index]
 
       if (frame !== null)
-        drawRectangle(index + 1, frame.pitch, getColorFromInstrument(frame.type))
+        drawRectangle(index, frame.pitch, getColorFromInstrument(frame.type))
+    }
+  }
+
+  const drawColumns = () => {
+    let columns = CANVAS_W / (CELL_W * 4);
+    for (let index = 0; index < columns; index++) {
+      if (ctx) {
+        ctx.strokeStyle = ACCENT_COLOR
+        ctx.lineWidth = 0.3
+        ctx.beginPath()
+        ctx.moveTo(LEFT_PADDING + CELL_W * 4 * index, 0)
+        ctx.lineTo(LEFT_PADDING + CELL_W * 4 * index, CANVAS_H)
+        ctx.closePath()
+        ctx.stroke()
+      }
     }
   }
 
   return (
-    <>
-    <InstrumentPicker
-        currentType={type}
-        update={(t: OscillatorType) => setType(t)}
-      />
-    <div
-      className="SoundTimeline"  
-    >
+    <div className="SoundTimeline">
       <canvas
         className="soundCanvas"
         ref={canvasRef}
@@ -310,13 +327,12 @@ function SoundTimeline(props: any) {
         onMouseLeave={onInputStop}
       ></canvas>
     </div>
-    </>
   )
 }
 
 export default SoundTimeline
 
-const getColorFromInstrument = (instrument: OscillatorType) => {
+const getColorFromInstrument = (instrument: string) => {
   switch (instrument) {
     case "sine":
       return "red"
