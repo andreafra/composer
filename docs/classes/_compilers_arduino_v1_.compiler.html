@@ -1,0 +1,616 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Compiler | project-composer</title>
+	<meta name="description" content="Documentation for project-composer">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.json" data-base="..">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="../index.html" class="title">project-composer</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="../globals.html">Globals</a>
+				</li>
+				<li>
+					<a href="../modules/_compilers_arduino_v1_.html">&quot;compilers/arduino_v1&quot;</a>
+				</li>
+				<li>
+					<a href="_compilers_arduino_v1_.compiler.html">Compiler</a>
+				</li>
+			</ul>
+			<h1>Class Compiler</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>A compiler is a class handling the creation of source code
+							for a specific platform, providing a function to export it as a string.
+							The download of the file should be handled separately in the
+						src/components/App/menu.tsx.</p>
+					</div>
+					<p>This file provides an example on how to retrieve data from the store,
+						how to process it, and how to assemble it, in this case to produce
+					an Arduino Scratch file, that can be compiled and uploaded to a board.</p>
+					<p>Utilizes template code contained in the blueprint/ folder.</p>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<span class="target">Compiler</span>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Constructors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_compilers_arduino_v1_.compiler.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_compilers_arduino_v1_.compiler.html#actuatordefs" class="tsd-kind-icon">actuator<wbr>Defs</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_compilers_arduino_v1_.compiler.html#actuators" class="tsd-kind-icon">actuators</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_compilers_arduino_v1_.compiler.html#options" class="tsd-kind-icon">options</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_compilers_arduino_v1_.compiler.html#sound" class="tsd-kind-icon">sound</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_compilers_arduino_v1_.compiler.html#build" class="tsd-kind-icon">build</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_compilers_arduino_v1_.compiler.html#generatenotes" class="tsd-kind-icon">generate<wbr>Notes</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_compilers_arduino_v1_.compiler.html#getactuatorblueprint" class="tsd-kind-icon">get<wbr>Actuator<wbr>Blueprint</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_compilers_arduino_v1_.compiler.html#getactuatorsdefs" class="tsd-kind-icon">get<wbr>Actuators<wbr>Defs</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_compilers_arduino_v1_.compiler.html#getactuatorsloop" class="tsd-kind-icon">get<wbr>Actuators<wbr>Loop</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_compilers_arduino_v1_.compiler.html#getactuatorssetup" class="tsd-kind-icon">get<wbr>Actuators<wbr>Setup</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_compilers_arduino_v1_.compiler.html#getsounddefs" class="tsd-kind-icon">get<wbr>Sound<wbr>Defs</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_compilers_arduino_v1_.compiler.html#getsoundloop" class="tsd-kind-icon">get<wbr>Sound<wbr>Loop</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_compilers_arduino_v1_.compiler.html#getsoundsetup" class="tsd-kind-icon">get<wbr>Sound<wbr>Setup</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_compilers_arduino_v1_.compiler.html#header" class="tsd-kind-icon">header</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_compilers_arduino_v1_.compiler.html#loop" class="tsd-kind-icon">loop</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_compilers_arduino_v1_.compiler.html#setup" class="tsd-kind-icon">setup</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>constructor</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Compiler<span class="tsd-signature-symbol">(</span>state<span class="tsd-signature-symbol">: </span><a href="../interfaces/_types_index_.composerstate.html" class="tsd-signature-type">ComposerState</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_compilers_arduino_v1_.compiler.html" class="tsd-signature-type">Compiler</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/QUB3X/project-composer/blob/1da4e8b/src/compilers/arduino_v1.ts#L29">Users/andrea/Projects/project-composer/src/compilers/arduino_v1.ts:29</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Creates a new instance of the compiler by saving locally the various fields to parse.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>state: <a href="../interfaces/_types_index_.composerstate.html" class="tsd-signature-type">ComposerState</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>The state of the app that you want to export.</p>
+										</div>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_compilers_arduino_v1_.compiler.html" class="tsd-signature-type">Compiler</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="actuatordefs" class="tsd-anchor"></a>
+					<h3>actuator<wbr>Defs</h3>
+					<div class="tsd-signature tsd-kind-icon">actuator<wbr>Defs<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_types_index_.actuator.html" class="tsd-signature-type">Actuator</a><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/QUB3X/project-composer/blob/1da4e8b/src/compilers/arduino_v1.ts#L29">Users/andrea/Projects/project-composer/src/compilers/arduino_v1.ts:29</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="actuators" class="tsd-anchor"></a>
+					<h3>actuators</h3>
+					<div class="tsd-signature tsd-kind-icon">actuators<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_types_index_.channel.html" class="tsd-signature-type">Channel</a><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/QUB3X/project-composer/blob/1da4e8b/src/compilers/arduino_v1.ts#L28">Users/andrea/Projects/project-composer/src/compilers/arduino_v1.ts:28</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="options" class="tsd-anchor"></a>
+					<h3>options</h3>
+					<div class="tsd-signature tsd-kind-icon">options<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_types_index_.editoroptions.html" class="tsd-signature-type">EditorOptions</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/QUB3X/project-composer/blob/1da4e8b/src/compilers/arduino_v1.ts#L26">Users/andrea/Projects/project-composer/src/compilers/arduino_v1.ts:26</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="sound" class="tsd-anchor"></a>
+					<h3>sound</h3>
+					<div class="tsd-signature tsd-kind-icon">sound<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><a href="../interfaces/_types_index_.soundframe.html" class="tsd-signature-type">SoundFrame</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/QUB3X/project-composer/blob/1da4e8b/src/compilers/arduino_v1.ts#L27">Users/andrea/Projects/project-composer/src/compilers/arduino_v1.ts:27</a></li>
+						</ul>
+					</aside>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="build" class="tsd-anchor"></a>
+					<h3>build</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">build<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/QUB3X/project-composer/blob/1da4e8b/src/compilers/arduino_v1.ts#L50">Users/andrea/Projects/project-composer/src/compilers/arduino_v1.ts:50</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns a string containing the compiled file,
+									by assembling the various parts of it.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="generatenotes" class="tsd-anchor"></a>
+					<h3>generate<wbr>Notes</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">generate<wbr>Notes<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>duration<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>freq<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>size<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/QUB3X/project-composer/blob/1da4e8b/src/compilers/arduino_v1.ts#L108">Users/andrea/Projects/project-composer/src/compilers/arduino_v1.ts:108</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns an objet containing a string of notes frequencies, comma separated,
+										a string of notes lengths in milliseconds, comma separated, and the number
+									of notes/lengths contained in each string.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">{ </span>duration<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>freq<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>size<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></h4>
+							<ul class="tsd-parameters">
+								<li class="tsd-parameter">
+									<h5>duration<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li class="tsd-parameter">
+									<h5>freq<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li class="tsd-parameter">
+									<h5>size<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getactuatorblueprint" class="tsd-anchor"></a>
+					<h3>get<wbr>Actuator<wbr>Blueprint</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Actuator<wbr>Blueprint<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">String</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">{ </span>definition<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>item<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>loop<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>setup<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/QUB3X/project-composer/blob/1da4e8b/src/compilers/arduino_v1.ts#L174">Users/andrea/Projects/project-composer/src/compilers/arduino_v1.ts:174</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Return a matching blueprint for the actuator of the type
+									passed as parameter.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>type: <span class="tsd-signature-type">String</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">{ </span>definition<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>item<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>loop<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>setup<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getactuatorsdefs" class="tsd-anchor"></a>
+					<h3>get<wbr>Actuators<wbr>Defs</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Actuators<wbr>Defs<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/QUB3X/project-composer/blob/1da4e8b/src/compilers/arduino_v1.ts#L202">Users/andrea/Projects/project-composer/src/compilers/arduino_v1.ts:202</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Generate a string containing all the actuators macro, global variables,
+										data structures, etc.
+									Replaces keywords with the $ prefix.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getactuatorsloop" class="tsd-anchor"></a>
+					<h3>get<wbr>Actuators<wbr>Loop</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Actuators<wbr>Loop<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/QUB3X/project-composer/blob/1da4e8b/src/compilers/arduino_v1.ts#L279">Users/andrea/Projects/project-composer/src/compilers/arduino_v1.ts:279</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns the loop code based on the blueprint of each actuator.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getactuatorssetup" class="tsd-anchor"></a>
+					<h3>get<wbr>Actuators<wbr>Setup</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Actuators<wbr>Setup<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/QUB3X/project-composer/blob/1da4e8b/src/compilers/arduino_v1.ts#L258">Users/andrea/Projects/project-composer/src/compilers/arduino_v1.ts:258</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns the setup code based on the blueprint of each actuator.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getsounddefs" class="tsd-anchor"></a>
+					<h3>get<wbr>Sound<wbr>Defs</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Sound<wbr>Defs<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/QUB3X/project-composer/blob/1da4e8b/src/compilers/arduino_v1.ts#L146">Users/andrea/Projects/project-composer/src/compilers/arduino_v1.ts:146</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Return sound related macros and global variables.
+									Replaces variables starting with $.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getsoundloop" class="tsd-anchor"></a>
+					<h3>get<wbr>Sound<wbr>Loop</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Sound<wbr>Loop<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/QUB3X/project-composer/blob/1da4e8b/src/compilers/arduino_v1.ts#L166">Users/andrea/Projects/project-composer/src/compilers/arduino_v1.ts:166</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Return sound related loop fetched from the blueprint.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getsoundsetup" class="tsd-anchor"></a>
+					<h3>get<wbr>Sound<wbr>Setup</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Sound<wbr>Setup<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/QUB3X/project-composer/blob/1da4e8b/src/compilers/arduino_v1.ts#L159">Users/andrea/Projects/project-composer/src/compilers/arduino_v1.ts:159</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Return sound related setup fetched from the blueprint.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="header" class="tsd-anchor"></a>
+					<h3>header</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">header<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/QUB3X/project-composer/blob/1da4e8b/src/compilers/arduino_v1.ts#L61">Users/andrea/Projects/project-composer/src/compilers/arduino_v1.ts:61</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns global, general definitions to use in the source file.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="loop" class="tsd-anchor"></a>
+					<h3>loop</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">loop<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/QUB3X/project-composer/blob/1da4e8b/src/compilers/arduino_v1.ts#L84">Users/andrea/Projects/project-composer/src/compilers/arduino_v1.ts:84</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns an assembled arduino loop() function.
+									Code in this function will be executed iteratively.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="setup" class="tsd-anchor"></a>
+					<h3>setup</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">setup<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/QUB3X/project-composer/blob/1da4e8b/src/compilers/arduino_v1.ts#L72">Users/andrea/Projects/project-composer/src/compilers/arduino_v1.ts:72</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns an assembled arduino setup() function.
+									Code in this function will be executed once.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="../globals.html"><em>Globals</em></a>
+					</li>
+					<li class="current tsd-kind-module">
+						<a href="../modules/_compilers_arduino_v1_.html">&quot;compilers/arduino_<wbr>v1&quot;</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class tsd-parent-kind-module">
+						<a href="_compilers_arduino_v1_.compiler.html" class="tsd-kind-icon">Compiler</a>
+						<ul>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+								<a href="_compilers_arduino_v1_.compiler.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_compilers_arduino_v1_.compiler.html#actuatordefs" class="tsd-kind-icon">actuator<wbr>Defs</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_compilers_arduino_v1_.compiler.html#actuators" class="tsd-kind-icon">actuators</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_compilers_arduino_v1_.compiler.html#options" class="tsd-kind-icon">options</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_compilers_arduino_v1_.compiler.html#sound" class="tsd-kind-icon">sound</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_compilers_arduino_v1_.compiler.html#build" class="tsd-kind-icon">build</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_compilers_arduino_v1_.compiler.html#generatenotes" class="tsd-kind-icon">generate<wbr>Notes</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_compilers_arduino_v1_.compiler.html#getactuatorblueprint" class="tsd-kind-icon">get<wbr>Actuator<wbr>Blueprint</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_compilers_arduino_v1_.compiler.html#getactuatorsdefs" class="tsd-kind-icon">get<wbr>Actuators<wbr>Defs</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_compilers_arduino_v1_.compiler.html#getactuatorsloop" class="tsd-kind-icon">get<wbr>Actuators<wbr>Loop</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_compilers_arduino_v1_.compiler.html#getactuatorssetup" class="tsd-kind-icon">get<wbr>Actuators<wbr>Setup</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_compilers_arduino_v1_.compiler.html#getsounddefs" class="tsd-kind-icon">get<wbr>Sound<wbr>Defs</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_compilers_arduino_v1_.compiler.html#getsoundloop" class="tsd-kind-icon">get<wbr>Sound<wbr>Loop</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_compilers_arduino_v1_.compiler.html#getsoundsetup" class="tsd-kind-icon">get<wbr>Sound<wbr>Setup</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_compilers_arduino_v1_.compiler.html#header" class="tsd-kind-icon">header</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_compilers_arduino_v1_.compiler.html#loop" class="tsd-kind-icon">loop</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_compilers_arduino_v1_.compiler.html#setup" class="tsd-kind-icon">setup</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+					<li class=" tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+						<a href="../modules/_compilers_arduino_v1_.html#hextorgb" class="tsd-kind-icon">hex<wbr>ToRgb</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+</body>
+</html>
